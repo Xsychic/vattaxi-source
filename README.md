@@ -1,4 +1,4 @@
-# vattaxi
+# VATTAXI
 
 ## Project setup
 ```

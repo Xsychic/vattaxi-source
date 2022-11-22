@@ -1,6 +1,8 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import path from 'path';
+
+import { app, protocol, BrowserWindow, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
 const isDevelopment = process.env.NODE_ENV !== 'production'
@@ -12,25 +14,41 @@ protocol.registerSchemesAsPrivileged([
 
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
-    width: 800,
-    height: 600,
-    webPreferences: {
-      
-      // Required for Spectron testing
-      enableRemoteModule: !!process.env.IS_TEST,
-      
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
-      contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION
-    }
-  })
+    const win = new BrowserWindow({
+        width: 1200,
+        height: 800,
+        frame: false,
+        webPreferences: {
+            // Required for Spectron testing
+            enableRemoteModule: !!process.env.IS_TEST,
+
+            // Use pluginOptions.nodeIntegration, leave this alone
+            // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
+            nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+            contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
+            preload: path.join(__dirname, 'src/preload.js')
+        }
+    })
+
+    // Close the app when close button in titlebar is clicked
+    ipcMain.on('app/close', () => {
+        if (win.webContents.isDevToolsOpened()) { win.webContents.closeDevTools() }
+        app.quit();
+    })
+
+    ipcMain.on("app/maximise", () => {
+        if(win.isMaximized())
+            win.unmaximize();
+        else
+            win.maximize()
+    })
+
+    ipcMain.on('app/minimise', () => win.minimize())
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     await win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
-    if (!process.env.IS_TEST) win.webContents.openDevTools()
+    // if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
     createProtocol('app')
     // Load the index.html when not in development
