@@ -11,11 +11,23 @@
 
 <template>
     <nav>
-        <div class="nav-controls">
-            <span class="nav-link" @click="minimise">&minus;</span>
-            <span class="nav-link" @click="maximise">&#128470;</span>
-            <span class="nav-link" @click="close">&#10006;</span>
+        <h1 class="title">VATTAXI</h1>
+        
+        <div class="nav-right">
+            <div class="simulator-status">
+                <div class="status-light"></div>
+                Connected to Simulator
+            </div>
+
+            <div class="nav-controls">
+                <span class="nav-link" @click="minimise">
+                    <font-awesome-icon icon='fa-solid fa-window-minimize'></font-awesome-icon>
+                </span>
+                <span class="nav-link" @click="maximise">&#128470;</span>
+                <span class="nav-link" @click="close">&#10006;</span>
+            </div>
         </div>
+
     </nav>
 </template>
 
@@ -23,10 +35,10 @@
     nav {
         height: 40px;
         width: 100vw;
-        background-color: #202124;
+        background-color: var(--not-black);
         color: white;
         display: flex;
-        justify-content: flex-end;
+        justify-content: space-between;
         align-items: center;
         -webkit-app-region: drag;
     }
@@ -34,8 +46,6 @@
     .nav-controls {
         height: 100%;
         display: flex;
-        user-select: none;
-        -webkit-user-select: none;
         -webkit-app-region: no-drag;
     }
 
@@ -54,10 +64,39 @@
     }
 
     .nav-link:hover {
-        background: #424242;
+        background: var(--active-grey);
     }
 
     .nav-link:hover:last-of-type {
-        background: #dd112b;
+        background: var(--red);
+    }
+
+    .nav-right {
+        height: 100%;
+        display: flex;
+        user-select: none;
+        -webkit-user-select: none;
+    }
+
+    .simulator-status {
+        margin-right: 15px;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        font-size: 16px;
+    }
+
+    .status-light {
+        height: 9px;
+        width: 9px;
+        background: var(--green);
+        border-radius: 50%;
+        margin: 0 3px;
+    }
+
+    .title {
+        font-weight: 600;
+        font-size: 24px;
+        margin-left: 15px;
     }
 </style>
