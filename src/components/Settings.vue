@@ -173,7 +173,7 @@
         border: none;
     }
 
-    .text-button:active, .text-button:focus, .text-button:hover {
+    .text-button:active, .text-button:hover {
         cursor: pointer;
         outline: none;
         border: none;
