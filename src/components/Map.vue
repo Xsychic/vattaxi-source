@@ -1,36 +1,88 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, onMounted } from 'vue';
 
     const showFilters = ref(false);
     let chartLastPosition = false;
+    let chartFrame = {};
+    let chart = {};
+    const initialX = -800;
+    const initialY = -300;
+
+    onMounted(() => {
+        chartFrame = document.querySelector('.chart');
+        chart = document.querySelector('#chart-image');
+
+        // remove not-allowed cursor
+        document.addEventListener("dragover", (event) => {
+            event.preventDefault();
+        });
+    })
+
 
     const drag = (event) => {
         const target = event.target;
 
         if(target.id !== 'chart-image')
             return;
-        
+
         if(!chartLastPosition) {
             chartLastPosition = event;
             return;
         }
 
-        const xChange = event.x - chartLastPosition.x;
+        if(event.x == 0 && event.y == 0)
+            return;
 
-        let currentLeft = target.style.left || '0px';
+        // translate on x axis
+        let currentLeft = target.style.left || `${ initialX }px`;
         currentLeft = parseInt(currentLeft.replace('px', ''));
-        const newLeft = `${ currentLeft + xChange }px`;
+        const xDifference = event.screenX - chartLastPosition.screenX;
+        let newLeft = currentLeft + xDifference;
+
+        // x bound checks
+        if(newLeft > 0)
+            newLeft = 0;
+
+        const minLeft = -1 * (chart.width - chartFrame.clientWidth);
+
+        if(newLeft < minLeft)
+            newLeft = minLeft;
+
+        newLeft = `${ newLeft }px`;
         target.style.left = newLeft;
+
+        // translate on y axis
+        let currentTop = target.style.top || `${ initialY }px`;
+        currentTop = parseInt(currentTop.replace('px', ''));
+        const yDifference = event.screenY - chartLastPosition.screenY;
+        let newTop = currentTop + yDifference;
+
+        // y bound checks
+        if(newTop > 0) 
+            newTop = 0;
+
+        const minTop = -1 * (chart.height - chartFrame.clientHeight);
+
+        if(newTop < minTop)
+            newTop = minTop;
+
+        newTop = `${ newTop }px`;
+        target.style.top = newTop;
 
         chartLastPosition = event;
 
     }
+
+    const dragEnd = (event) => {
+        drag(event)
+        chartLastPosition = false;
+    }
+
 </script>
 
 <template>
     <div class='chart'>
-        <img id='chart-image' src='@/assets/chart/kk-all-layers.png' alt='airfield chart' @drag='drag'>
-
+        <img id='chart-image' src='@/assets/chart/kk-all-layers.png' alt='airfield chart' @drag='drag' @dragend='dragEnd'>
         <div class='controls'>
             <div class='buttons'>
                 <div class='control-button filter' @click='showFilters = !showFilters'>
@@ -194,10 +246,10 @@
 
     #chart-image {
         z-index: 1;
-        position: absolute;
+        position: relative;
         bottom: 800px;
-        width: 1000px;
-        top: 0;
-        /* right: 1700px; */
+        width: 2000px;
+        top: -300px;
+        left: -800px;
     }
 </style>
