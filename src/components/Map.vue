@@ -1,7 +1,18 @@
 <script setup>
     import { ref, onMounted } from 'vue';
 
+    // filter vars
     const showFilters = ref(false);
+    const rwyMarkings = ref(true);
+    const taxiMarkings = ref(true);
+    const hpMarkings = ref(true);
+    const standMarkings = ref(true);
+    const taxiLabels = ref(true);
+    const hpLabels = ref(true);
+    const standLabels = ref(true);
+    const buildingLabels = ref(true);
+    
+    // map panning vars
     let chartLastPosition = false;
     let chartFrame = {};
     let chart = {};
@@ -10,7 +21,7 @@
 
     onMounted(() => {
         chartFrame = document.querySelector('.chart');
-        chart = document.querySelector('#chart-image');
+        chart = document.querySelector('#chart-stack');
 
         // remove not-allowed cursor
         document.addEventListener("dragover", (event) => {
@@ -20,11 +31,6 @@
 
 
     const drag = (event) => {
-        const target = event.target;
-
-        if(target.id !== 'chart-image')
-            return;
-
         if(!chartLastPosition) {
             chartLastPosition = event;
             return;
@@ -34,7 +40,7 @@
             return;
 
         // translate on x axis
-        let currentLeft = target.style.left || `${ initialX }px`;
+        let currentLeft = chart.style.left || `${ initialX }px`;
         currentLeft = parseInt(currentLeft.replace('px', ''));
         const xDifference = event.screenX - chartLastPosition.screenX;
         let newLeft = currentLeft + xDifference;
@@ -43,16 +49,16 @@
         if(newLeft > 0)
             newLeft = 0;
 
-        const minLeft = -1 * (chart.width - chartFrame.clientWidth);
+        const minLeft = -1 * (event.target.width - chartFrame.clientWidth);
 
         if(newLeft < minLeft)
             newLeft = minLeft;
 
         newLeft = `${ newLeft }px`;
-        target.style.left = newLeft;
+        chart.style.left = newLeft;
 
         // translate on y axis
-        let currentTop = target.style.top || `${ initialY }px`;
+        let currentTop = chart.style.top || `${ initialY }px`;
         currentTop = parseInt(currentTop.replace('px', ''));
         const yDifference = event.screenY - chartLastPosition.screenY;
         let newTop = currentTop + yDifference;
@@ -61,13 +67,13 @@
         if(newTop > 0) 
             newTop = 0;
 
-        const minTop = -1 * (chart.height - chartFrame.clientHeight);
+        const minTop = -1 * (event.target.height - chartFrame.clientHeight);
 
         if(newTop < minTop)
             newTop = minTop;
 
         newTop = `${ newTop }px`;
-        target.style.top = newTop;
+        chart.style.top = newTop;
 
         chartLastPosition = event;
 
@@ -82,7 +88,20 @@
 
 <template>
     <div class='chart'>
-        <img id='chart-image' src='@/assets/chart/kk-all-layers.png' alt='airfield chart' @drag='drag' @dragend='dragEnd'>
+        <div id="chart-wrapper">
+            <div id="chart-stack" @drag='drag' @dragend='dragEnd'>
+                <img class='chart-layer' src='@/assets/chart/kk-concrete.png' alt='airfield chart concrete base layer'>
+                <img class='chart-layer' src='@/assets/chart/kk-runway-markings.png' alt='airfield chart runway markings' v-if='rwyMarkings'>
+                <img class='chart-layer' src='@/assets/chart/kk-taxi-markings.png' alt='airfield chart taxi markings' v-if='taxiMarkings'>
+                <img class='chart-layer' src='@/assets/chart/kk-holding-point-markings.png' alt='airfield chart holding point markings' v-if='hpMarkings'>
+                <img class='chart-layer' src='@/assets/chart/kk-stand-markings.png' alt='airfield chart stand markings' v-if='standMarkings'>
+                <img class='chart-layer' src='@/assets/chart/kk-taxi-labels.png' alt='airfield chart taxi labels' v-if='taxiLabels'>
+                <img class='chart-layer' src='@/assets/chart/kk-holding-point-labels.png' alt='airfield chart holding point labels' v-if='hpLabels'>
+                <img class='chart-layer' src='@/assets/chart/kk-stand-labels.png' alt='airfield chart stand labels' v-if='standLabels'>
+                <img class='chart-layer' src='@/assets/chart/kk-building-labels.png' alt='airfield chart building labels' v-if='buildingLabels'>
+            </div>
+        </div>
+        
         <div class='controls'>
             <div class='buttons'>
                 <div class='control-button filter' @click='showFilters = !showFilters'>
@@ -104,19 +123,19 @@
                 <h5 class='filter-header'>Markings</h5>
                 <ul class='filter-list'>
                     <li>
-                        <input class='filter-checkbox' name='runway-markings' type='checkbox' checked>
+                        <input class='filter-checkbox' name='runway-markings' type='checkbox' v-model='rwyMarkings'>
                         Runway
                     </li>
                     <li>
-                        <input class='filter-checkbox' name='taxi-markings' type='checkbox' checked>
+                        <input class='filter-checkbox' name='taxi-markings' type='checkbox' v-model='taxiMarkings'>
                         Taxi
                     </li>
                     <li>
-                        <input class='filter-checkbox' name='hp-markings' type='checkbox' checked>
+                        <input class='filter-checkbox' name='hp-markings' type='checkbox' v-model='hpMarkings'>
                         Holding Point
                     </li>
                     <li>
-                        <input class='filter-checkbox' name='stand-markings' type='checkbox' checked>
+                        <input class='filter-checkbox' name='stand-markings' type='checkbox' v-model='standMarkings'>
                         Stand
                     </li>
                 </ul>
@@ -124,19 +143,19 @@
                 <h5 class='filter-header'>Labels</h5>
                 <ul class='filter-list'>
                     <li>
-                        <input class='filter-checkbox' name='taxi-labels' type='checkbox' checked>
+                        <input class='filter-checkbox' name='taxi-labels' type='checkbox' v-model='taxiLabels'>
                         Taxi
                     </li>
                     <li>
-                        <input class='filter-checkbox' name='hp-labels' type='checkbox' checked>
+                        <input class='filter-checkbox' name='hp-labels' type='checkbox' v-model='hpLabels'>
                         Holding Point
                     </li>
                     <li>
-                        <input class='filter-checkbox' name='stand-labels' type='checkbox' checked>
+                        <input class='filter-checkbox' name='stand-labels' type='checkbox' v-model='standLabels'>
                         Stand
                     </li>
                     <li>
-                        <input class='filter-checkbox' name='building-labels' type='checkbox' checked>
+                        <input class='filter-checkbox' name='building-labels' type='checkbox' v-model='buildingLabels'>
                         Building
                     </li>
                 </ul>
@@ -153,6 +172,13 @@
         width: 70%;
         position: relative;
         overflow: hidden;
+    }
+
+    .chart-layer {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2000px;
     }
 
     .controls {
@@ -244,12 +270,14 @@
         border-top-right-radius: 0;
     }
 
-    #chart-image {
+    #chart-stack {
         z-index: 1;
-        position: relative;
-        bottom: 800px;
-        width: 2000px;
+        position: absolute;
         top: -300px;
         left: -800px;
+    }
+
+    #chart-wrapper {
+        position: relative;
     }
 </style>
