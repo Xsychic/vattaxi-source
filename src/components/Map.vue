@@ -2,10 +2,35 @@
     import { ref } from 'vue';
 
     const showFilters = ref(false);
+    let chartLastPosition = false;
+
+    const drag = (event) => {
+        const target = event.target;
+
+        if(target.id !== 'chart-image')
+            return;
+        
+        if(!chartLastPosition) {
+            chartLastPosition = event;
+            return;
+        }
+
+        const xChange = event.x - chartLastPosition.x;
+
+        let currentLeft = target.style.left || '0px';
+        currentLeft = parseInt(currentLeft.replace('px', ''));
+        const newLeft = `${ currentLeft + xChange }px`;
+        target.style.left = newLeft;
+
+        chartLastPosition = event;
+
+    }
 </script>
 
 <template>
     <div class='chart'>
+        <img id='chart-image' src='@/assets/chart/kk-all-layers.png' alt='airfield chart' @drag='drag'>
+
         <div class='controls'>
             <div class='buttons'>
                 <div class='control-button filter' @click='showFilters = !showFilters'>
@@ -74,10 +99,8 @@
         min-height: 700px;
         height: 100%;
         width: 70%;
-        background: url('@/assets/chart/kk-all-layers.png');
-        background-position: center;
-        background-size: 2500px;
         position: relative;
+        overflow: hidden;
     }
 
     .controls {
@@ -87,6 +110,7 @@
         align-items: flex-end;
         bottom: 15px;
         right: 15px;
+        z-index: 2;
     }
 
     .control-button {
@@ -166,5 +190,14 @@
     .zoom-out {
         border-top-left-radius: 0;
         border-top-right-radius: 0;
+    }
+
+    #chart-image {
+        z-index: 1;
+        position: absolute;
+        bottom: 800px;
+        width: 1000px;
+        top: 0;
+        /* right: 1700px; */
     }
 </style>
