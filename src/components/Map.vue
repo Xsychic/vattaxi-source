@@ -12,25 +12,62 @@
     const standLabels = ref(true);
     const buildingLabels = ref(true);
     
-    // map panning vars
+    // map manipulation vars
     let chartLastPosition = false;
     let chartFrame = {};
     let chart = {};
-    const initialX = -800;
-    const initialY = -300;
+    let scale = 1;
+    const zoomSpeed = 0.1;
+    let initialX = 0;
+    let initialY = 0;
 
     onMounted(() => {
         chartFrame = document.querySelector('.chart');
         chart = document.querySelector('#chart-stack');
+        
+        zoom('out');
+        zoom('out');
+        zoom('out');
+
+        center();
+
+
 
         // remove not-allowed cursor
         document.addEventListener("dragover", (event) => {
             event.preventDefault();
         });
+        
+        // add map scroll listener
+        chartFrame.addEventListener("wheel", (e)=> {
+            if (e.deltaY > 0) {
+                zoom('out')
+            } else {
+                zoom('in');
+            }
+        })
     })
 
+    const center = () => {
+        const chartWidth = chart.children[0].width * scale;
+        const frameWidth = chartFrame.clientWidth;
+        const widthMargin = Math.max((chartWidth - frameWidth) / 2, 0);
+
+        const chartHeight = chart.children[0].height * scale;
+        const frameHeight = chartFrame.clientHeight;
+        const heightMargin = Math.max((chartHeight - frameHeight) / 2, 0);
+
+        initialX = widthMargin;
+        initialY = heightMargin;
+
+        chart.style.top = `${ -1 * heightMargin }px`;
+        chart.style.left = `${ -1 * widthMargin }px`;
+        console.log(chart)
+    }
 
     const drag = (event) => {
+        // image panning/drag event handler
+
         if(!chartLastPosition) {
             chartLastPosition = event;
             return;
@@ -39,41 +76,20 @@
         if(event.x == 0 && event.y == 0)
             return;
 
-        // translate on x axis
+        // calculate translation on x axis
         let currentLeft = chart.style.left || `${ initialX }px`;
         currentLeft = parseInt(currentLeft.replace('px', ''));
         const xDifference = event.screenX - chartLastPosition.screenX;
         let newLeft = currentLeft + xDifference;
 
-        // x bound checks
-        if(newLeft > 0)
-            newLeft = 0;
-
-        const minLeft = -1 * (event.target.width - chartFrame.clientWidth);
-
-        if(newLeft < minLeft)
-            newLeft = minLeft;
-
-        newLeft = `${ newLeft }px`;
-        chart.style.left = newLeft;
-
-        // translate on y axis
+        // calculate translation on y axis
         let currentTop = chart.style.top || `${ initialY }px`;
         currentTop = parseInt(currentTop.replace('px', ''));
         const yDifference = event.screenY - chartLastPosition.screenY;
         let newTop = currentTop + yDifference;
 
-        // y bound checks
-        if(newTop > 0) 
-            newTop = 0;
-
-        const minTop = -1 * (event.target.height - chartFrame.clientHeight);
-
-        if(newTop < minTop)
-            newTop = minTop;
-
-        newTop = `${ newTop }px`;
-        chart.style.top = newTop;
+        // bound checks and translate
+        translateMap(newLeft, newTop, event.target);
 
         chartLastPosition = event;
 
@@ -82,6 +98,48 @@
     const dragEnd = (event) => {
         drag(event)
         chartLastPosition = false;
+    }
+
+    const zoom = (direction) => {
+        if(direction == 'in') {
+            chart.style.transform = `scale(${( scale += zoomSpeed )})`;
+        } else {
+            chart.style.transform = `scale(${( scale -= zoomSpeed )})`;
+        }
+
+        let top = chart.style.top || `${ initialY }px`;
+        top = parseInt(top.replace('px', '')) * scale;
+
+        let left = chart.style.left || `${ initialX }px`;
+        left = parseInt(left.replace('px', '')) * scale;
+
+        translateMap(left, top, chart.children[0])
+    }
+
+    const translateMap = (newLeft, newTop, element) => {
+        // x bound checks
+        if(newLeft > 0)
+            newLeft = 0;
+
+        const minLeft = -1 * (element.width * scale - chartFrame.clientWidth);
+
+        if(newLeft < minLeft)
+            newLeft = minLeft;
+
+        // y bound checks
+        if(newTop > 0) 
+            newTop = 0;
+
+        const minTop = -1 * (element.height * scale - chartFrame.clientHeight);
+
+        if(newTop < minTop)
+            newTop = minTop;
+
+        // translate
+        newLeft = `${ newLeft }px`;
+        chart.style.left = newLeft;
+        newTop = `${ newTop }px`;
+        chart.style.top = newTop;
     }
 
 </script>
@@ -109,10 +167,10 @@
                 </div>  
                 
                 <div class='zoom'>
-                    <div class='control-button zoom-in'>
+                    <div class='control-button zoom-in' @click='zoom("in")'>
                         <font-awesome-icon icon='fa-solid fa-plus'></font-awesome-icon>
                     </div>
-                    <div class='control-button zoom-out'>
+                    <div class='control-button zoom-out' @click='zoom("out")'>
                         <font-awesome-icon icon='fa-solid fa-minus'></font-awesome-icon>
                     
                     </div>
@@ -172,13 +230,14 @@
         width: 70%;
         position: relative;
         overflow: hidden;
+        user-select: none;
+        -webkit-user-select: none;
     }
 
     .chart-layer {
         position: absolute;
         top: 0;
         left: 0;
-        width: 2000px;
     }
 
     .controls {
@@ -273,8 +332,6 @@
     #chart-stack {
         z-index: 1;
         position: absolute;
-        top: -300px;
-        left: -800px;
     }
 
     #chart-wrapper {
