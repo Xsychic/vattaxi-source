@@ -115,12 +115,18 @@
             xDiff = xDiff / 2 * zoomSpeed;
             yDiff = yDiff / 2 * zoomSpeed;
         }
-
-        // exit function if zooming out and it would cause map to be smaller than chartFrame
+        
+        // zoom bound checks
         let newWidth = chart.children[0].offsetWidth * (scale * rateOfChange); 
         let newHeight = chart.children[0].offsetHeight * (scale * rateOfChange); 
 
+        // exit function if zooming out and it would cause map to be smaller than chartFrame
         if(direction == 'out' && (newWidth <= chartFrame.offsetWidth || newHeight <= chartFrame.offsetHeight)) {
+            return;
+        }
+
+        // exit function if zooming in and scale would be more than 6
+        if(direction == 'in' && scale * rateOfChange > 6) {
             return;
         }
 
