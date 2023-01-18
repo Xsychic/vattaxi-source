@@ -25,9 +25,9 @@
         chartFrame = document.querySelector('.chart');
         chart = document.querySelector('#chart-stack');
         
-        zoom('out');
-        zoom('out');
-        zoom('out');
+        // zoom('out');
+        // zoom('out');
+        // zoom('out');
 
         center();
 
@@ -62,7 +62,6 @@
 
         chart.style.top = `${ -1 * heightMargin }px`;
         chart.style.left = `${ -1 * widthMargin }px`;
-        console.log(chart)
     }
 
     const drag = (event) => {
@@ -101,18 +100,40 @@
     }
 
     const zoom = (direction) => {
+        // function to implement zoom on map
+
+        // rate of change is the zoomSpeed as a proportion
+        // x/yDiff is the amount that the visible part of the map is squashed/stretched to update the margin with as well
+        let rateOfChange, xDiff = chartFrame.offsetWidth, yDiff = chartFrame.offsetHeight;
+        
         if(direction == 'in') {
-            chart.style.transform = `scale(${( scale += zoomSpeed )})`;
-        } else {
-            chart.style.transform = `scale(${( scale -= zoomSpeed )})`;
+            rateOfChange = 1 + zoomSpeed;
+            xDiff = 0 - xDiff / 2 * zoomSpeed;
+            yDiff = 0 - yDiff / 2 * zoomSpeed;
+        } else if(direction == 'out') {
+            rateOfChange = 1 - zoomSpeed; 
+            xDiff = xDiff / 2 * zoomSpeed;
+            yDiff = yDiff / 2 * zoomSpeed;
         }
 
+        // exit function if zooming out and it would cause map to be smaller than chartFrame
+        let newWidth = chart.children[0].offsetWidth * (scale * rateOfChange); 
+        let newHeight = chart.children[0].offsetHeight * (scale * rateOfChange); 
+
+        if(direction == 'out' && (newWidth <= chartFrame.offsetWidth || newHeight <= chartFrame.offsetHeight)) {
+            return;
+        }
+
+        // scale map
+        chart.style.transform = `scale(${( scale *= rateOfChange )})`;
+
         let top = chart.style.top || `${ initialY }px`;
-        top = parseInt(top.replace('px', '')) * scale;
+        top = parseInt(top.replace('px', '')) * rateOfChange + yDiff;
 
         let left = chart.style.left || `${ initialX }px`;
-        left = parseInt(left.replace('px', '')) * scale;
+        left = parseInt(left.replace('px', '')) * rateOfChange + xDiff;
 
+        // enforce bound checks and then translate map
         translateMap(left, top, chart.children[0])
     }
 
