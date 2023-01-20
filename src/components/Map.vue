@@ -16,7 +16,7 @@
     let chartLastPosition = false;
     let chartFrame = {};
     let chart = {};
-    let scale = 1;
+    let scale = 0.6;
     const zoomSpeed = 0.1;
     let initialX = 0;
     let initialY = 0;
@@ -24,14 +24,8 @@
     onMounted(() => {
         chartFrame = document.querySelector('.chart');
         chart = document.querySelector('#chart-stack');
-        
-        // zoom('out');
-        // zoom('out');
-        // zoom('out');
 
-        center();
-
-
+        initMap();
 
         // remove not-allowed cursor
         document.addEventListener("dragover", (event) => {
@@ -48,17 +42,20 @@
         })
     })
 
-    const center = () => {
+    const initMap = () => {
         const chartWidth = chart.children[0].width * scale;
-        const frameWidth = chartFrame.clientWidth;
-        const widthMargin = Math.max((chartWidth - frameWidth) / 2, 0);
+        const frameWidth = chartFrame.offsetWidth;
+        const widthMargin = Math.max(5 * (chartWidth - frameWidth) / 8, 0);
 
         const chartHeight = chart.children[0].height * scale;
-        const frameHeight = chartFrame.clientHeight;
-        const heightMargin = Math.max((chartHeight - frameHeight) / 2, 0);
+        const frameHeight = chartFrame.offsetHeight;
+        const heightMargin = Math.max(2 * (chartHeight - frameHeight) / 5, 0);
 
-        initialX = widthMargin;
-        initialY = heightMargin;
+        // scale map
+        chart.style.transform = `scale(${( scale )})`;
+
+        initialX = -1 * widthMargin;
+        initialY = -1 * heightMargin;
 
         chart.style.top = `${ -1 * heightMargin }px`;
         chart.style.left = `${ -1 * widthMargin }px`;
