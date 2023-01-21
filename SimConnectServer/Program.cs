@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+using System.Diagnostics;
 
 namespace SimConnectServer {
     internal static class Program {
@@ -9,7 +9,11 @@ namespace SimConnectServer {
         static void Main() {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
-            Application.Run(new SimConnectServer());
+            try {
+                Application.Run(new SimConnectServer());
+            } catch (Exception e) {
+                Debug.WriteLine(e.ToString());
+            }
         }
     }
 }
