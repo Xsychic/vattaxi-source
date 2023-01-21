@@ -13,8 +13,7 @@ public partial class SimConnectServer : Form {
     const int WM_USER_SIMCONNECT = 0x0402;
 
     enum DATA_DEFINE_ID {
-        DEFINITION_1,
-        DEFINITION_2
+        DEFINITION_1
     };
 
     enum DATA_REQUEST_ID {
@@ -22,6 +21,7 @@ public partial class SimConnectServer : Form {
     };
 
     struct DataStruct {
+        public double altitude;
         public double latitude;
         public double longitude;
     };
@@ -52,8 +52,8 @@ public partial class SimConnectServer : Form {
                 connection.OnRecvSimobjectData += new SimConnect.RecvSimobjectDataEventHandler(simconnect_OnRecvSimobjectData);
             }
 
-            
 
+            connection?.AddToDataDefinition(DATA_DEFINE_ID.DEFINITION_1, "Plane Altitude", "Feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
             connection?.AddToDataDefinition(DATA_DEFINE_ID.DEFINITION_1, "Plane Latitude", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
             connection?.AddToDataDefinition(DATA_DEFINE_ID.DEFINITION_1, "Plane Longitude", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
 
@@ -76,7 +76,7 @@ public partial class SimConnectServer : Form {
         switch ((DATA_REQUEST_ID)data.dwRequestID) {
             case DATA_REQUEST_ID.REQUEST_1:
                 DataStruct st = (DataStruct)data.dwData[0];
-                Debug.Write($"Lat: { st.latitude } Long: { st.longitude }\n");
+                Debug.Write($"Altitude: { st.altitude } Lat: { st.latitude } Long: { st.longitude }\n");
                 break;
             default:
                 Debug.WriteLine("weird");
