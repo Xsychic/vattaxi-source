@@ -1,0 +1,15 @@
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\bin\Debug\net6.0\SimConnectServer.exe
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\bin\Debug\net6.0\SimConnectServer.deps.json
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\bin\Debug\net6.0\SimConnectServer.runtimeconfig.json
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\bin\Debug\net6.0\SimConnectServer.dll
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\bin\Debug\net6.0\SimConnectServer.pdb
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\SimConnectServer.csproj.AssemblyReference.cache
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\SimConnectServer.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\SimConnectServer.AssemblyInfoInputs.cache
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\SimConnectServer.AssemblyInfo.cs
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\SimConnectServer.csproj.CoreCompileInputs.cache
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\SimConnectServer.dll
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\refint\SimConnectServer.dll
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\SimConnectServer.pdb
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\SimConnectServer.genruntimeconfig.cache
+C:\Users\adamb\Documents\coding\vattaxi\SimConnectServer\obj\Debug\net6.0\ref\SimConnectServer.dll
