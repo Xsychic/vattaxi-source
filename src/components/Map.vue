@@ -1,5 +1,6 @@
 <script setup>
-    import { ref, onMounted } from 'vue';
+    import { ref, onMounted, watch, reactive } from 'vue';
+    import DataProvider from '@/js/positionData';
 
     // filter vars
     const showFilters = ref(false);
@@ -12,6 +13,16 @@
     const standLabels = ref(true);
     const buildingLabels = ref(true);
     
+
+
+    const dataProvider = reactive(new DataProvider());
+    
+    watch(() => dataProvider.currentData, (newValue) => {
+        console.log("watching");
+    });
+
+
+
     // map manipulation vars
     let chartLastPosition = false;
     let chartFrame = {};
@@ -25,7 +36,8 @@
         chartFrame = document.querySelector('.chart');
         chart = document.querySelector('#chart-stack');
 
-        initMap();
+        // timeout allows for components to be mounted that initMap relies on (required at least 5ms on my pc)
+        setTimeout(initMap, 50);
 
         // remove not-allowed cursor
         document.addEventListener("dragover", (event) => {
