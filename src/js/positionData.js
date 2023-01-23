@@ -10,8 +10,10 @@ class DataProvider {
 
     currentData;
     reqTimeoutCounter = 0;
+    timeoutCap = 100;
     connected = false;
     continueFetchingData = true;
+
 
     getData = () => { 
         axios({
@@ -25,17 +27,19 @@ class DataProvider {
         }).then(async (response) => {
             this.connected = true;
             this.currentData = response?.data;
+            this.reqTimeoutCounter = 0;
             console.log(response.data);
         }).catch((error) => {
-            console.log(error);
             this.connected = false;
 
             if(error.code == 'ECONNABORTED' || error.code == 'ERR_NETWORK') {
                 // timed out 
                 this.reqTimeoutCounter++;
-                console.log(this.reqTimeoutCounter);
+                if(this.reqTimeoutCounter == this.timeoutCap || this.reqTimeoutCounter == 1) console.log(error);
                 return;
             }          
+
+            console.log(error);
 
             if(error.response) {
                 const { status = 500 } = error?.response;
@@ -45,11 +49,10 @@ class DataProvider {
                 }
             }
         }).finally(() => {
-            if(this.reqTimeoutCounter > 100) {
+            if(this.reqTimeoutCounter == this.timeoutCap) {
                 // need to post message to user
-                alert("Unable to connect to the simulator, please ensure it is running and then restart this application.");
-                console.log("Timeout cap exceeded, unresolvable loss in connection to simconnect client, please restart the application.");
-                this.continueFetchingData = false;
+                alert("Unable to connect to the simulator, please ensure it is running and if still not connected then please try restarting this application.");
+                console.log("Timeout cap exceeded, likely unresolvable loss in connection to simconnect client, please restart the application.");
             }
 
             if(this.continueFetchingData) {
