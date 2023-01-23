@@ -8,22 +8,24 @@ namespace SimConnectServer;
 
 public partial class SimConnectServer : Form {
 
-    SimConnect? connection = null;
     public bool connected = false;
     public bool remainActive = true;
+
+    private SimConnect? connection = null;
     private DateTime? disconnectTime = null;
     private bool allowShowDisplay = false;
-    const int WM_USER_SIMCONNECT = 0x0402;
+    private DataStruct? latestData = null;
+    private const int WM_USER_SIMCONNECT = 0x0402;
 
-    enum DATA_DEFINE_ID {
+    private enum DATA_DEFINE_ID {
         DEFINITION_1
     };
 
-    enum DATA_REQUEST_ID {
+    private enum DATA_REQUEST_ID {
         REQUEST_1
     };
 
-    struct DataStruct {
+    public struct DataStruct {
         public double altitude;
         public double latitude;
         public double longitude;
@@ -48,7 +50,7 @@ public partial class SimConnectServer : Form {
             if(err?.Message == "Error HRESULT E_FAIL has been returned from a call to a COM component.") {
                 // connection failed, likely because the simulator hasn't started
                 // delay entire thread for 2 seconds before retrying
-                // timeout in case js app fails 'ungracefully'
+                // timeout in case js app fails silently
                 if(remainActive && (disconnectTime == null || DateTime.UtcNow - disconnectTime < TimeSpan.FromMinutes(5))) {
                     Thread.Sleep(2000);
                     createConnection();
@@ -61,6 +63,7 @@ public partial class SimConnectServer : Form {
     }
 
     public void closeConnection() {
+        // closes connnection to SimConnect if still active and terminates C# process
         if(connection != null) {
             connection.Dispose();
             connection = null;
@@ -85,7 +88,7 @@ public partial class SimConnectServer : Form {
                 connection.OnRecvException += new SimConnect.RecvExceptionEventHandler(simconnect_OnRecvException);
             }
 
-
+            // define data structure to be provided by SimConnect server
             connection?.AddToDataDefinition(DATA_DEFINE_ID.DEFINITION_1, "Plane Altitude", "Feet", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
             connection?.AddToDataDefinition(DATA_DEFINE_ID.DEFINITION_1, "Plane Latitude", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
             connection?.AddToDataDefinition(DATA_DEFINE_ID.DEFINITION_1, "Plane Longitude", "Degrees", SIMCONNECT_DATATYPE.FLOAT64, 0.0f, SimConnect.SIMCONNECT_UNUSED);
@@ -121,26 +124,41 @@ public partial class SimConnectServer : Form {
             if(connection != null && remainActive)
                 getData();
             else
+                // terminates C# process
                 closeConnection();
         }
+        closeConnection();
     }
 
     void simconnect_OnRecvSimObjectData(SimConnect sender, SIMCONNECT_RECV_SIMOBJECT_DATA data) {
         // data received, handle here
-        switch ((DATA_REQUEST_ID)data.dwRequestID) {
-            case DATA_REQUEST_ID.REQUEST_1:
-                DataStruct st = (DataStruct)data.dwData[0];
-                Debug.Write($"Altitude: { st.altitude } Lat: { st.latitude } Long: { st.longitude }\n");
-                break;
-            default:
-                Debug.WriteLine("weird - unexpected data returned in simconnect_OnRecvSimObjectData");
-                break;
+
+        try {
+            switch((DATA_REQUEST_ID)data.dwRequestID) {
+                case DATA_REQUEST_ID.REQUEST_1:
+                    DataStruct receivedData = (DataStruct)data.dwData[0];
+                    latestData = receivedData;
+                    break;
+                default:
+                    Debug.WriteLine("weird - unexpected data returned in simconnect_OnRecvSimObjectData");
+                    break;
+            }
+        } catch(Exception error) {
+            Debug.WriteLine(error);
         }
     }
 
     void simconnect_OnRecvException(SimConnect sender, SIMCONNECT_RECV_EXCEPTION error) {
         Debug.WriteLine($"Error received from simulator: { error }");
+        // terminates SimConnect connection and then terminates C# process
         closeConnection();
+    }
+
+    public DataStruct? getLatestData() {
+        if(latestData != null) {
+            return latestData;
+        }
+        return null;
     }
 
     public void resetDisconnectTimer() {
@@ -162,7 +180,6 @@ public partial class SimConnectServer : Form {
             base.DefWndProc(ref m);
         }
     }
-
 
     protected override void SetVisibleCore(bool value) {
         // hide the gui

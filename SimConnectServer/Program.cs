@@ -10,7 +10,13 @@ namespace SimConnectServer {
             // To customize application configuration such as set high DPI settings or default font,
             // see https://aka.ms/applicationconfiguration.
             try {
-                Application.Run(new SimConnectServer());
+                SimConnectServer simConnectClient = new SimConnectServer();
+                LocalServer server = new LocalServer(simConnectClient);
+
+                Thread thread = new Thread(new ThreadStart(server.startServer));
+                thread.Start();
+
+                Application.Run(simConnectClient);                
             } catch (Exception e) {
                 Debug.WriteLine(e.ToString());
             }
