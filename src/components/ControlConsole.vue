@@ -2,9 +2,10 @@
     import InstructionsField from '@/components/ControlConsole/InstructionsField.vue';
     import DirectionsComponent from '@/components/ControlConsole/DirectionsComponent.vue'
 
-    import { defineEmits } from 'vue';
+    import { defineEmits, defineProps } from 'vue';
 
-    const emit = defineEmits(['openSettings']);
+    const props = defineProps(['modeOnline'])
+    const emit = defineEmits(['openSettings', 'toggleMode']);
 
 
 </script>
@@ -27,7 +28,7 @@
 
             <!-- switch from https://www.w3schools.com/howto/howto_css_switch.asp -->
             <label class="switch">
-                <input type="checkbox" checked>
+                <input type="checkbox" :checked='modeOnline' @change='emit("toggleMode")'>
                 <span class="slider round"></span>
             </label>
         </div>

@@ -7,6 +7,9 @@
     import { ref } from 'vue'
 
     const showSettings = ref(false);
+    const modeOnline = ref(true);
+
+    const toggleMode = () => modeOnline.value = !modeOnline.value;
 </script>
 
 <template>
@@ -14,8 +17,8 @@
     
     <div class="content">
         <Map v-show='!showSettings'></Map>
-        <ControlConsole @openSettings='showSettings = !showSettings' v-show='!showSettings'></ControlConsole>
-        <Settings @closeSettings='showSettings = !showSettings' v-show='showSettings'></Settings>
+        <ControlConsole :modeOnline='modeOnline' @openSettings='showSettings = !showSettings' @toggleMode='toggleMode' v-show='!showSettings'></ControlConsole>
+        <Settings :modeOnline='modeOnline' @closeSettings='showSettings = !showSettings' @toggleMode='toggleMode' v-show='showSettings'></Settings>
     </div>
 
 </template>
