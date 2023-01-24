@@ -181,8 +181,8 @@ public partial class SimConnectServer : Form {
         }
     }
 
-    protected override void SetVisibleCore(bool value) {
+/*    protected override void SetVisibleCore(bool value) {
         // hide the gui
         base.SetVisibleCore(allowShowDisplay ? value : allowShowDisplay);
-    }
+    }*/
 }

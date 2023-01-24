@@ -72,7 +72,7 @@
         </div>
         
         <div class='controls'>
-            <div class='buttons'>
+            <div>
                 <div class='control-button filter' @click='showFilters = !showFilters'>
                     <font-awesome-icon icon='fa-solid fa-filter'></font-awesome-icon>
                 </div>  
@@ -157,16 +157,17 @@
         flex-direction: row-reverse;
         align-items: flex-end;
         bottom: 15px;
-        right: 15px;
+        right: 9px;
         z-index: 2;
     }
 
     .control-button {
-        height: 40px;
+        height: 34px;
+        width: 34px;
         border-radius: 10px;
         background: var(--dark-grey);
         color: var(--marble-grey);
-        font-size: 30px;
+        font-size: 22px;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -181,7 +182,7 @@
 
     .filter {
         margin-bottom: 10px;
-        font-size: 22px;
+        font-size: 18px;
     }
 
     .filter-checkbox {

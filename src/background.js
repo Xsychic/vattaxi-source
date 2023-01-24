@@ -32,6 +32,19 @@ async function createWindow() {
         }
     })
 
+    // C# stuff
+    var child = require('child_process').execFile;
+    var executablePath = 'SimConnectServer/bin/x64/Debug/net6.0-windows/SimConnectServer.exe';
+
+    child(executablePath, (err, data) => {
+        if (err) {
+            console.log(err);
+            return;
+        }
+
+        console.log(data.toString());
+    });
+
     // Close the app when close button in titlebar is clicked
     ipcMain.on('app/close', () => {
         if (win.webContents.isDevToolsOpened()) { win.webContents.closeDevTools() }
