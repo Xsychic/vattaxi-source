@@ -1,6 +1,12 @@
 <script setup>
-    import { ref, onMounted, watch, reactive } from 'vue';
+    import { ref, onMounted, watch, defineEmits } from 'vue';
     import DataProvider from '@/js/positionData';
+    import mapTransformations from '@/js/mapTransformations';
+
+    const emit = defineEmits(['updateConnection']);
+
+    // transformation functions var
+    let transformations;
 
     // filter vars
     const showFilters = ref(false);
@@ -15,29 +21,20 @@
     
 
 
-    const dataProvider = reactive(new DataProvider());
-    
-    watch(() => dataProvider.currentData, (newValue) => {
-        console.log("watching");
-    });
+    // get position data and sim connection status
+    const { connected, data } = new DataProvider();
 
-
-
-    // map manipulation vars
-    let chartLastPosition = false;
-    let chartFrame = {};
-    let chart = {};
-    let scale = 0.6;
-    const zoomSpeed = 0.1;
-    let initialX = 0;
-    let initialY = 0;
+    watch(connected, (newValue) => emit('updateConnection', newValue));
+    watch(data, (newValue) => {});
 
     onMounted(() => {
-        chartFrame = document.querySelector('.chart');
-        chart = document.querySelector('#chart-stack');
+        const chartFrame = document.querySelector('.chart');
+        const chart = document.querySelector('#chart-stack');
+
+        transformations = new mapTransformations(chartFrame, chart);
 
         // timeout allows for components to be mounted that initMap relies on (required at least 5ms on my pc)
-        setTimeout(initMap, 50);
+        setTimeout(transformations.initMap, 50);
 
         // remove not-allowed cursor
         document.addEventListener("dragover", (event) => {
@@ -45,145 +42,23 @@
         });
         
         // add map scroll listener
-        chartFrame.addEventListener("wheel", (e)=> {
+        transformations.chartFrame.addEventListener("wheel", (e)=> {
             if (e.deltaY > 0) {
-                zoom('out')
+                transformations.zoom('out')
             } else {
-                zoom('in');
+                transformations.zoom('in');
             }
         })
     })
 
-    const initMap = () => {
-        const chartWidth = chart.children[0].width * scale;
-        const frameWidth = chartFrame.offsetWidth;
-        const widthMargin = Math.max(5 * (chartWidth - frameWidth) / 8, 0);
-
-        const chartHeight = chart.children[0].height * scale;
-        const frameHeight = chartFrame.offsetHeight;
-        const heightMargin = Math.max(2 * (chartHeight - frameHeight) / 5, 0);
-
-        // scale map
-        chart.style.transform = `scale(${( scale )})`;
-
-        initialX = -1 * widthMargin;
-        initialY = -1 * heightMargin;
-
-        chart.style.top = `${ -1 * heightMargin }px`;
-        chart.style.left = `${ -1 * widthMargin }px`;
-    }
-
-    const drag = (event) => {
-        // image panning/drag event handler
-
-        if(!chartLastPosition) {
-            chartLastPosition = event;
-            return;
-        }
-
-        if(event.x == 0 && event.y == 0)
-            return;
-
-        // calculate translation on x axis
-        let currentLeft = chart.style.left || `${ initialX }px`;
-        currentLeft = parseInt(currentLeft.replace('px', ''));
-        const xDifference = event.screenX - chartLastPosition.screenX;
-        let newLeft = currentLeft + xDifference;
-
-        // calculate translation on y axis
-        let currentTop = chart.style.top || `${ initialY }px`;
-        currentTop = parseInt(currentTop.replace('px', ''));
-        const yDifference = event.screenY - chartLastPosition.screenY;
-        let newTop = currentTop + yDifference;
-
-        // bound checks and translate
-        translateMap(newLeft, newTop, event.target);
-
-        chartLastPosition = event;
-
-    }
-
-    const dragEnd = (event) => {
-        drag(event)
-        chartLastPosition = false;
-    }
-
-    const zoom = (direction) => {
-        // function to implement zoom on map
-
-        // rate of change is the zoomSpeed as a proportion
-        // x/yDiff is the amount that the visible part of the map is squashed/stretched to update the margin with as well
-        let rateOfChange, xDiff = chartFrame.offsetWidth, yDiff = chartFrame.offsetHeight;
-        
-        if(direction == 'in') {
-            rateOfChange = 1 + zoomSpeed;
-            xDiff = 0 - xDiff / 2 * zoomSpeed;
-            yDiff = 0 - yDiff / 2 * zoomSpeed;
-        } else if(direction == 'out') {
-            rateOfChange = 1 - zoomSpeed; 
-            xDiff = xDiff / 2 * zoomSpeed;
-            yDiff = yDiff / 2 * zoomSpeed;
-        }
-        
-        // zoom bound checks
-        let newWidth = chart.children[0].offsetWidth * (scale * rateOfChange); 
-        let newHeight = chart.children[0].offsetHeight * (scale * rateOfChange); 
-
-        // exit function if zooming out and it would cause map to be smaller than chartFrame
-        if(direction == 'out' && (newWidth <= chartFrame.offsetWidth || newHeight <= chartFrame.offsetHeight)) {
-            return;
-        }
-
-        // exit function if zooming in and scale would be more than 6
-        if(direction == 'in' && scale * rateOfChange > 6) {
-            return;
-        }
-
-        // scale map
-        chart.style.transform = `scale(${( scale *= rateOfChange )})`;
-
-        let top = chart.style.top || `${ initialY }px`;
-        top = parseInt(top.replace('px', '')) * rateOfChange + yDiff;
-
-        let left = chart.style.left || `${ initialX }px`;
-        left = parseInt(left.replace('px', '')) * rateOfChange + xDiff;
-
-        // enforce bound checks and then translate map
-        translateMap(left, top, chart.children[0])
-    }
-
-    const translateMap = (newLeft, newTop, element) => {
-        // x bound checks
-        if(newLeft > 0)
-            newLeft = 0;
-
-        const minLeft = -1 * (element.width * scale - chartFrame.clientWidth);
-
-        if(newLeft < minLeft)
-            newLeft = minLeft;
-
-        // y bound checks
-        if(newTop > 0) 
-            newTop = 0;
-
-        const minTop = -1 * (element.height * scale - chartFrame.clientHeight);
-
-        if(newTop < minTop)
-            newTop = minTop;
-
-        // translate
-        newLeft = `${ newLeft }px`;
-        chart.style.left = newLeft;
-        newTop = `${ newTop }px`;
-        chart.style.top = newTop;
-    }
+    
 
 </script>
 
 <template>
     <div class='chart'>
         <div id="chart-wrapper">
-            <div id="chart-stack" @drag='drag' @dragend='dragEnd'>
+            <div id="chart-stack" @drag='transformations.drag' @dragend='transformations.dragEnd'>
                 <img class='chart-layer' src='@/assets/chart/kk-concrete.png' alt='airfield chart concrete base layer'>
                 <img class='chart-layer' src='@/assets/chart/kk-runway-markings.png' alt='airfield chart runway markings' v-if='rwyMarkings'>
                 <img class='chart-layer' src='@/assets/chart/kk-taxi-markings.png' alt='airfield chart taxi markings' v-if='taxiMarkings'>
@@ -203,10 +78,10 @@
                 </div>  
                 
                 <div class='zoom'>
-                    <div class='control-button zoom-in' @click='zoom("in")'>
+                    <div class='control-button zoom-in' @click='transformations.zoom("in")'>
                         <font-awesome-icon icon='fa-solid fa-plus'></font-awesome-icon>
                     </div>
-                    <div class='control-button zoom-out' @click='zoom("out")'>
+                    <div class='control-button zoom-out' @click='transformations.zoom("out")'>
                         <font-awesome-icon icon='fa-solid fa-minus'></font-awesome-icon>
                     
                     </div>

@@ -33,7 +33,6 @@
                 <!-- switch from https://www.w3schools.com/howto/howto_css_switch.asp -->
                 <label class="switch">
                     <input type="checkbox" :checked='modeOnline' @change='emit("toggleMode")'>
-                    {{ `current setting ${modeOnline}` }}
                     <span class="slider round"></span>
                 </label>
             </div>

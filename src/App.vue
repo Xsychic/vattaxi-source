@@ -8,17 +8,33 @@
 
     const showSettings = ref(false);
     const modeOnline = ref(true);
+    const connected = ref(false);
+    const positionData = ref({});
 
     const toggleMode = () => modeOnline.value = !modeOnline.value;
+    const updateConnection = (newStatus) => connected.value = newStatus;
 </script>
 
 <template>
-    <TitleBar></TitleBar>
+    <TitleBar :connected='connected'></TitleBar>
     
     <div class="content">
-        <Map v-show='!showSettings'></Map>
-        <ControlConsole :modeOnline='modeOnline' @openSettings='showSettings = !showSettings' @toggleMode='toggleMode' v-show='!showSettings'></ControlConsole>
-        <Settings :modeOnline='modeOnline' @closeSettings='showSettings = !showSettings' @toggleMode='toggleMode' v-show='showSettings'></Settings>
+        <Map 
+            v-show='!showSettings'
+            @updateConnection='updateConnection'
+        ></Map>
+        <ControlConsole 
+            :modeOnline='modeOnline' 
+            @openSettings='showSettings = !showSettings' 
+            @toggleMode='toggleMode' 
+            v-show='!showSettings'
+        ></ControlConsole>
+        <Settings 
+            :modeOnline='modeOnline' 
+            @closeSettings='showSettings = !showSettings' 
+            @toggleMode='toggleMode' 
+            v-show='showSettings'
+        ></Settings>
     </div>
 
 </template>

@@ -1,4 +1,7 @@
 <script setup>
+    import { defineProps } from 'vue';
+
+    const props = defineProps(['connected']);
 
     const close = () => window.ipcRenderer.window.close();
     const maximise = () => {
@@ -15,8 +18,8 @@
         
         <div class="nav-right">
             <div class="simulator-status">
-                <div class="status-light"></div>
-                Connected to Simulator
+                <div class="status-light" :class='"status-light-" + (connected ? "green" : "red")'></div>
+                {{ (connected ? "C" : "Not c") }}onnected to simulator
             </div>
 
             <div class="nav-controls">
@@ -89,9 +92,16 @@
     .status-light {
         height: 9px;
         width: 9px;
-        background: var(--green);
         border-radius: 50%;
         margin: 0 3px;
+    }
+
+    .status-light-green {
+        background: var(--green);
+    }
+
+    .status-light-red {
+        background: var(--red);
     }
 
     .title {
