@@ -28,13 +28,20 @@ async function createWindow() {
             // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
             nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
             contextIsolation: !process.env.ELECTRON_NODE_INTEGRATION,
-            preload: path.join(__dirname, 'src/preload.js')
+            preload: path.join(__dirname, 'preload.js')
         }
     })
 
     // C# stuff
     var child = require('child_process').execFile;
-    var executablePath = 'SimConnectServer/bin/x64/Debug/net6.0-windows/SimConnectServer.exe';
+    // var executablePath = 'SimConnectServer/bin/x64/Debug/net6.0-windows/SimConnectServer.exe';
+    // var executablePath = 
+    var executablePath;
+    
+    if(app.isPackaged)
+        executablePath = './SimConnectServer/bin/x64/Release/net6.0-windows/SimConnectServer.exe';
+    else
+        executablePath = './SimConnectServer/bin/x64/Debug/net6.0-windows/SimConnectServer.exe';
 
     child(executablePath, (err, data) => {
         if (err) {

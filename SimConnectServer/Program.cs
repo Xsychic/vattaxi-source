@@ -18,7 +18,8 @@ namespace SimConnectServer {
 
                 Application.Run(simConnectClient);                
             } catch (Exception e) {
-                Debug.WriteLine(e.ToString());
+                Debug.WriteLine(8);
+                Debug.WriteLine(e);
             }
         }
     }

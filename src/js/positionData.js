@@ -66,6 +66,7 @@ class DataProvider {
                 if(status == 404 && this.fourOhFourOccurred == false) {
                     // location data not received from sim
                     this.fourOhFourOccurred = true;
+                    console.log(error);
                     console.log(error.response.data.message); // "Location data not yet been retrieved from the simulator" or "Connection to simulator has been lost"
                 } else if(status != 404) {
                     console.log(error);

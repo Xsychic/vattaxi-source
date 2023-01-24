@@ -3,7 +3,6 @@ using System.Windows.Forms;
 using System.Runtime.InteropServices;
 using Microsoft.FlightSimulator.SimConnect;
 
-
 namespace SimConnectServer;
 
 public partial class SimConnectServer : Form {
@@ -31,14 +30,18 @@ public partial class SimConnectServer : Form {
     };
 
     public SimConnectServer() {
-        createConnection();
-        // js app could have been closed while trying to create connection with simulator
-        if(connection != null && remainActive)
-            getData();
-        else if(remainActive)
+        try {
             createConnection();
-        else
-            Application.Exit();
+            // js app could have been closed while trying to create connection with simulator
+            if(connection != null && remainActive)
+                getData();
+            else if(remainActive)
+                createConnection();
+            else
+                Application.Exit();
+        } catch(Exception e) {
+            Debug.WriteLine(e);
+        }
 	}
 
     public void createConnection() {
@@ -97,8 +100,7 @@ public partial class SimConnectServer : Form {
             connection?.RequestDataOnSimObject(DATA_REQUEST_ID.REQUEST_1, DATA_DEFINE_ID.DEFINITION_1, 0, SIMCONNECT_PERIOD.SECOND, SIMCONNECT_DATA_REQUEST_FLAG.DEFAULT, 0, 0, 0);
 
         } catch(COMException err) {
-            Debug.WriteLine(1);
-            Debug.WriteLine($"Error: { err.Message }"); 
+            Debug.WriteLine(err); 
         }
 	}
 
@@ -166,6 +168,7 @@ public partial class SimConnectServer : Form {
                 try {
                     connection.ReceiveMessage();
                 } catch(Exception e) {
+                    Debug.WriteLine(1);
                     Debug.WriteLine(e.Message);
                 }
             }
