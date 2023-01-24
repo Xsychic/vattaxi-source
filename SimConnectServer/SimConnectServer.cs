@@ -12,7 +12,6 @@ public partial class SimConnectServer : Form {
     public bool remainActive = true;
 
     private SimConnect? connection = null;
-    private DateTime? disconnectTime = null;
     private bool allowShowDisplay = false;
     private DataStruct? latestData = null;
     private const int WM_USER_SIMCONNECT = 0x0402;
@@ -36,6 +35,8 @@ public partial class SimConnectServer : Form {
         // js app could have been closed while trying to create connection with simulator
         if(connection != null && remainActive)
             getData();
+        else if(remainActive)
+            createConnection();
         else
             Application.Exit();
 	}
@@ -45,13 +46,10 @@ public partial class SimConnectServer : Form {
             connection = new SimConnect("MSFS Data Connection", Handle, WM_USER_SIMCONNECT, null, 0);
             Debug.WriteLine("SimConnect connection established");
             connected = true;
-            disconnectTime = null;
         } catch(Exception err) {
             if(err?.Message == "Error HRESULT E_FAIL has been returned from a call to a COM component.") {
                 // connection failed, likely because the simulator hasn't started
-                // delay entire thread for 2 seconds before retrying
-                // timeout in case js app fails silently
-                if(remainActive && (disconnectTime == null || DateTime.UtcNow - disconnectTime < TimeSpan.FromMinutes(5))) {
+                if(remainActive) {
                     Thread.Sleep(2000);
                     createConnection();
                 }
@@ -118,7 +116,6 @@ public partial class SimConnectServer : Form {
         
         if(remainActive) {
             // if connection closed unexpectedly (very likely in this function), then try to reconnect after a short delay
-            disconnectTime = DateTime.UtcNow;
             Thread.Sleep(2000);
             createConnection();
             if(connection != null && remainActive)
@@ -161,10 +158,6 @@ public partial class SimConnectServer : Form {
         return null;
     }
 
-    public void resetDisconnectTimer() {
-        disconnectTime = DateTime.UtcNow;
-    }
-
     protected override void DefWndProc(ref Message m) {
         // something to do with the message receival from the simulator I think - it's needed, don't ask questions
         // from docs and both examples
@@ -181,8 +174,8 @@ public partial class SimConnectServer : Form {
         }
     }
 
-/*    protected override void SetVisibleCore(bool value) {
+    protected override void SetVisibleCore(bool value) {
         // hide the gui
         base.SetVisibleCore(allowShowDisplay ? value : allowShowDisplay);
-    }*/
+    }
 }

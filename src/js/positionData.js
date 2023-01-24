@@ -79,7 +79,7 @@ class DataProvider {
             }
 
             if(this.continueFetchingData) {
-                const period = (this.connected ? 1000 : 5000);
+                const period = (this.connected ? 1000 : 2500);
                 setTimeout(this.getData, period);
             }    
         });
