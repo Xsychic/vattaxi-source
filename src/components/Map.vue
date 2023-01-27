@@ -1,7 +1,8 @@
 <script setup>
-    import { ref, onMounted, watch, defineEmits } from 'vue';
+    import utmObj from 'utm-latlng';
     import DataProvider from '@/js/positionData';
     import mapTransformations from '@/js/mapTransformations';
+    import { ref, onMounted, watch, defineEmits } from 'vue';
 
     const emit = defineEmits(['updateConnection']);
 
@@ -19,13 +20,20 @@
     const standLabels = ref(true);
     const buildingLabels = ref(true);
     
-
+    
 
     // get position data and sim connection status
     const { connected, data } = new DataProvider();
+    const utmConverter = new utmObj();
+    const utm = ref({});
+
 
     watch(connected, (newValue) => emit('updateConnection', newValue));
-    watch(data, (newValue) => {});
+    watch(data, (newValue) => {
+        const { latitude = false, longitude = false } = newValue;
+        if(latitude && longitude)
+            utm.value = utmConverter.convertLatLngToUtm(latitude, longitude, 1);
+    });
 
     onMounted(() => {
         const chartFrame = document.querySelector('.chart');
@@ -57,6 +65,7 @@
 
 <template>
     <div class='chart'>
+        <div class='utm'>UTM: {{ utm }}</div>
         <div id="chart-wrapper">
             <div id="chart-stack" @drag='transformations.drag' @dragend='transformations.dragEnd'>
                 <img class='chart-layer' src='@/assets/chart/kk-concrete.png' alt='airfield chart concrete base layer'>
@@ -134,6 +143,18 @@
 </template>
 
 <style scoped>
+    .utm {
+        position: absolute;
+        top: 0;
+        left: 0;
+        min-width: 50px;
+        height: 30px;
+        background: white;
+        z-index: 100;
+        color: black;
+        padding: 3px;
+    }
+
     .chart {
         min-width: 800px;
         min-height: 700px;

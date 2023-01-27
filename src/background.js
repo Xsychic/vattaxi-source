@@ -34,8 +34,6 @@ async function createWindow() {
 
     // C# stuff
     var child = require('child_process').execFile;
-    // var executablePath = 'SimConnectServer/bin/x64/Debug/net6.0-windows/SimConnectServer.exe';
-    // var executablePath = 
     var executablePath;
     
     if(app.isPackaged)

@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ref } from 'vue';
+import { ref, reactive } from 'vue';
 
 class DataProvider {
 
@@ -12,7 +12,7 @@ class DataProvider {
 
     constructor() { 
         this.getData();
-        return { connected: this.connectedField, data: this.currentData };
+        return { connected: this.connectedField, data: this.currentDataField };
     }
 
     set connected(newValue) {
@@ -44,9 +44,25 @@ class DataProvider {
             responseType: 'json'    
         }).then(async (response) => {
             this.connected = true;
-            this.currentData = response?.data;
             this.reqTimeoutCounter = 0;
             this.fourOhFourOccurred = false;
+
+            if(response?.data?.latitude && response?.data?.longitude) {
+                let lat = response.data.latitude;
+                let long = response.data.longitude;
+
+                lat = Math.round(lat * 10**6) / 10**6;
+                long = Math.round(long * 10**6) / 10**6;
+
+                response.data.latitude = lat;
+                response.data.longitude = long;
+
+                if(response.data.latitude != this.currentData.latitude || response.data.longitude != this.currentData.longitude) {
+                    console.log(response.data);
+                    this.currentData = response.data;
+                }
+            }
+
         }).catch((error) => {
             this.connected = false;
 

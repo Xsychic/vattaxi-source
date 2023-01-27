@@ -21,6 +21,7 @@
     "@fortawesome/vue-fontawesome": "^3.0.2",
     "axios": "^1.2.3",
     "core-js": "^3.8.3",
+    "utm-latlng": "^1.0.7",
     "vue": "^3.2.13"
   },
   "devDependencies": {
