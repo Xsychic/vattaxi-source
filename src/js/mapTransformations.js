@@ -1,3 +1,4 @@
+
 class MapTransformations {
     chartLastPosition = false;
     chartFrame;
@@ -13,11 +14,11 @@ class MapTransformations {
     }
     
     initMap = () => {
-        const chartWidth = this.chart.children[0].width * this.scale;
+        const chartWidth = this.chart.children[0].offsetWidth * this.scale;
         const frameWidth = this.chartFrame.offsetWidth;
         const widthMargin = Math.max(5 * (chartWidth - frameWidth) / 8, 0);
     
-        const chartHeight = this.chart.children[0].height * this.scale;
+        const chartHeight = this.chart.children[0].offsetHeight * this.scale;
         const frameHeight = this.chartFrame.offsetHeight;
         const heightMargin = Math.max(2 * (chartHeight - frameHeight) / 5, 0);
     
@@ -30,10 +31,14 @@ class MapTransformations {
         this.chart.style.top = `${ -1 * heightMargin }px`;
         this.chart.style.left = `${ -1 * widthMargin }px`;
     }
+
+    dragStart = (event) => {
+        // remove 'ghost image' when dragging map
+        event.dataTransfer.setDragImage(document.querySelector('li'), -99999, -99999);
+    }
     
     drag = (event) => {
         // image panning/drag event handler
-    
         if(!this.chartLastPosition) {
             this.chartLastPosition = event;
             return;
@@ -58,6 +63,7 @@ class MapTransformations {
         this.translateMap(newLeft, newTop, event.target);
     
         this.chartLastPosition = event;
+
     
     }
     
@@ -115,8 +121,8 @@ class MapTransformations {
         if(newLeft > 0)
             newLeft = 0;
     
-        const minLeft = -1 * (element.width * this.scale - this.chartFrame.clientWidth);
-    
+        const minLeft = -1 * (element.offsetWidth * this.scale - this.chartFrame.clientWidth);
+
         if(newLeft < minLeft)
             newLeft = minLeft;
     
@@ -124,7 +130,7 @@ class MapTransformations {
         if(newTop > 0) 
             newTop = 0;
     
-        const minTop = -1 * (element.height * this.scale - this.chartFrame.clientHeight);
+        const minTop = -1 * (element.offsetHeight * this.scale - this.chartFrame.clientHeight);
     
         if(newTop < minTop)
             newTop = minTop;

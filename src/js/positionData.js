@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { ref, reactive } from 'vue';
+import { ref } from 'vue';
 
 class DataProvider {
 
@@ -33,7 +33,7 @@ class DataProvider {
         return this.currentDataField.value;
     }
 
-    getData = () => { 
+    getData = async () => { 
         axios({
             method: 'get',
             url: 'http://localhost:57016',
@@ -41,31 +41,30 @@ class DataProvider {
                 type: 'data request'
             },
             timeout: 2000,
-            responseType: 'json'    
+            responseType: 'json'  
         }).then(async (response) => {
             this.connected = true;
             this.reqTimeoutCounter = 0;
             this.fourOhFourOccurred = false;
-
+    
             if(response?.data?.latitude && response?.data?.longitude) {
                 let lat = response.data.latitude;
                 let long = response.data.longitude;
-
+    
                 lat = Math.round(lat * 10**6) / 10**6;
                 long = Math.round(long * 10**6) / 10**6;
-
+    
                 response.data.latitude = lat;
                 response.data.longitude = long;
-
+    
                 if(response.data.latitude != this.currentData.latitude || response.data.longitude != this.currentData.longitude) {
-                    console.log(response.data);
                     this.currentData = response.data;
                 }
             }
-
+    
         }).catch((error) => {
             this.connected = false;
-
+    
             if(error.code == 'ECONNABORTED' || error.code == 'ERR_NETWORK') {
                 // timed out 
                 this.reqTimeoutCounter++;
@@ -75,10 +74,10 @@ class DataProvider {
                 }
                 return;
             }          
-
+    
             if(error?.response) {
                 const { status = 500 } = error.response;
-
+    
                 if(status == 404 && this.fourOhFourOccurred == false) {
                     // location data not received from sim
                     this.fourOhFourOccurred = true;
@@ -94,7 +93,7 @@ class DataProvider {
                 alert("Unable to connect to the simulator, please ensure it is running and if still not connected then please try restarting this application.");
                 console.log("Timeout cap exceeded, likely unresolvable loss in connection to simconnect client, please restart the application.");
             }
-
+    
             if(this.continueFetchingData) {
                 const period = (this.connected ? 1000 : 2500);
                 setTimeout(this.getData, period);
