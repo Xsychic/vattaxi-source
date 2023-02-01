@@ -45,21 +45,23 @@ public partial class SimConnectServer : Form {
 	}
 
     public void createConnection() {
-        try {
-            connection = new SimConnect("MSFS Data Connection", Handle, WM_USER_SIMCONNECT, null, 0);
-            Debug.WriteLine("SimConnect connection established");
-            connected = true;
-        } catch(Exception err) {
-            if(err?.Message == "Error HRESULT E_FAIL has been returned from a call to a COM component.") {
-                // connection failed, likely because the simulator hasn't started
-                if(remainActive) {
-                    Thread.Sleep(2000);
-                    createConnection();
+        while(!connected && remainActive) {
+            try {
+                connection = new SimConnect("MSFS Data Connection", Handle, WM_USER_SIMCONNECT, null, 0);
+                Debug.WriteLine("SimConnect connection established");
+                connected = true;
+            } catch(Exception err) {
+                if(err?.Message == "Error HRESULT E_FAIL has been returned from a call to a COM component.") {
+                    // connection failed, likely because the simulator hasn't started
+                    if(remainActive) {
+                        Thread.Sleep(2000);
+                    }
+                } else {
+                    Debug.WriteLine("Connection to SimConnect couldn't be established");
+                    Debug.WriteLine(err?.Message);
+                    remainActive = false;
                 }
-                return;
             }
-            Debug.WriteLine("Connection to SimConnect couldn't be established");
-            Debug.WriteLine(err?.Message);
         }
     }
 
