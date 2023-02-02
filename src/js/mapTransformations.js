@@ -3,7 +3,8 @@ class MapTransformations {
     chartLastPosition = false;
     chartFrame;
     chart;
-    scale = 0.6;
+    // scale = 0.6;
+    scale = 1;
     zoomSpeed = 0.1;
     initialY = 0;
     initialX = 0;

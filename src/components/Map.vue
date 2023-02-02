@@ -2,6 +2,7 @@
     import paper from 'paper';
     import utmObj from 'utm-latlng';
     import DataProvider from '@/js/positionData';
+    import TempTools from '@/components/TempTools.vue';
     import mapTransformations from '@/js/mapTransformations';
     import { ref, onMounted, watch, defineEmits } from 'vue';
 
@@ -9,6 +10,10 @@
 
     // transformation functions var
     let transformations;
+
+    // for temp tools - REMOVE
+    var locator = ref();
+    const tool = ref(false);
 
     // filter vars
     const showFilters = ref(false);
@@ -28,14 +33,80 @@
     const { connected, data } = new DataProvider();
     const utmConverter = new utmObj();
     const utm = ref({});
+    const plot = ref();
+
+    const rj = {latitude: 51.151964, longitude: -0.182138};
+    const kn = {latitude: 51.156001, longitude: -0.173381};
+    const rjUTM = utmConverter.convertLatLngToUtm(rj.latitude, rj.longitude, 1);
+    const knUTM = utmConverter.convertLatLngToUtm(kn.latitude, kn.longitude, 1);
+    const vectorRJtoKN = {Easting: knUTM.Easting - rjUTM.Easting, Northing: knUTM.Northing - rjUTM.Northing};
+    const physicalY = vectorRJtoKN.Northing * (611.8 / vectorRJtoKN.Easting);
+    console.log(`expected: ${ 448.3 }, calculated: ${ physicalY }`);
 
 
     watch(connected, (newValue) => emit('updateConnection', newValue));
     watch(data, (newValue) => {
-        const { latitude = false, longitude = false } = newValue;
-        if(latitude && longitude)
-            utm.value = utmConverter.convertLatLngToUtm(latitude, longitude, 1);
+
+        let { latitude = false, longitude = false } = newValue;
+        
+        if(!latitude || !longitude) {
+            plot.value.remove();
+            plot.value = false;
+            return;
+        }
+
+        // for testing map calibration at key points
+        // const fixedPoints = {
+        //     'st574': {
+        //         lat: 51.163184,
+        //         long: -0.181002
+        //     },
+        //     'st38': {
+        //         lat: 51.158494,
+        //         long: -0.167269
+        //     }, 
+        //     'a2': {
+        //         lat: 51.15223,
+        //         long: -0.169045
+        //     }, 
+        //     'j4': {
+        //         lat: 51.147189,
+        //         long: -0.214077
+        //     },
+        //     '08r': {
+        //         lat: 51.145972,
+        //         long: -0.206175
+        //     },
+        //     'j7': {
+        //         lat: 51.146945,
+        //         long: -0.212335
+        //     },
+        //     'tj': {
+        //         lat: 51.150559,
+        //         long: -0.19285
+        //     }
+        // }
+        // let { lat: latitude, long: longitude } = fixedPoints['08r'];
+
+
+        // coord translation to pixels
+        // lat is vertical, long horizontal
+        const baseLat = 51.150559; // T/J Intersection
+        const baseLong = -0.214077; // J4
+        const baseYPx = 1512; // T/J Intersection
+        const baseXPx = 568; // J4
+        const pxPerLat = -880 / 0.012625; // T/J -> St574
+        const pxPerLong = 1970 / 0.045032; // J4 -> A2
+        let yPx = baseYPx + (latitude - baseLat) * pxPerLat;
+        let xPx = baseXPx + (longitude - baseLong) * pxPerLong;
+        // console.log(`latitude: ${ latitude }\nlongitude: ${ longitude }\nlatDiff: ${ latitude - baseLat }\nlongDiff: ${ longitude - baseLong }\npxPerLat: ${ pxPerLat }\npxPerLong: ${ pxPerLong }\nlatOffset: ${ (latitude - baseLat) * pxPerLat }\nlongOffset: ${ (longitude - baseLong) * pxPerLong }\nxPx: ${ xPx }\nyPx: ${ yPx }`);
+        let point = new paper.Point(xPx, yPx);
+        if(plot.value)
+            plot.value.remove();
+        plot.value = new paper.Path.Circle(point, 3);
+        plot.value.fillColor = 'red';
     });
+
 
     const rasters = {};
     const layers = {};
@@ -65,22 +136,29 @@
         rasters.hpLabels = new paper.Raster('chart-hp-labels-layer');
         rasters.standLabels = new paper.Raster('chart-stand-labels-layer');
         rasters.buildingLabels = new paper.Raster('chart-building-labels-layer'); 
+        // rasters.buildingLabels = new paper.Raster('reference'); 
 
 
 
         // centre images and add each to a new layer
         Object.entries(rasters).forEach(([rasterName, raster]) => {
             raster.position = paper.view.center;
-            layers[rasterName] = new paper.Layer(raster);
+            layers[rasterName] = new paper.Layer(raster); 
         });
 
         // draw sample line
         let path = new paper.Path();
-        path.strokeColor = 'red';
+        path.strokeColor = 'green';
         path.strokeWidth = '5';
-        let start = new paper.Point(1495, 1512);
+        // J line
+        // let start = new paper.Point(1495, 1512);
+        // path.moveTo(start);
+        // path.lineTo(start.add([471, -97]));
+        // paper.view.draw();
+
+        let start = new paper.Point(1966, 1415);
         path.moveTo(start);
-        path.lineTo(start.add([471, -97]));
+        path.lineTo(start.add([387, -282]));
         paper.view.draw();
 
         // create map transformations object
@@ -104,6 +182,25 @@
         })
     });    
 
+
+    const toggleTool = () => {
+        if(tool.value) {
+            tool.value.remove();
+            locator.value = {};
+            tool.value = false;
+        } else {
+            tool.value = new paper.Tool();
+
+            tool.value.onMouseUp = (event) => {
+                event.scale = transformations.scale;
+                locator.value = event;
+            }
+
+            tool.value.activate();
+        }
+    }
+
+
     // function to show/hide map layers
     const toggleLayer = (event) => {
         let layerName = event.target.name;
@@ -112,13 +209,14 @@
 </script>
 
 <template>
-    
+
     <div class='chart'>
-        <div class='utm' @click='toggleMarkings()'>UTM: {{ utm }}</div>
+        <TempTools :utm='utm' :locator='locator' @locatorTool='toggleTool'></TempTools>
+        
         <div id="chart-wrapper">
             <div id="chart-stack">
                 <!-- 3452 2759 -->
-                <canvas id='canvas' @dragstart='transformations.dragStart' @drag='transformations.drag' @dragend='transformations.dragEnd' draggable='true'></canvas>
+                <canvas id='canvas' width='3452' height='2759' @dragstart='transformations.dragStart' @drag='transformations.drag' @dragend='transformations.dragEnd' draggable='true'></canvas>
                 <img class='chart-layer' id='chart-base-layer' src='@/assets/chart/kk-concrete.png' alt='airfield chart concrete base layer'>
                 <img class='chart-layer' id='chart-rwy-markings-layer' src='@/assets/chart/kk-runway-markings.png' alt='airfield chart runway markings'>
                 <img class='chart-layer' id='chart-taxi-markings-layer' src='@/assets/chart/kk-taxi-markings.png' alt='airfield chart taxi markings'>
@@ -194,18 +292,6 @@
 </template>
 
 <style scoped>
-    .utm {
-        position: absolute;
-        top: 0;
-        left: 0;
-        min-width: 50px;
-        height: 30px;
-        background: white;
-        z-index: 100;
-        color: black;
-        padding: 3px;
-    }
-
     .chart {
         min-width: 800px;
         min-height: 700px;
@@ -315,8 +401,6 @@
         position: absolute;
         top: 0;
         left: 0;
-        width: 3452px;
-        height: 2759px;
         background: #aaaaaa;
     }
 
