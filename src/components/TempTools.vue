@@ -1,8 +1,8 @@
 <script setup>
     import { ref, defineProps, defineEmits } from 'vue';
 
-    const props = defineProps(['plot', 'locator']);
-    const emit = defineEmits(['locatorTool']);
+    const props = defineProps(['plot', 'locator', 'showGraph']);
+    const emit = defineEmits(['locatorTool', 'toggleGraph']);
 
     const toolOn = ref(false);
 
@@ -16,11 +16,20 @@
     <div class='tools'>
         <div class='block'>Plotted position: {{ (plot?.position ? plot.position : 'No plot') }}</div>
         <div class='block' @click='handle'>Locator: {{ (locator?.point ? `x: ${ Math.round(locator.point.x) }, y: ${ Math.round(locator.point.y) }, scale: ${ Math.round(locator.scale * 100) / 100 } Ax: ${ Math.round(locator.point.x / locator.scale) }, Ay: ${ Math.round(locator.point.y / locator.scale) }` : (toolOn ? 'On' : 'Off')) }}</div>
+        <div class='block'>
+            Display Graph: 
+            <input type='checkbox' :checked='showGraph' v-on:change='emit("toggleGraph")'>
+        </div>
     </div>
 
 </template>
 
 <style scoped>
+    input {
+        margin-left: 6px;
+        position: relative;
+        top: 1px;
+    }
 
     .tools {
         display: flex;
@@ -37,5 +46,7 @@
         background: white;
         padding: 3px;
         margin-right: 5px;
+        display: flex;
+        align-items: center;
     }
 </style>

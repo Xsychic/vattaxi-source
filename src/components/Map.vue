@@ -1,10 +1,11 @@
 <script setup>
     import paper from 'paper';
-    import utmObj from 'utm-latlng';
+    import draw from '@/js/drawingFunctions';
     import DataProvider from '@/js/positionData';
     import TempTools from '@/components/TempTools.vue';
     import mapTransformations from '@/js/mapTransformations';
     import { ref, onMounted, watch, defineEmits } from 'vue';
+
 
     const emit = defineEmits(['updateConnection']);
 
@@ -31,8 +32,6 @@
 
     // get position data and sim connection status
     const { connected, data } = new DataProvider();
-    const utmConverter = new utmObj();
-    const utm = ref({});
     const plot = ref();
 
     watch(connected, (newValue) => emit('updateConnection', newValue));
@@ -52,40 +51,6 @@
 
             return;
         }
-
-        // for testing map calibration at key points
-        // const fixedPoints = {
-        //     'st574': {
-        //         lat: 51.163184,
-        //         long: -0.181002
-        //     },
-        //     'st38': {
-        //         lat: 51.158494,
-        //         long: -0.167269
-        //     }, 
-        //     'a2': {
-        //         lat: 51.15223,
-        //         long: -0.169045
-        //     }, 
-        //     'j4': {
-        //         lat: 51.147189,
-        //         long: -0.214077
-        //     },
-        //     '08r': {
-        //         lat: 51.145972,
-        //         long: -0.206175
-        //     },
-        //     'j7': {
-        //         lat: 51.146945,
-        //         long: -0.212335
-        //     },
-        //     'tj': {
-        //         lat: 51.150559,
-        //         long: -0.19285
-        //     }
-        // }
-        // let { lat: latitude, long: longitude } = fixedPoints['08r'];
-
 
         // coord translation to pixels
         // lat is vertical, long horizontal
@@ -125,40 +90,9 @@
         const chartFrame = document.querySelector('.chart');
         const chart = document.querySelector('#chart-stack');
         const canvas = document.querySelector('#canvas');
-        paper.setup(canvas);
-
-
-        // remove styles preventing canvas dragging
-        canvas.style.removeProperty('user-select');
-        canvas.style.removeProperty('-webkit-user-drag');
         
-        // add map images to canvas
-        rasters.base = new paper.Raster('chart-base-layer');
-        rasters.rwyMarkings = new paper.Raster('chart-rwy-markings-layer');
-        rasters.taxiMarkings = new paper.Raster('chart-taxi-markings-layer');
-        rasters.hpMarkings = new paper.Raster('chart-hp-markings-layer');
-        rasters.standMarkings = new paper.Raster('chart-stand-markings-layer');
-        rasters.taxiLabels = new paper.Raster('chart-taxi-labels-layer');
-        rasters.hpLabels = new paper.Raster('chart-hp-labels-layer');
-        rasters.standLabels = new paper.Raster('chart-stand-labels-layer');
-        rasters.buildingLabels = new paper.Raster('chart-building-labels-layer'); 
-
-
-        // centre images and add each to a new layer
-        Object.entries(rasters).forEach(([rasterName, raster]) => {
-            raster.position = paper.view.center;
-            layers[rasterName] = new paper.Layer(raster); 
-        });
-
-        // draw sample line
-        let path = new paper.Path();
-        path.strokeColor = 'green';
-        path.strokeWidth = '5';
-
-        let start = new paper.Point(1966, 1415);
-        path.moveTo(start);
-        path.lineTo(start.add([387, -282]));
-        paper.view.draw();
+        // setup canvas with paper.js and add images to background
+        draw.setupCanvas(canvas, rasters, layers)
 
         // create map transformations object
         transformations = new mapTransformations(chartFrame, chart);
@@ -174,9 +108,22 @@
             } else {
                 transformations.zoom('in');
             }
-        })
+        });      
+        
     });    
 
+    const showGraph = ref(true);
+    const graphPaths = [];
+
+    watch(showGraph, (show) => {
+        if(show) {
+            draw.drawGraph(graphPaths);
+        } else {
+            while(graphPaths.length > 0) {
+                graphPaths.pop().remove();
+            }
+        }
+    });
 
     const toggleTool = () => {
         if(tool.value) {
@@ -206,7 +153,7 @@
 <template>
 
     <div class='chart'>
-        <TempTools :plot='plot' :locator='locator' @locatorTool='toggleTool'></TempTools>
+        <TempTools :plot='plot' :locator='locator' :showGraph='showGraph' @locatorTool='toggleTool' @toggleGraph='showGraph = !showGraph'></TempTools>
         
         <div id="chart-wrapper">
             <div id="chart-stack">
