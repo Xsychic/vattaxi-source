@@ -1,7 +1,7 @@
 <script setup>
     import { ref, defineProps, defineEmits } from 'vue';
 
-    const props = defineProps(['utm', 'locator']);
+    const props = defineProps(['plot', 'locator']);
     const emit = defineEmits(['locatorTool']);
 
     const toolOn = ref(false);
@@ -14,7 +14,7 @@
 
 <template>
     <div class='tools'>
-        <div class='block'>UTM: {{ utm }}</div>
+        <div class='block'>Plotted position: {{ (plot?.position ? plot.position : 'No plot') }}</div>
         <div class='block' @click='handle'>Locator: {{ (locator?.point ? `x: ${ Math.round(locator.point.x) }, y: ${ Math.round(locator.point.y) }, scale: ${ Math.round(locator.scale * 100) / 100 } Ax: ${ Math.round(locator.point.x / locator.scale) }, Ay: ${ Math.round(locator.point.y / locator.scale) }` : (toolOn ? 'On' : 'Off')) }}</div>
     </div>
 

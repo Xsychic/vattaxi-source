@@ -106,8 +106,11 @@
         if(plot.value)
             plot.value.remove();
         
-        if(xPx < xLower || xPx > xUpper || yPx < yLower || yPx > yUpper)
+        if(xPx < xLower || xPx > xUpper || yPx < yLower || yPx > yUpper) {
+            if(plot.value)
+                plot.value = false;
             return;
+        }
 
         plot.value = new paper.Path.Circle(point, 6);
         plot.value.fillColor = 'red';
@@ -203,7 +206,7 @@
 <template>
 
     <div class='chart'>
-        <TempTools :utm='utm' :locator='locator' @locatorTool='toggleTool'></TempTools>
+        <TempTools :plot='plot' :locator='locator' @locatorTool='toggleTool'></TempTools>
         
         <div id="chart-wrapper">
             <div id="chart-stack">
