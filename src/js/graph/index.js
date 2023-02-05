@@ -1,3 +1,5 @@
-import QA from '@/js/graph/taxiways/QX';
+import Q from '@/js/graph/taxiways/Q';
+import QX from '@/js/graph/taxiways/QX';
 
-export default QA;
+
+export default QX.segOne.upper;
