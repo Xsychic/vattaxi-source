@@ -4,8 +4,8 @@
 
     import { defineEmits, defineProps } from 'vue';
 
-    const props = defineProps(['modeOnline'])
-    const emit = defineEmits(['openSettings', 'toggleMode']);
+    const props = defineProps(['modeOnline']);
+    const emit = defineEmits(['toggleMode']);
 
 
 </script>
@@ -14,7 +14,6 @@
     <div class="console">
         <header class='header'>
             <h2 class='title'>EGKK - LONDON GATWICK</h2>
-            <font-awesome-icon icon='fa-solid fa-cog' class='settings' @click='emit("openSettings")'></font-awesome-icon>
         </header>
 
         <InstructionsField></InstructionsField>

@@ -1,12 +1,10 @@
 <script setup>
     import Map from '@/components/Map.vue';
-    import Settings from '@/components/Settings.vue';
     import TitleBar from '@/components/TitleBar.vue';
     import ControlConsole from '@/components/ControlConsole.vue';
 
     import { ref } from 'vue'
 
-    const showSettings = ref(false);
     const modeOnline = ref(true);
     const connected = ref(false);
     const positionData = ref({});
@@ -20,21 +18,13 @@
     
     <div class="content">
         <Map 
-            v-show='!showSettings'
             @updateConnection='updateConnection'
         ></Map>
         <ControlConsole 
             :modeOnline='modeOnline' 
-            @openSettings='showSettings = !showSettings' 
             @toggleMode='toggleMode' 
             v-show='!showSettings'
         ></ControlConsole>
-        <Settings 
-            :modeOnline='modeOnline' 
-            @closeSettings='showSettings = !showSettings' 
-            @toggleMode='toggleMode' 
-            v-show='showSettings'
-        ></Settings>
     </div>
 
 </template>
