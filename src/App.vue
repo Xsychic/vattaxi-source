@@ -23,7 +23,6 @@
         <ControlConsole 
             :modeOnline='modeOnline' 
             @toggleMode='toggleMode' 
-            v-show='!showSettings'
         ></ControlConsole>
     </div>
 

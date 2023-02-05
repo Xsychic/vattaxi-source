@@ -26,7 +26,7 @@
         hpLabels: true,
         standLabels: true,
         buildingLabels: true 
-    }, { deep: true })
+    }, { deep: true });
     
 
     // get position data and sim connection status
@@ -35,23 +35,21 @@
     const utm = ref({});
     const plot = ref();
 
-    const rj = {latitude: 51.151964, longitude: -0.182138};
-    const kn = {latitude: 51.156001, longitude: -0.173381};
-    const rjUTM = utmConverter.convertLatLngToUtm(rj.latitude, rj.longitude, 1);
-    const knUTM = utmConverter.convertLatLngToUtm(kn.latitude, kn.longitude, 1);
-    const vectorRJtoKN = {Easting: knUTM.Easting - rjUTM.Easting, Northing: knUTM.Northing - rjUTM.Northing};
-    const physicalY = vectorRJtoKN.Northing * (611.8 / vectorRJtoKN.Easting);
-    console.log(`expected: ${ 448.3 }, calculated: ${ physicalY }`);
-
-
     watch(connected, (newValue) => emit('updateConnection', newValue));
     watch(data, (newValue) => {
 
         let { latitude = false, longitude = false } = newValue;
         
-        if(!latitude || !longitude) {
-            plot.value.remove();
-            plot.value = false;
+        const latLower = 51.10631, latUpper = 51.20330;
+        const longLower = -0.28233, longUpper = -0.07946;
+
+        // if no position coords or coords out of bounds
+        if(!latitude || !longitude || latitude < latLower || latitude > latUpper || longitude < longLower || longitude > longUpper) {
+            if(plot.value) {
+                plot.value.remove();
+                plot.value = false;
+            }
+
             return;
         }
 
@@ -101,9 +99,17 @@
         let xPx = baseXPx + (longitude - baseLong) * pxPerLong;
         // console.log(`latitude: ${ latitude }\nlongitude: ${ longitude }\nlatDiff: ${ latitude - baseLat }\nlongDiff: ${ longitude - baseLong }\npxPerLat: ${ pxPerLat }\npxPerLong: ${ pxPerLong }\nlatOffset: ${ (latitude - baseLat) * pxPerLat }\nlongOffset: ${ (longitude - baseLong) * pxPerLong }\nxPx: ${ xPx }\nyPx: ${ yPx }`);
         let point = new paper.Point(xPx, yPx);
+        
+        const yLower = 0, yUpper = 3452;
+        const xLower = 0, xUpper = 2759;
+
         if(plot.value)
             plot.value.remove();
-        plot.value = new paper.Path.Circle(point, 3);
+        
+        if(xPx < xLower || xPx > xUpper || yPx < yLower || yPx > yUpper)
+            return;
+
+        plot.value = new paper.Path.Circle(point, 6);
         plot.value.fillColor = 'red';
     });
 
@@ -117,9 +123,6 @@
         const chart = document.querySelector('#chart-stack');
         const canvas = document.querySelector('#canvas');
         paper.setup(canvas);
-
-
-        // path.strokeWidth = '3';
 
 
         // remove styles preventing canvas dragging
@@ -136,8 +139,6 @@
         rasters.hpLabels = new paper.Raster('chart-hp-labels-layer');
         rasters.standLabels = new paper.Raster('chart-stand-labels-layer');
         rasters.buildingLabels = new paper.Raster('chart-building-labels-layer'); 
-        // rasters.buildingLabels = new paper.Raster('reference'); 
-
 
 
         // centre images and add each to a new layer
@@ -150,11 +151,6 @@
         let path = new paper.Path();
         path.strokeColor = 'green';
         path.strokeWidth = '5';
-        // J line
-        // let start = new paper.Point(1495, 1512);
-        // path.moveTo(start);
-        // path.lineTo(start.add([471, -97]));
-        // paper.view.draw();
 
         let start = new paper.Point(1966, 1415);
         path.moveTo(start);
@@ -167,10 +163,6 @@
         // timeout allows for components to be mounted that initMap relies on (required at least 5ms on my pc)
         setTimeout(transformations.initMap, 50);
 
-        // remove not-allowed cursor - ALLOWS IMAGES TO BE DRAGGED ONTO DESKTOP
-        // document.addEventListener("dragover", (event) => {
-        //     event.preventDefault();
-        // });
         
         // add map scroll listener
         transformations.chartFrame.addEventListener("wheel", (e)=> {
