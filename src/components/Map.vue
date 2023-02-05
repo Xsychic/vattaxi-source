@@ -110,6 +110,9 @@
             }
         });      
         
+        if(showGraph.value) {
+            draw.drawGraph(graphPaths);
+        }
     });    
 
     const showGraph = ref(true);
@@ -136,6 +139,8 @@
             tool.value.onMouseUp = (event) => {
                 event.scale = transformations.scale;
                 locator.value = event;
+                // write points to clipboard in json format
+                navigator.clipboard.writeText(`{x: ${Math.round(event.point.x / event.scale)}, y: ${Math.round(event.point.y / event.scale)}}`);
             }
 
             tool.value.activate();

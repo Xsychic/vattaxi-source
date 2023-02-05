@@ -1,5 +1,5 @@
 import paper from 'paper';
-import Graph from '@/js/graph/graph';
+import Graph from '@/js/graph';
 
 
 const functions = {};
@@ -54,18 +54,20 @@ functions.drawGraph = (graphPaths) => {
             return false;
         }
 
-        console.log(`graph traversal error: points have same coords`);
+        return -1;
     }
 
     while(toVisit.length > 0) {
         const point = toVisit.pop();
         visited.push(point);
-        const segment = point.taxiwaySegment;
-        const pairPoint = segment.points.find((p) => p != point);
+        const segment = point?.taxiwaySegment;
 
-        if(!segment)
+        if(!segment) {
             console.log(`graph traversal error: point instance has no linked TaxiwaySegment`);
+            return;
+        }
 
+        const pairPoint = segment.points.find((p) => p != point);
         const segmentGradient = (point.y - pairPoint.y) / (point.x - pairPoint.x);
 
         if(point.holdingPoint) {
@@ -88,7 +90,14 @@ functions.drawGraph = (graphPaths) => {
             graphPaths.push(hpPath)
         }
 
-        if(isSeniorPoint(point, pairPoint)) {
+        const isSeniorPt = isSeniorPoint(point, pairPoint);
+
+        if(isSeniorPt == -1) {
+            console.error(`graph traversal error: points have same coords`);
+            return;
+        }
+
+        if(isSeniorPt) {
             // draw taxiwaySegment bounding box
             const boundingPath = new paper.Path();
             graphPaths.push(boundingPath);
@@ -132,15 +141,23 @@ functions.drawGraph = (graphPaths) => {
         point.adjoiningPoints.forEach((newPoint) => {
 
             // draw adjoining links
-            const joinPath = new paper.Path();
-            graphPaths.push(joinPath);
+            let joinPath;
+            
 
-            if(isSeniorPoint(point, newPoint)) {
+            const isSeniorPt = isSeniorPoint(point, newPoint);
+
+            if(isSeniorPt) {
+                joinPath = new paper.Path();
                 joinPath.strokeColor = 'red';
                 joinPath.strokeWidth = '2px';
-            } else {
+            } else if(isSeniorPt != -1) {
+                joinPath = new paper.Path();
                 joinPath.strokeColor = 'blue';
+            } else {
+                joinPath = new paper.Path.Circle(point, 3);
+                joinPath.fillColor = 'red';
             }
+            graphPaths.push(joinPath);
 
             joinPath.add(new paper.Point(point.x, point.y));
             joinPath.add(new paper.Point(newPoint.x, newPoint.y));

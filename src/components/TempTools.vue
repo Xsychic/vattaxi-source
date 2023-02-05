@@ -14,7 +14,7 @@
 
 <template>
     <div class='tools'>
-        <div class='block'>Plotted position: {{ (plot?.position ? plot.position : 'No plot') }}</div>
+        <div class='block'>Plotted position: {{ (plot?.position ? `x: ${Math.round(plot.position.x)}, y: ${Math.round(plot.position.y)}` : 'No plot') }}</div>
         <div class='block' @click='handle'>Locator: {{ (locator?.point ? `x: ${ Math.round(locator.point.x) }, y: ${ Math.round(locator.point.y) }, scale: ${ Math.round(locator.scale * 100) / 100 } Ax: ${ Math.round(locator.point.x / locator.scale) }, Ay: ${ Math.round(locator.point.y / locator.scale) }` : (toolOn ? 'On' : 'Off')) }}</div>
         <div class='block'>
             Display Graph: 

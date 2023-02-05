@@ -6,9 +6,9 @@ class Point {
     taxiwaySegment;
     adjoiningPoints = [];
 
-    constructor(x, y, holdingPoint = null) {
-        this.x = x;
-        this.y = y;
+    constructor(coord, holdingPoint = null) {
+        this.x = coord.x;
+        this.y = coord.y;
         this.holdingPoint = holdingPoint;
     }
 
