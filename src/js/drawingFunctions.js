@@ -60,14 +60,9 @@ functions.drawGraph = (graphPaths) => {
     while(toVisit.length > 0) {
         const point = toVisit.pop();
         visited.push(point);
-        const segment = point?.taxiwaySegment;
 
-        if(!segment) {
-            console.log(`graph traversal error: point instance has no linked TaxiwaySegment`);
-            return;
-        }
-
-        const pairPoint = segment.points.find((p) => p != point);
+        // naive way to pick a gradient point
+        const pairPoint = point.adjacentTaxiwaySegments[0].points.find((p) => p != point);
         const segmentGradient = (point.y - pairPoint.y) / (point.x - pairPoint.x);
 
         if(point.holdingPoint) {
@@ -76,9 +71,9 @@ functions.drawGraph = (graphPaths) => {
             
             // set hp path
             const hpPath = new paper.Path();
-            hpPath.strokeColor = '#0edde8';
-            hpPath.strokeWidth = '3';
-            const hpSpan = 12;
+            hpPath.strokeColor = '#0015ff';
+            hpPath.strokeWidth = '7';
+            const hpSpan = 14;
 
             // create hp equation and use to calc point coords
             const intercept = point.y - hpGradient * point.x;
@@ -90,54 +85,55 @@ functions.drawGraph = (graphPaths) => {
             graphPaths.push(hpPath)
         }
 
-        const isSeniorPt = isSeniorPoint(point, pairPoint);
+        
+        // draw features for adjacent segments if senior point
+        point.adjacentTaxiwaySegments.forEach((segment) => {
+            const pairPoint = segment.points.find((p) => p != point);
+            const isSeniorPt = isSeniorPoint(point, pairPoint);
 
-        if(isSeniorPt == -1) {
-            console.error(`graph traversal error: points have same coords`);
-            return;
-        }
-
-        if(isSeniorPt) {
-            // draw taxiwaySegment bounding box
-            const boundingPath = new paper.Path();
-            graphPaths.push(boundingPath);
-            boundingPath.strokeColor = 'orange';
-
-            segment.bounds.forEach((bound) => {
-                let p = new paper.Point(bound.x, bound.y);
-                boundingPath.add(p);
-            });
-
-            boundingPath.closed = true;
-            
-
-            // draw taxiwaySegment taxi line
-            const taxiPath = new paper.Path();
-            graphPaths.push(taxiPath);
-            taxiPath.strokeWidth = '2';
-            taxiPath.strokeColor = '#0ee87b';
-
-            taxiPath.add(new paper.Point(point.x, point.y));
-            taxiPath.add(new paper.Point(pairPoint.x, pairPoint.y));
-            
-            
-            // draw stands
-            segment.stands.forEach((stand) => {
-                const standPath = new paper.Path();
-                graphPaths.push(standPath);
-                standPath.strokeColor = '#a600ff';
-                standPath.strokeWidth = '1';
+            if(isSeniorPt) {
+                // draw taxiwaySegment bounding box
+                const boundingPath = new paper.Path();
+                graphPaths.push(boundingPath);
+                boundingPath.strokeColor = 'orange';
+    
+                segment.bounds.forEach((bound) => {
+                    let p = new paper.Point(bound.x, bound.y);
+                    boundingPath.add(p);
+                });
+    
+                boundingPath.closed = true;
                 
-                const { joinPoint: jp, stopPoint: sp } = stand;
+    
+                // draw taxiwaySegment taxi line
+                const taxiPath = new paper.Path();
+                graphPaths.push(taxiPath);
+                taxiPath.strokeWidth = '2';
+                taxiPath.strokeColor = '#0ee87b';
+    
+                taxiPath.add(new paper.Point(point.x, point.y));
+                taxiPath.add(new paper.Point(pairPoint.x, pairPoint.y));
+                
+                
+                // draw stands
+                segment.stands.forEach((stand) => {
+                    const standPath = new paper.Path();
+                    graphPaths.push(standPath);
+                    standPath.strokeColor = '#a600ff';
+                    standPath.strokeWidth = '1';
+                    
+                    const { joinPoint: jp, stopPoint: sp } = stand;
+    
+                    standPath.add(new paper.Point(jp.x, jp.y));
+                    standPath.add(new paper.Point(sp.x, sp.y));
+                });
+            }
+    
+            if(!toVisit.includes(pairPoint) && !visited.includes(pairPoint))
+                toVisit.push(pairPoint);
+        });
 
-                standPath.add(new paper.Point(jp.x, jp.y));
-                standPath.add(new paper.Point(sp.x, sp.y));
-            });
-        }
-
-        if(!toVisit.includes(pairPoint) && !visited.includes(pairPoint))
-            toVisit.push(pairPoint);
-
+        // draw adjoining links and add them to toVisit list
         point.adjoiningPoints.forEach((newPoint) => {
 
             // draw adjoining links
@@ -166,6 +162,13 @@ functions.drawGraph = (graphPaths) => {
                 toVisit.push(newPoint);
             }
         });
+
+        const isSeniorPt = isSeniorPoint(point, pairPoint);
+
+        if(isSeniorPt == -1) {
+            console.error(`graph traversal error: points have same coords`);
+            return;
+        }
     }
 }
 

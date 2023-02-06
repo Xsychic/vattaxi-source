@@ -3,7 +3,7 @@ class Point {
     x;
     y;
     holdingPoint;
-    taxiwaySegment;
+    adjacentTaxiwaySegments = [];
     adjoiningPoints = [];
 
     constructor(coord, holdingPoint = null) {
@@ -14,6 +14,10 @@ class Point {
 
     addAdjoiningPoint = (point) => {
         this.adjoiningPoints.push(point);
+    }
+
+    addTaxiwaySegment = (segment) => {
+        this.adjacentTaxiwaySegments.push(segment);
     }
 
 }

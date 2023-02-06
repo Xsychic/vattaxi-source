@@ -1,6 +1,9 @@
-const joinPoints = (pointOne, pointTwo) => {
+export const joinPoints = (pointOne, pointTwo) => {
     pointOne.addAdjoiningPoint(pointTwo);
     pointTwo.addAdjoiningPoint(pointOne);
 }
 
-export default joinPoints;
+export const linkSegment = (segment, pointOne, pointTwo) => {
+    pointOne.addTaxiwaySegment(segment);
+    pointTwo.addTaxiwaySegment(segment);
+}

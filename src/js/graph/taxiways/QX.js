@@ -1,6 +1,6 @@
 import Point from '@/js/graph/Point';
 import Stand from '@/js/graph/Stand';
-import joinPoints from '@/js/graph/tools';
+import { joinPoints } from '@/js/graph/tools';
 import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 
 /*
@@ -37,19 +37,15 @@ const points = {
         lower: new Point({x: 1991, y: 807})
     },
     segTwo: {
-        upper: new Point({x: 1991, y: 807}),
         lower: new Point({x: 1999, y: 844})
     },
     segThree: {
-        upper: new Point({x: 1999, y: 844}),
         lower: new Point({x: 2032, y: 996})
     },
     segFour: {
-        upper: new Point({x: 2032, y: 996}),
         lower: new Point({x: 2039, y: 1029})
     },
     segFive: {
-        upper: new Point({x: 2039, y: 1029}),
         lower: new Point({x: 2043, y: 1050})
     },
     QB: {
@@ -103,8 +99,8 @@ const segThreeStands = {
 // taxiway segments for QA
 const taxiways = {
     segOne: new TaxiwaySegment(
-        points.segOne.lower, 
         points.segOne.upper, 
+        points.segOne.lower, 
         'QA', 
         [
             {x: 1925, y: 638},
@@ -116,8 +112,8 @@ const taxiways = {
         Object.values(segOneStands)
     ),
     segTwo: new TaxiwaySegment(
+        points.segOne.lower,
         points.segTwo.lower,
-        points.segTwo.upper,
         'QA',
         [
             {x: 2021, y: 801},
@@ -128,8 +124,8 @@ const taxiways = {
         Object.values(segTwoStands)
     ),
     segThree: new TaxiwaySegment(
+        points.segTwo.lower,
         points.segThree.lower,
-        points.segThree.upper,
         'QA',
         [
             {x: 2028, y: 837},
@@ -140,8 +136,8 @@ const taxiways = {
         Object.values(segThreeStands)
     ),
     segFour: new TaxiwaySegment(
+        points.segThree.lower,
         points.segFour.lower,
-        points.segFour.upper,
         'QA',
         [
             {x: 2061, y: 991},
@@ -152,8 +148,8 @@ const taxiways = {
         []
     ),
     segFive: new TaxiwaySegment(
+        points.segFour.lower,
         points.segFive.lower,
-        points.segFive.upper,
         'QA',
         [
             {x: 2069, y: 1023},
@@ -195,19 +191,16 @@ const taxiways = {
     
 } 
 
-joinPoints(points.segOne.lower, points.segTwo.upper);
-joinPoints(points.segTwo.lower, points.segThree.upper);
+// link adjoining (non-adjacent segment) points
 joinPoints(points.segOne.lower, points.QC.right);
-joinPoints(points.segThree.upper, points.QC.right);
-joinPoints(points.segThree.lower, points.segFour.upper);
-joinPoints(points.segFive.upper, points.segFour.lower);
+joinPoints(points.segTwo.lower, points.QC.right);
 joinPoints(points.QB.right, points.segThree.lower);
-joinPoints(points.QB.right, points.segFive.upper);
+joinPoints(points.QB.right, points.segFour.lower);
 
 // add taxiway reference to point instances in QA
-Object.keys(taxiways).forEach((segment) => {
-    Object.values(points[segment]).forEach((point) => {
-        point.taxiwaySegment = taxiways[segment]
+Object.values(taxiways).forEach((segment) => {
+    segment.points.forEach((point) => {
+        point.addTaxiwaySegment(segment);
     });
 });
 
