@@ -31,15 +31,19 @@ functions.setupCanvas = (canvas, rasters, layers) => {
         raster.position = paper.view.center;
         layers[rasterName] = new paper.Layer(raster); 
     });
+    layers['drawingLayer'] = new paper.Layer();
 }
 
 
 // function to draw graph data structure on map
 functions.drawGraph = (graphPaths) => {
     // plot graph
+
+    console.log('running func');
+    let sp;
+
     const visited = [];
     const toVisit = [Graph];
-
 
     const isSeniorPoint = (currentPoint, pairPoint) => {
         if(currentPoint.x !== pairPoint.x) {
@@ -61,13 +65,14 @@ functions.drawGraph = (graphPaths) => {
         const point = toVisit.pop();
         visited.push(point);
 
-        // naive way to pick a gradient point
-        const pairPoint = point.adjacentTaxiwaySegments[0].points.find((p) => p != point);
-        const segmentGradient = (point.y - pairPoint.y) / (point.x - pairPoint.x);
+        if(point.x == 1990 && point.y == 1255) {
+            if(sp) {
+                console.log('sp')
+            } else
+                sp = point;
+        }
 
         if(point.holdingPoint) {
-            // get hp gradient
-            const hpGradient = -1 / segmentGradient;
             
             // set hp path
             const hpPath = new paper.Path();
@@ -75,14 +80,25 @@ functions.drawGraph = (graphPaths) => {
             hpPath.strokeWidth = '7';
             const hpSpan = 14;
 
+            let hpGradient; 
+
             // create hp equation and use to calc point coords
+            if(typeof point.holdingPoint.gradient == 'undefined') {
+                // naive way to pick a gradient point
+                const pairPoint = point.adjacentTaxiwaySegments[0].points.find((p) => p != point);
+                const segmentGradient = (point.y - pairPoint.y) / (point.x - pairPoint.x);      
+                hpGradient = -1 / segmentGradient;
+            } else {
+                hpGradient = point.holdingPoint.gradient;
+            }
+            
             const intercept = point.y - hpGradient * point.x;
             const y = (x) => hpGradient * x + intercept;
-            const firstPoint = new paper.Point(point.x - hpSpan, y(point.x - hpSpan))
-            const secondPoint = new paper.Point(point.x + hpSpan, y(point.x + hpSpan))
+            const firstPoint = new paper.Point(point.x - hpSpan, y(point.x - hpSpan));
+            const secondPoint = new paper.Point(point.x + hpSpan, y(point.x + hpSpan));
             hpPath.add(firstPoint);
             hpPath.add(secondPoint);
-            graphPaths.push(hpPath)
+            graphPaths.push(hpPath);
         }
 
         
@@ -91,7 +107,11 @@ functions.drawGraph = (graphPaths) => {
             const pairPoint = segment.points.find((p) => p != point);
             const isSeniorPt = isSeniorPoint(point, pairPoint);
 
-            if(isSeniorPt) {
+
+            if(isSeniorPt == -1) {
+                console.error(`graph traversal error: points have same coords`);
+                return;
+            } else if(isSeniorPt) {
                 // draw taxiwaySegment bounding box
                 const boundingPath = new paper.Path();
                 graphPaths.push(boundingPath);
@@ -137,8 +157,7 @@ functions.drawGraph = (graphPaths) => {
         point.adjoiningPoints.forEach((newPoint) => {
 
             // draw adjoining links
-            let joinPath;
-            
+            let joinPath; 
 
             const isSeniorPt = isSeniorPoint(point, newPoint);
 
@@ -162,13 +181,6 @@ functions.drawGraph = (graphPaths) => {
                 toVisit.push(newPoint);
             }
         });
-
-        const isSeniorPt = isSeniorPoint(point, pairPoint);
-
-        if(isSeniorPt == -1) {
-            console.error(`graph traversal error: points have same coords`);
-            return;
-        }
     }
 }
 

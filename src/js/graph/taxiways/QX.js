@@ -30,7 +30,7 @@ import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
         constructor(Point pOne, Point pTwo, String name, Coord[] bounds, Stand[] stands)
 */
 
-// points for QA sections
+// points for QA sections 
 const points = {
     segOne: {
         upper: new Point({x: 1956, y: 641}),
@@ -56,7 +56,7 @@ const points = {
         left: new Point({x: 1951, y: 838}),
         right: new Point({x: 1976, y: 829})
     }
-}
+} 
 
 // stands for QA sections
 const segOneStands = {
@@ -123,7 +123,7 @@ const taxiways = {
         ],
         Object.values(segTwoStands)
     ),
-    segThree: new TaxiwaySegment(
+    segThree: new TaxiwaySegment( 
         points.segTwo.lower,
         points.segThree.lower,
         'QA',
@@ -189,7 +189,7 @@ const taxiways = {
         []
     )
     
-} 
+}
 
 // link adjoining (non-adjacent segment) points
 joinPoints(points.segOne.lower, points.QC.right);

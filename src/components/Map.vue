@@ -32,7 +32,7 @@
 
     // get position data and sim connection status
     const { connected, data } = new DataProvider();
-    const plot = ref();
+    const plot = ref(); 
 
     watch(connected, (newValue) => emit('updateConnection', newValue));
     watch(data, (newValue) => {
@@ -90,7 +90,7 @@
         const chartFrame = document.querySelector('.chart');
         const chart = document.querySelector('#chart-stack');
         const canvas = document.querySelector('#canvas');
-        
+
         // setup canvas with paper.js and add images to background
         draw.setupCanvas(canvas, rasters, layers)
 

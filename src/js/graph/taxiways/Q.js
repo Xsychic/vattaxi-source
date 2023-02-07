@@ -8,7 +8,7 @@ import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
     Point
         int x
         int y
-        String? holdingPoint
+        { name: String, gradient?: number }? holdingPoint
         Point[] adjoiningPoints
 
         constructor(Coord c, String holdingPoint = null)
@@ -48,10 +48,10 @@ const points = {
         lower: new Point({x: 1982, y: 1221})
     },
     segFive: {
-        lower: new Point({x: 1990, y: 1255})
+        lower: new Point({x: 1990, y: 1255}) 
     },
     segSix: {
-        lower: new Point({x: 2014, y: 1368}, 'Q1')
+        lower: new Point({x: 2014, y: 1368}, {name: 'Q1'})
     },
     segSeven: {
         lower: new Point({x: 2017, y: 1384})
@@ -172,7 +172,7 @@ const taxiways = {
             {x: 1997, y: 1389.5}
         ],
         []
-    )
+    ) 
 } 
 
 // link adjoining (non-adjacent segment) points
@@ -189,4 +189,4 @@ Object.values(taxiways).forEach((segment) => {
 });
  
 
-export default points;
+export default points; 

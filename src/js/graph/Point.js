@@ -13,13 +13,17 @@ class Point {
     }
 
     addAdjoiningPoint = (point) => {
-        this.adjoiningPoints.push(point);
+        if(!this.adjoiningPoints.includes(point))
+            this.adjoiningPoints.push(point);
     }
 
     addTaxiwaySegment = (segment) => {
-        this.adjacentTaxiwaySegments.push(segment);
+        if(!this.adjacentTaxiwaySegments.includes(segment))
+            this.adjacentTaxiwaySegments.push(segment);
     }
 
 }
 
 export default Point;
+
+
