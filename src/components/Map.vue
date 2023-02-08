@@ -140,7 +140,7 @@
                 event.scale = transformations.scale;
                 locator.value = event;
                 // write points to clipboard in json format
-                navigator.clipboard.writeText(`{x: ${Math.round(event.point.x / event.scale)}, y: ${Math.round(event.point.y / event.scale)}}`);
+                navigator.clipboard.writeText(`{x: ${Math.round(10* event.point.x / event.scale)/10}, y: ${Math.round(10*event.point.y / event.scale)/10}}`);
             }
 
             tool.value.activate();

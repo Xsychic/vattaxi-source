@@ -3,34 +3,7 @@ import Stand from '@/js/graph/Stand';
 import { joinPoints } from '@/js/graph/tools';
 import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 
-/*
-    Point
-        int x
-        int y
-        String? holdingPoint
-        Point[] adjoiningPoints
-
-        constructor(Coord c, String holdingPoint = null)
-        
-        addAdjoiningPoint(Point p)
-
-
-    Stand
-        Coord joinPoint
-        Coord stopPoint
-        String name
-
-
-    TaxiwaySegment
-        String name
-        Point[] points : points passed as first two args to constructor
-        Coord[] bounds
-        Stand[] stands
-
-        constructor(Point pOne, Point pTwo, String name, Coord[] bounds, Stand[] stands)
-*/
-
-// points for QA sections 
+// points for taxiway segments
 const points = {
     segOne: {
         upper: new Point({x: 1956, y: 641}),
@@ -58,7 +31,7 @@ const points = {
     }
 } 
 
-// stands for QA sections
+// stands for taxiway segments
 const segOneStands = {
     '64': new Stand({x: 1958, y: 655}, {x: 1888, y: 669}, '64'),
     '64l': new Stand({x: 1962, y: 675}, {x: 1905, y: 686}, '64l'),
@@ -96,7 +69,7 @@ const segThreeStands = {
     '562': new Stand({x: 2000, y: 847}, {x: 2069, y: 832}, '562')
 }
 
-// taxiway segments for QA
+// taxiway segments
 const taxiways = {
     segOne: new TaxiwaySegment(
         points.segOne.upper, 
@@ -197,7 +170,7 @@ joinPoints(points.segTwo.lower, points.QC.right);
 joinPoints(points.QB.right, points.segThree.lower);
 joinPoints(points.QB.right, points.segFour.lower);
 
-// add taxiway reference to point instances in QA
+// add taxiway reference to point instances
 Object.values(taxiways).forEach((segment) => {
     segment.points.forEach((point) => {
         point.addTaxiwaySegment(segment);

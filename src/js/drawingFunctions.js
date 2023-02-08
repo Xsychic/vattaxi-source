@@ -62,7 +62,6 @@ functions.drawGraph = (graphPaths) => {
         const point = toVisit.pop();
         visited.push(point);
 
-
         if(point.holdingPoint) {
             
             // set hp path
@@ -119,7 +118,7 @@ functions.drawGraph = (graphPaths) => {
                 // draw taxiwaySegment taxi line
                 const taxiPath = new paper.Path();
                 graphPaths.push(taxiPath);
-                taxiPath.strokeWidth = '2';
+                taxiPath.strokeWidth = '1';
                 taxiPath.strokeColor = '#0ee87b';
     
                 taxiPath.add(new paper.Point(point.x, point.y));
@@ -150,19 +149,8 @@ functions.drawGraph = (graphPaths) => {
             // draw adjoining links
             let joinPath; 
 
-            const isSeniorPt = isSeniorPoint(point, newPoint);
-
-            if(isSeniorPt) {
-                joinPath = new paper.Path();
-                joinPath.strokeColor = 'red';
-                joinPath.strokeWidth = '2px';
-            } else if(isSeniorPt != -1) {
-                joinPath = new paper.Path();
-                joinPath.strokeColor = 'blue';
-            } else {
-                joinPath = new paper.Path.Circle(point, 3);
-                joinPath.fillColor = 'red';
-            }
+            joinPath = new paper.Path();
+            joinPath.strokeColor = 'blue';
             graphPaths.push(joinPath);
 
             joinPath.add(new paper.Point(point.x, point.y));
