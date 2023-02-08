@@ -10,4 +10,5 @@ NOTE: SEPARATE FILES SHOULD NOT BE LINKED AT A POINT AT WHICH THE TWO
       function does.
 
 */
+
 export default QX.segOne.upper;

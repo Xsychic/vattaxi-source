@@ -4,7 +4,6 @@ class TaxiwaySegment {
     points = [];
     bounds = [];
     stands = [];
-    taxiwaySegment;
 
 
     constructor(pointOne, pointTwo, name, bounds, stands) {

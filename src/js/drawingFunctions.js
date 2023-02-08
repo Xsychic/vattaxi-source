@@ -39,9 +39,6 @@ functions.setupCanvas = (canvas, rasters, layers) => {
 functions.drawGraph = (graphPaths) => {
     // plot graph
 
-    console.log('running func');
-    let sp;
-
     const visited = [];
     const toVisit = [Graph];
 
@@ -65,12 +62,6 @@ functions.drawGraph = (graphPaths) => {
         const point = toVisit.pop();
         visited.push(point);
 
-        if(point.x == 1990 && point.y == 1255) {
-            if(sp) {
-                console.log('sp')
-            } else
-                sp = point;
-        }
 
         if(point.holdingPoint) {
             
