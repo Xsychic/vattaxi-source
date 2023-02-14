@@ -2,16 +2,17 @@
     import Map from '@/components/Map.vue';
     import TitleBar from '@/components/TitleBar.vue';
     import ControlConsole from '@/components/ControlConsole.vue';
-    import taxiwayCompiler from '@/js/utilities/taxiwayBoundCompiler';
+    // import taxiwayCompiler from '@/js/utilities/taxiwayBoundCompiler';
 
     import { ref } from 'vue'
 
     const modeOnline = ref(true);
     const connected = ref(false);
-    const positionData = ref({});
+    const pxCoords = ref({});
 
     const toggleMode = () => modeOnline.value = !modeOnline.value;
     const updateConnection = (newStatus) => connected.value = newStatus;
+    const updateCoords = (newCoords) => pxCoords.value = newCoords;
 </script>
 
 <template>
@@ -19,10 +20,12 @@
     
     <div class="content">
         <Map 
+            :pxCoords='pxCoords'
             @updateConnection='updateConnection'
+            @updateCoords='updateCoords'
         ></Map>
         <ControlConsole 
-            :modeOnline='modeOnline' 
+            :modeOnline='modeOnline'
             @toggleMode='toggleMode' 
         ></ControlConsole>
     </div>

@@ -1,13 +1,16 @@
 <script setup>
     import paper from 'paper';
-    import draw from '@/js/drawingFunctions';
-    import DataProvider from '@/js/positionData';
+    import draw from '@/js/map/drawingFunctions';
+    import DataProvider from '@/js/map/positionData';
     import TempTools from '@/components/TempTools.vue';
-    import mapTransformations from '@/js/mapTransformations';
-    import { ref, onMounted, watch, defineEmits } from 'vue';
+    import mapTransformations from '@/js/map/mapTransformations';
+    
+    
+    import { calculatePixelCoords } from '@/js/map/mapLogic';
+    import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
 
-
-    const emit = defineEmits(['updateConnection']);
+    const props = defineProps(['pxCoords']);
+    const emit = defineEmits(['updateConnection', 'updateCoords']);
 
     // transformation functions var
     let transformations;
@@ -34,48 +37,28 @@
     const { connected, data } = new DataProvider();
     const plot = ref(); 
 
+
+
     watch(connected, (newValue) => emit('updateConnection', newValue));
     watch(data, (newValue) => {
+        // get x and y pixel coords and check if in bounds of map
+        const { x, y, oob = false } = calculatePixelCoords(newValue);
 
-        let { latitude = false, longitude = false } = newValue;
-        
-        const latLower = 51.10631, latUpper = 51.20330;
-        const longLower = -0.28233, longUpper = -0.07946;
-
-        // if no position coords or coords out of bounds
-        if(!latitude || !longitude || latitude < latLower || latitude > latUpper || longitude < longLower || longitude > longUpper) {
-            if(plot.value) {
-                plot.value.remove();
-                plot.value = false;
-            }
-
-            return;
-        }
-
-        // coord translation to pixels
-        // lat is vertical, long horizontal
-        const baseLat = 51.150559; // T/J Intersection
-        const baseLong = -0.214077; // J4
-        const baseYPx = 1512; // T/J Intersection
-        const baseXPx = 568; // J4
-        const pxPerLat = -880 / 0.012625; // T/J -> St574
-        const pxPerLong = 1970 / 0.045032; // J4 -> A2
-        let yPx = baseYPx + (latitude - baseLat) * pxPerLat;
-        let xPx = baseXPx + (longitude - baseLong) * pxPerLong;
-        // console.log(`latitude: ${ latitude }\nlongitude: ${ longitude }\nlatDiff: ${ latitude - baseLat }\nlongDiff: ${ longitude - baseLong }\npxPerLat: ${ pxPerLat }\npxPerLong: ${ pxPerLong }\nlatOffset: ${ (latitude - baseLat) * pxPerLat }\nlongOffset: ${ (longitude - baseLong) * pxPerLong }\nxPx: ${ xPx }\nyPx: ${ yPx }`);
-        let point = new paper.Point(xPx, yPx);
-        
-        const yLower = 0, yUpper = 3452;
-        const xLower = 0, xUpper = 2759;
-
-        if(plot.value)
+        if(plot.value) {
             plot.value.remove();
-        
-        if(xPx < xLower || xPx > xUpper || yPx < yLower || yPx > yUpper) {
-            if(plot.value)
+        }
+
+        if(oob) {
+            if(plot.value) {
                 plot.value = false;
+                emit("updateCoords", {});
+            }
             return;
         }
+
+        let point = new paper.Point(x, y);
+
+        emit("updateCoords", {x, y});
 
         plot.value = new paper.Path.Circle(point, 6);
         plot.value.fillColor = 'red';
@@ -114,6 +97,9 @@
             draw.drawGraph(graphPaths);
         }
     });    
+
+
+    // temp tools stuff
 
     const showGraph = ref(true);
     const graphPaths = [];
@@ -156,10 +142,8 @@
 </script>
 
 <template>
-
     <div class='chart'>
         <TempTools :plot='plot' :locator='locator' :showGraph='showGraph' @locatorTool='toggleTool' @toggleGraph='showGraph = !showGraph'></TempTools>
-        
         <div id="chart-wrapper">
             <div id="chart-stack">
                 <!-- 3452 2759 -->
