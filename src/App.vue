@@ -2,6 +2,7 @@
     import Map from '@/components/Map.vue';
     import TitleBar from '@/components/TitleBar.vue';
     import ControlConsole from '@/components/ControlConsole.vue';
+    import taxiwayCompiler from '@/js/utilities/taxiwayBoundCompiler';
 
     import { ref } from 'vue'
 

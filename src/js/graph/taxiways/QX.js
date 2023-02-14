@@ -70,7 +70,7 @@ const segThreeStands = {
 }
 
 // taxiway segments
-const taxiways = {
+export const taxiways = {
     segOne: new TaxiwaySegment(
         points.segOne.upper, 
         points.segOne.lower, 
