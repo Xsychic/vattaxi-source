@@ -6,7 +6,7 @@
     import mapTransformations from '@/js/map/mapTransformations';
     
     
-    import { calculatePixelCoords } from '@/js/map/mapLogic';
+    import { calculatePixelCoords, getSegment } from '@/js/map/mapLogic';
     import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
 
     const props = defineProps(['pxCoords']);
@@ -36,6 +36,7 @@
     // get position data and sim connection status
     const { connected, data } = new DataProvider();
     const plot = ref(); 
+    const segment = ref();
 
 
 
@@ -51,6 +52,7 @@
         if(oob) {
             if(plot.value) {
                 plot.value = false;
+                segment.value = false;
                 emit("updateCoords", {});
             }
             return;
@@ -62,6 +64,16 @@
 
         plot.value = new paper.Path.Circle(point, 6);
         plot.value.fillColor = 'red';
+
+        const newSeg = getSegment(x, y);
+
+        if(newSeg.length == 0) {
+            // to-do
+        } else if(newSeg.length > 1) {
+            // to-do 
+        }
+
+        segment.value = newSeg;
     });
 
 

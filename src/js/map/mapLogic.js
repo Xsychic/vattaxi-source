@@ -1,3 +1,6 @@
+import pointInPolygon from 'point-in-polygon';
+import taxiwaySegments from '@/js/graph/taxiways';
+
 
 export const calculatePixelCoords = (newValue) => {
     let { latitude = false, longitude = false } = newValue;
@@ -30,4 +33,25 @@ export const calculatePixelCoords = (newValue) => {
     }
 
     return { x: xPx, y: yPx };
+}
+
+
+export const getSegment = (x = false, y = false) => {
+    const segments = [];
+
+    if(x == false || y == false) {
+        console.log("no coords for get segment :(");
+        return [];
+    }
+
+    for(const [taxiway, boundObjs] of Object.entries(taxiwaySegments)) {
+        for(let i = 0; i < boundObjs.length; i++) {
+            const boundObj = boundObjs[i];
+            if(pointInPolygon([x, y], boundObj.bounds)) {
+                segments.push(boundObj.object)
+            }
+        }
+    }
+
+    return segments;
 }

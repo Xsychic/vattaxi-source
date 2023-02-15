@@ -28,7 +28,7 @@ for(const [tWayName, tWaySegments] of Object.entries(taxiways)) {
 
     for(const [segName, segment] of Object.entries(tWaySegments)) {
         segments.push({
-            object: `${tWayName}.taxiways.${segName}`,
+            object: `${tWayName}.${segName}`,
             bounds: segment.bounds
         });
     }
@@ -36,12 +36,16 @@ for(const [tWayName, tWaySegments] of Object.entries(taxiways)) {
     data[tWayName] = segments
 }
 
-const jsonString = JSON.stringify(data, null, "\t");
+let dataString = JSON.stringify(data, null, "\t");
 
 const referenceRegex = /"object":\s*"(.{0,40})",/g;
-const replaceText = '"object": $1,'
+const referenceReplacement = '"object": $1,'
 
-const dataString = jsonString.replaceAll(referenceRegex, replaceText);
+const coordFormatRegex = /\{\s*"x":\s*(\d+(?:\.\d+)?),\s*"y":\s*(\d+(?:\.\d+)?)\s*\}/g;
+const coordFormatReplacement = '[$1, $2]'
+
+dataString = dataString.replaceAll(referenceRegex, referenceReplacement);
+dataString = dataString.replaceAll(coordFormatRegex, coordFormatReplacement);
 
 let writeString = '';
 
@@ -49,6 +53,7 @@ for(const tWay of Object.keys(taxiways)) {
     writeString += `import { taxiways as ${tWay} } from '@/js/graph/taxiways/${tWay}';\n`;
 }
 
-writeString += `\n\nexport const data = ${dataString};`;
+writeString += `\n\nconst data = ${dataString};\n\nexport default data;`;
 
 console.log(writeString);
+    
