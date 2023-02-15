@@ -9,10 +9,12 @@
     const modeOnline = ref(true);
     const connected = ref(false);
     const pxCoords = ref({});
+    const route = ref([]);
 
     const toggleMode = () => modeOnline.value = !modeOnline.value;
     const updateConnection = (newStatus) => connected.value = newStatus;
     const updateCoords = (newCoords) => pxCoords.value = newCoords;
+    const updateRoute = (newRoute) => route.value = newRoute;
 </script>
 
 <template>
@@ -21,12 +23,15 @@
     <div class="content">
         <Map 
             :pxCoords='pxCoords'
+            :route='route'
             @updateConnection='updateConnection'
             @updateCoords='updateCoords'
         ></Map>
         <ControlConsole 
             :modeOnline='modeOnline'
+            :route='route'
             @toggleMode='toggleMode' 
+            @updateRoute='updateRoute'
         ></ControlConsole>
     </div>
 

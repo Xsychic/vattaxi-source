@@ -4,9 +4,10 @@
 
     import { defineEmits, defineProps } from 'vue';
 
-    const props = defineProps(['modeOnline']);
-    const emit = defineEmits(['toggleMode']);
+    const props = defineProps(['modeOnline', 'route']);
+    const emit = defineEmits(['toggleMode', 'updateRoute']);
 
+    const updateRoute = (newRoute) => emit('updateRoute', newRoute);
 
 </script>
 
@@ -16,7 +17,10 @@
             <h2 class='title'>EGKK - LONDON GATWICK</h2>
         </header>
 
-        <InstructionsField></InstructionsField>
+        <InstructionsField 
+            :route='route'
+            @updateRoute='updateRoute'
+        />
         <DirectionsComponent></DirectionsComponent>
 
         <div class='mode-switch'>

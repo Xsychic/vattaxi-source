@@ -1,7 +1,80 @@
 <script setup>
-    import { ref } from 'vue';
+    import { ref, defineProps, defineEmits, watch } from 'vue';
 
+    const props = defineProps(['route']);
+    const emit = defineEmits(['updateRoute']);
+    
     const showTooltip = ref(false);
+    const routeString = ref('');
+    const routeValid = ref(0);
+
+    const isValidRoute = (route) => {
+        /*
+            RULES
+
+            - Each element in route is a taxiway, holding point, hold short or stand
+            - Route ends in holding point, hold short or stand
+            - Route starts on taxiway that user is on
+
+        */
+        
+        // create regexs
+        const singleTaxiways = ['Q', 'L'];
+        const singleTwysExp = `[${ singleTaxiways.join('') }]`;
+        const doubleTaxiways = ['QA', 'QB', 'QC'];
+        let doubleTwysExp = '';
+
+        for(let i = 0; i < doubleTaxiways.length; i++) {
+            doubleTwysExp += `(?:${ doubleTaxiways[i] })`;
+            if((i+1) !== doubleTaxiways.length)
+                doubleTwysExp += '|';
+        }
+
+        const standExp = `(?:S\\d{1,3}[LR]?)`;
+        const holdingPointExp = String.raw`(?:\/[a-zA-Z]{1,2}|\/[abcdeghjmnpqrstuwyzABCDEGHJMNPQRSTUWYZ][1-7])`;
+
+        // global flag must not be used
+        const validElementString = String.raw`^(${ singleTwysExp }{1}|${ doubleTwysExp })$`;
+        const validElement = new RegExp(validElementString, 'mi');
+
+        const validTerminatorString = String.raw`^(${ standExp }|${ holdingPointExp })$`;
+        const validTerminator = new RegExp(validTerminatorString, 'mi');
+
+
+        // route ends in termination point
+        if(!validTerminator.test(route.pop())) {
+            return false;
+        }
+
+        // rest of route consists of taxiways
+        for(let i = 0; i < route.length; i++) {
+            if(!validElement.test(route[i])) {
+                return false;
+            }
+        }
+
+        return true;   
+    }
+
+    watch(routeString, (newRoute, oldRoute) => {
+        // split route into array on 1+ whitespace chars
+        const route = newRoute.split(/\s+/g).filter((el) => el);
+
+        if(route.length < 2) {
+            // route at least has two elements
+            // can't be in validation function for feedback v-else-if
+            routeValid.value = 0;
+            emit('updateRoute', []);
+            return;
+        }
+
+        if(isValidRoute(route)) {
+            routeValid.value = 1;
+            emit('updateRoute', route);
+        } else {
+            routeValid.value = -1;
+        }
+    });
 </script>
 
 <template>
@@ -38,11 +111,16 @@
             </div>
 
         </div>
-        <textarea class='instructions' id='instructions' name='instructions' rows='4' placeholder='Enter your taxi route'></textarea>
-        <div class='route-status'>
+        <textarea class='instructions' id='instructions' name='instructions' rows='4' placeholder='Enter your taxi route' v-model='routeString'></textarea>
+        <div class='route-status route-valid' v-if='routeValid == 1'>
             valid route
             <font-awesome-icon icon='fa-solid fa-check'></font-awesome-icon>
         </div>
+        <div class='route-status route-invalid' v-else-if='routeValid == -1'>
+            invalid route
+            <font-awesome-icon icon='fa-solid fa-times'></font-awesome-icon>
+        </div>
+        <div class='route-status' v-else></div>
     </div>
 </template>
 
@@ -89,10 +167,14 @@
         align-items: center;
     }
 
+    .route-invalid {
+        color: var(--red);
+    }
+
     .route-status {
         font-size: 14px;
         font-weight: bold;
-        color: var(--green);
+        height: 22.4px;
         width: calc(100% - 10px);
         text-align: right;
         padding: 0 5px;
@@ -103,6 +185,10 @@
         position: relative;
         top: 1px;
         font-size: 16px;
+    }
+
+    .route-valid {
+        color: var(--green);
     }
 
     .tooltip {
