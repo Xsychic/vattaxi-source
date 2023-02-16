@@ -31,7 +31,7 @@
         }
 
         const standExp = `(?:S\\d{1,3}[LR]?)`;
-        const holdingPointExp = String.raw`(?:\/[a-zA-Z]{1,2}|\/[abcdeghjmnpqrstuwyzABCDEGHJMNPQRSTUWYZ][1-7])`;
+        const holdingPointExp = String.raw`(?:\/[a-z]{1,2}|\/[abcdeghjmnpqrstuwyz][1-7])`;
 
         // global flag must not be used
         const validElementString = String.raw`^(${ singleTwysExp }{1}|${ doubleTwysExp })$`;
@@ -40,15 +40,15 @@
         const validTerminatorString = String.raw`^(${ standExp }|${ holdingPointExp })$`;
         const validTerminator = new RegExp(validTerminatorString, 'mi');
 
-
         // route ends in termination point
-        if(!validTerminator.test(route.pop())) {
+        if(!validTerminator.test(route[route.length - 1])) {
             return false;
         }
 
         // rest of route consists of taxiways
-        for(let i = 0; i < route.length; i++) {
-            if(!validElement.test(route[i])) {
+        const restOfRoute = route.splice(0,-1);
+        for(let i = 0; i < restOfRoute.length; i++) {
+            if(!validElement.test(restOfRoute[i])) {
                 return false;
             }
         }
