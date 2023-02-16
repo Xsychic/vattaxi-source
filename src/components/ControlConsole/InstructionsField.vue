@@ -1,7 +1,7 @@
 <script setup>
     import { ref, defineProps, defineEmits, watch } from 'vue';
 
-    const props = defineProps(['routeStringArr', 'routeFound']);
+    const props = defineProps(['routeStringArr', 'routeFound', 'segment']);
     const emit = defineEmits(['updateRouteStringArr']);
     
     const showTooltip = ref(false);
@@ -60,6 +60,15 @@
         // split route into array on 1+ whitespace chars
         let route = newRoute.split(/\s+/g).filter((el) => el);
         route = route.map((el) => el.toUpperCase());
+
+        if(!props.segment) {
+            routeValid.value = 0;
+            return;
+        }
+
+        if(route[0] !== props.segment.name) {
+            route.unshift(props.segment.name);
+        }
 
         if(route.length < 2) {
             // route at least has two elements

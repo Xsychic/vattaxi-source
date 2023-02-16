@@ -4,7 +4,7 @@
 
     import { defineEmits, defineProps } from 'vue';
 
-    const props = defineProps(['modeOnline', 'routeStringArr', 'routeFound']);
+    const props = defineProps(['modeOnline', 'routeStringArr', 'routeFound', 'segment']);
     const emit = defineEmits(['toggleMode', 'updateRouteStringArr']);
 
     const updateRouteStringArr = (newRoute) => emit('updateRouteStringArr', newRoute);
@@ -20,6 +20,7 @@
         <InstructionsField 
             :routeStringArr='routeStringArr'
             :routeFound='routeFound'
+            :segment='segment'
             @updateRouteStringArr='updateRouteStringArr'
         />
         <DirectionsComponent></DirectionsComponent>

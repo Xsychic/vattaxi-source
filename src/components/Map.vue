@@ -5,12 +5,11 @@
     import TempTools from '@/components/TempTools.vue';
     import mapTransformations from '@/js/map/mapTransformations';
     
-    
     import { calculatePixelCoords, getSegment, parseRoute } from '@/js/map/mapLogic';
     import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
 
-    const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound']);
-    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRoute', 'updateRouteFound']);
+    const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound', 'segment']);
+    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRoute', 'updateRouteFound', 'updateSegment']);
 
     // transformation functions var
     let transformations;
@@ -36,9 +35,6 @@
     // get position data and sim connection status
     const { connected, data } = new DataProvider();
     const plot = ref(); 
-    const segment = ref();
-
-
 
     watch(connected, (newValue) => emit('updateConnection', newValue));
     watch(data, (newValue) => {
@@ -52,7 +48,7 @@
         if(oob) {
             if(plot.value) {
                 plot.value = false;
-                segment.value = false;
+                emit('updateSegment', false);
                 emit("updateCoords", {});
             }
             return;
@@ -67,22 +63,18 @@
 
         const newSeg = getSegment(x, y);
 
-        if(newSeg.length == 0) {
-            // to-do
-        } else if(newSeg.length > 1) {
-            // to-do 
-        }
-
-        segment.value = newSeg;
+        emit('updateSegment', newSeg);
     });
 
+    
     watch(() => props.routeStringArr, (newRoute) => {
-        if(!segment.value)
+        // if route string array changes, parse new route
+        if(!props.segment)
             return;
 
-        const point = segment.value[0].points[0];
-        const routeArr = parseRoute(point, newRoute, segment.value[0]);
-
+        const point = props.segment.points[0];
+        const routeArr = parseRoute(point, newRoute, props.segment);
+        console.log(routeArr)
         if(routeArr == false && props.routeFound) {
             emit('updateRouteFound', false);
             emit('updateRoute', []);

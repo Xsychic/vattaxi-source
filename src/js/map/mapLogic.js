@@ -53,14 +53,16 @@ export const getSegment = (x = false, y = false) => {
         }
     }
 
-    return segments;
+    if(segments.length == 0)
+        return false;
+    return segments[0];
 }
 
 
 export const parseRoute = (point, route, currentSegment) => {
     const path = traversePoint(point, route, []);
 
-    
+
     if(path && path[1] == currentSegment) {
         // if initially picked wrong point in current segment, remove it and current segment
         return path.slice(2);

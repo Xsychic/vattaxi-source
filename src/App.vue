@@ -12,6 +12,7 @@
     const routeStringArr = ref([]);
     const routeArr = ref([]);
     const routeFound = ref(false);
+    const segment = ref();
 
     const toggleMode = () => modeOnline.value = !modeOnline.value;
     const updateConnection = (newStatus) => connected.value = newStatus;
@@ -19,6 +20,7 @@
     const updateRouteStringArr = (newRouteStringArr) => routeStringArr.value = newRouteStringArr;
     const updateRouteFound = (routeValidity) => routeFound.value = routeValidity;
     const updateRouteArr = (newRouteArr) => routeArr.value = newRouteArr;
+    const updateSegment = (newSegment) => segment.value = newSegment;
 </script>
 
 <template>
@@ -29,15 +31,18 @@
             :pxCoords='pxCoords'
             :routeStringArr='routeStringArr'
             :routeFound='routeFound'
+            :segment='segment'
             @updateConnection='updateConnection'
             @updateCoords='updateCoords' 
             @updateRouteArr='updateRouteArr'
             @updateRouteFound='updateRouteFound'
+            @updateSegment='updateSegment'
         ></Map>
         <ControlConsole 
             :modeOnline='modeOnline'
             :routeStringArr='routeStringArr'
             :routeFound='routeFound'
+            :segment='segment'
             @toggleMode='toggleMode' 
             @updateRouteStringArr='updateRouteStringArr'
         ></ControlConsole>
