@@ -9,13 +9,16 @@
     const modeOnline = ref(true);
     const connected = ref(false);
     const pxCoords = ref({});
-    const route = ref([]);
-    const routeValid = ref(0);
+    const routeStringArr = ref([]);
+    const routeArr = ref([]);
+    const routeFound = ref(false);
 
     const toggleMode = () => modeOnline.value = !modeOnline.value;
     const updateConnection = (newStatus) => connected.value = newStatus;
     const updateCoords = (newCoords) => pxCoords.value = newCoords;
-    const updateRoute = (newRoute) => route.value = newRoute;
+    const updateRouteStringArr = (newRouteStringArr) => routeStringArr.value = newRouteStringArr;
+    const updateRouteFound = (routeValidity) => routeFound.value = routeValidity;
+    const updateRouteArr = (newRouteArr) => routeArr.value = newRouteArr;
 </script>
 
 <template>
@@ -24,17 +27,19 @@
     <div class="content">
         <Map 
             :pxCoords='pxCoords'
-            :route='route'
-            :routeValid='routeValid'
+            :routeStringArr='routeStringArr'
+            :routeFound='routeFound'
             @updateConnection='updateConnection'
-            @updateCoords='updateCoords'
+            @updateCoords='updateCoords' 
+            @updateRouteArr='updateRouteArr'
+            @updateRouteFound='updateRouteFound'
         ></Map>
         <ControlConsole 
             :modeOnline='modeOnline'
-            :route='route'
-            :routeValid='routeValid'
+            :routeStringArr='routeStringArr'
+            :routeFound='routeFound'
             @toggleMode='toggleMode' 
-            @updateRoute='updateRoute'
+            @updateRouteStringArr='updateRouteStringArr'
         ></ControlConsole>
     </div>
 

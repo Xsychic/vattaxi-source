@@ -9,8 +9,8 @@
     import { calculatePixelCoords, getSegment, parseRoute } from '@/js/map/mapLogic';
     import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
 
-    const props = defineProps(['pxCoords', 'route', 'routeValid']);
-    const emit = defineEmits(['updateConnection', 'updateCoords']);
+    const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound']);
+    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRoute', 'updateRouteFound']);
 
     // transformation functions var
     let transformations;
@@ -76,9 +76,21 @@
         segment.value = newSeg;
     });
 
-    watch(() => props.route, (newRoute) => {
+    watch(() => props.routeStringArr, (newRoute) => {
+        if(!segment.value)
+            return;
+
         const point = segment.value[0].points[0];
-        console.log(parseRoute(point, newRoute));
+        const routeArr = parseRoute(point, newRoute, segment.value[0]);
+
+        if(routeArr == false && props.routeFound) {
+            emit('updateRouteFound', false);
+            emit('updateRoute', []);
+            return;
+        } else if(routeArr) {
+            emit('updateRouteFound', true);
+            emit('updateRoute', routeArr);
+        }
     });
 
 

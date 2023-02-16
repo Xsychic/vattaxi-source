@@ -1,8 +1,8 @@
 <script setup>
     import { ref, defineProps, defineEmits, watch } from 'vue';
 
-    const props = defineProps(['route']);
-    const emit = defineEmits(['updateRoute']);
+    const props = defineProps(['routeStringArr', 'routeFound']);
+    const emit = defineEmits(['updateRouteStringArr']);
     
     const showTooltip = ref(false);
     const routeString = ref('');
@@ -58,21 +58,22 @@
 
     watch(routeString, (newRoute, oldRoute) => {
         // split route into array on 1+ whitespace chars
-        const route = newRoute.split(/\s+/g).filter((el) => el);
+        let route = newRoute.split(/\s+/g).filter((el) => el);
+        route = route.map((el) => el.toUpperCase());
 
         if(route.length < 2) {
             // route at least has two elements
             // can't be in validation function for feedback v-else-if
-            if(props.route.length != 0) {
+            if(props.routeStringArr.length != 0) {
                 routeValid.value = 0;
-                emit('updateRoute', []);
+                emit('updateRouteStringArr', []);
             }
             return;
         }
 
         if(isValidRoute(route)) {
             routeValid.value = 1;
-            emit('updateRoute', route);
+            emit('updateRouteStringArr', route);
         } else {
             routeValid.value = -1;
         }
@@ -114,11 +115,11 @@
 
         </div>
         <textarea class='instructions' id='instructions' name='instructions' rows='4' placeholder='Enter your taxi route' v-model='routeString'></textarea>
-        <div class='route-status route-valid' v-if='routeValid == 1'>
+        <div class='route-status route-valid' v-if='routeValid == 1 && routeFound'>
             valid route
             <font-awesome-icon icon='fa-solid fa-check'></font-awesome-icon>
         </div>
-        <div class='route-status route-invalid' v-else-if='routeValid == -1'>
+        <div class='route-status route-invalid' v-else-if='routeValid == -1 || routeValid == 1 && !routeFound'>
             invalid route
             <font-awesome-icon icon='fa-solid fa-times'></font-awesome-icon>
         </div>

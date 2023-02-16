@@ -57,7 +57,16 @@ export const getSegment = (x = false, y = false) => {
 }
 
 
-export const parseRoute = (point, route) => traversePoint(point, route, []);
+export const parseRoute = (point, route, currentSegment) => {
+    const path = traversePoint(point, route, []);
+
+    
+    if(path && path[1] == currentSegment) {
+        // if initially picked wrong point in current segment, remove it and current segment
+        return path.slice(2);
+    }
+    return path;
+}
 
 const traversePoint = (point, route, path) => {
     let deadEnd = true;
@@ -68,7 +77,7 @@ const traversePoint = (point, route, path) => {
 
     if(route[1] && route[1][0] == '/') {
         // next point in route is an explicit holding point
-        if(point?.holdingPoint?.name == route[1])
+        if(point?.holdingPoint?.name == route[1].slice(1))
             return path;
     }
         
@@ -79,14 +88,8 @@ const traversePoint = (point, route, path) => {
                 return path;
         }
 
-        if(route.slice(0,2).includes(segment.name)) {
-            let newRoute;
-            if(segment.name == route[1])
-                newRoute = route.slice(1);
-            else
-                newRoute = route;
-
-                if(route[1][0] == 'S' && route[1].length > 1) {
+        if(route[0] == segment.name) {
+            if(route[1][0] == 'S' && route[1].length > 1) {
                 // next point is a stand
                 let standName = route[1].slice(1);
                 let stand = segment.stands.find((stand) => standName == stand.name);
@@ -96,7 +99,10 @@ const traversePoint = (point, route, path) => {
                     return path;
                 }
             }
-                
+        }
+
+        if(route[1] == segment.name) {
+            let newRoute = route.slice(1);
             let pairPoint = segment.points.find(p => p != point);
             
             if(!path.includes(pairPoint)) {
@@ -130,19 +136,46 @@ const traversePoint = (point, route, path) => {
             }
         }
 
-        // TODO: prioritise turning onto new taxiway
         for(let segment of pairPoint.adjacentTaxiwaySegments) {
-            if(route.slice(0,2).includes(segment.name)) {
+            if(route[1] == segment.name) {
                 if(!path.includes(pairPoint)) {
-
-                    let newRoute;
-                    if(segment.name == route[1])
-                        newRoute = route.slice(1);
-                    else
-                        newRoute = route;
-
+                    let newRoute = route.slice(1);
                     deadEnd = false;
+
                     let returnedPath = traversePoint(pairPoint, newRoute, path);
+                    if(returnedPath != false)
+                        return returnedPath;
+                    else
+                        deadEnd = true;
+                }
+            }
+        }
+    }
+
+    for(let segment of point.adjacentTaxiwaySegments) {
+        if(route[0] == segment.name) {
+            let pairPoint = segment.points.find(p => p != point);
+            
+            if(!path.includes(pairPoint)) {
+                deadEnd = false;
+                let pathCopy = path.map((el) => el);
+                pathCopy.push(segment);
+                let returnedPath = traversePoint(pairPoint, route, pathCopy);
+
+                if(returnedPath != false)
+                    return returnedPath; 
+                else
+                    deadEnd = true;
+            }
+        }
+    }
+
+    for(const pairPoint of point.adjoiningPoints) {
+        for(let segment of pairPoint.adjacentTaxiwaySegments) {
+            if(route[0] == segment.name) {
+                if(!path.includes(pairPoint)) {
+                    deadEnd = false;
+                    let returnedPath = traversePoint(pairPoint, route, path);
                     if(returnedPath != false)
                         return returnedPath;
                     else
