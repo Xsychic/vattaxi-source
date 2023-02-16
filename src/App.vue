@@ -10,6 +10,7 @@
     const connected = ref(false);
     const pxCoords = ref({});
     const route = ref([]);
+    const routeValid = ref(0);
 
     const toggleMode = () => modeOnline.value = !modeOnline.value;
     const updateConnection = (newStatus) => connected.value = newStatus;
@@ -24,12 +25,14 @@
         <Map 
             :pxCoords='pxCoords'
             :route='route'
+            :routeValid='routeValid'
             @updateConnection='updateConnection'
             @updateCoords='updateCoords'
         ></Map>
         <ControlConsole 
             :modeOnline='modeOnline'
             :route='route'
+            :routeValid='routeValid'
             @toggleMode='toggleMode' 
             @updateRoute='updateRoute'
         ></ControlConsole>

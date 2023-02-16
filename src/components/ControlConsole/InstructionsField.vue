@@ -63,8 +63,10 @@
         if(route.length < 2) {
             // route at least has two elements
             // can't be in validation function for feedback v-else-if
-            routeValid.value = 0;
-            emit('updateRoute', []);
+            if(props.route.length != 0) {
+                routeValid.value = 0;
+                emit('updateRoute', []);
+            }
             return;
         }
 

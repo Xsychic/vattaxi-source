@@ -55,3 +55,103 @@ export const getSegment = (x = false, y = false) => {
 
     return segments;
 }
+
+
+export const parseRoute = (point, route) => traversePoint(point, route, []);
+
+const traversePoint = (point, route, path) => {
+    let deadEnd = true;
+    path.push(point)
+
+    if(route == [])
+        return path;
+
+    if(route[1] && route[1][0] == '/') {
+        // next point in route is an explicit holding point
+        if(point?.holdingPoint?.name == route[1])
+            return path;
+    }
+        
+    for(let segment of point.adjacentTaxiwaySegments) {
+        if(route[1] && route[1][0] == '/') {
+            // next point in route is a hold short instruction that matches next node
+            if(route[1].slice(1) == segment.name)
+                return path;
+        }
+
+        if(route.slice(0,2).includes(segment.name)) {
+            let newRoute;
+            if(segment.name == route[1])
+                newRoute = route.slice(1);
+            else
+                newRoute = route;
+
+                if(route[1][0] == 'S' && route[1].length > 1) {
+                // next point is a stand
+                let standName = route[1].slice(1);
+                let stand = segment.stands.find((stand) => standName == stand.name);
+
+                if(typeof stand != 'undefined') {
+                    path.push(stand);
+                    return path;
+                }
+            }
+                
+            let pairPoint = segment.points.find(p => p != point);
+            
+            if(!path.includes(pairPoint)) {
+                deadEnd = false;
+                let pathCopy = path.map((el) => el);
+                pathCopy.push(segment);
+                let returnedPath = traversePoint(pairPoint, newRoute, pathCopy);
+
+                if(returnedPath != false)
+                    return returnedPath; 
+                else
+                    deadEnd = true;
+            }
+        }
+    }
+
+    for(const pairPoint of point.adjoiningPoints) {
+        if(route[1] && route[1][0] == '/') {
+            // some kind of hold short/holding point instruction next
+            if(pairPoint?.holdingPoint?.name == route[1]) {
+                // next point in route is a named holding point at pairPoint
+                // TODO: test this works
+                path.push(pairPoint);   
+                return path;
+            }
+
+            for(let tw of pairPoint.adjacentTaxiwaySegments) {
+                // next point in route is a hold short instruction that matches next segment
+                if(route[1].slice(1) == tw.name)
+                    return path;
+            }
+        }
+
+        // TODO: prioritise turning onto new taxiway
+        for(let segment of pairPoint.adjacentTaxiwaySegments) {
+            if(route.slice(0,2).includes(segment.name)) {
+                if(!path.includes(pairPoint)) {
+
+                    let newRoute;
+                    if(segment.name == route[1])
+                        newRoute = route.slice(1);
+                    else
+                        newRoute = route;
+
+                    deadEnd = false;
+                    let returnedPath = traversePoint(pairPoint, newRoute, path);
+                    if(returnedPath != false)
+                        return returnedPath;
+                    else
+                        deadEnd = true;
+                }
+            }
+        }
+    }
+                
+    if(deadEnd)
+        return false;
+}

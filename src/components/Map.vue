@@ -6,10 +6,10 @@
     import mapTransformations from '@/js/map/mapTransformations';
     
     
-    import { calculatePixelCoords, getSegment } from '@/js/map/mapLogic';
+    import { calculatePixelCoords, getSegment, parseRoute } from '@/js/map/mapLogic';
     import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
 
-    const props = defineProps(['pxCoords']);
+    const props = defineProps(['pxCoords', 'route', 'routeValid']);
     const emit = defineEmits(['updateConnection', 'updateCoords']);
 
     // transformation functions var
@@ -74,6 +74,11 @@
         }
 
         segment.value = newSeg;
+    });
+
+    watch(() => props.route, (newRoute) => {
+        const point = segment.value[0].points[0];
+        console.log(parseRoute(point, newRoute));
     });
 
 
