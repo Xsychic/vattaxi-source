@@ -1,6 +1,6 @@
 <script setup>
     import paper from 'paper';
-    import draw from '@/js/map/drawingFunctions';
+    import { setupCanvas, drawGraph, drawRoute, clearPaths } from '@/js/map/drawingFunctions';
     import DataProvider from '@/js/map/positionData';
     import TempTools from '@/components/TempTools.vue';
     import mapTransformations from '@/js/map/mapTransformations';
@@ -8,8 +8,8 @@
     import { calculatePixelCoords, getSegment, parseRoute } from '@/js/map/mapLogic';
     import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
 
-    const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound', 'segment']);
-    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRoute', 'updateRouteFound', 'updateSegment']);
+    const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound', 'segment', 'routeArr']);
+    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRouteArr', 'updateRouteFound', 'updateSegment']);
 
     // transformation functions var
     let transformations;
@@ -30,11 +30,46 @@
         standLabels: true,
         buildingLabels: true 
     }, { deep: true });
+
     
+    const rasters = {};
+    const layers = {};
+
+    onMounted(() => {
+        // setup paper canvas
+        const chartFrame = document.querySelector('.chart');
+        const chart = document.querySelector('#chart-stack');
+        const canvas = document.querySelector('#canvas');
+
+        // setup canvas with paper.js and add images to background
+        setupCanvas(canvas, rasters, layers)
+
+        // create map transformations object
+        transformations = new mapTransformations(chartFrame, chart);
+
+        // timeout allows for components to be mounted that initMap relies on (required at least 5ms on my pc)
+        setTimeout(transformations.initMap, 50);
+
+        
+        // add map scroll listener
+        transformations.chartFrame.addEventListener("wheel", (e)=> {
+            if (e.deltaY > 0) {
+                transformations.zoom('out')
+            } else {
+                transformations.zoom('in');
+            }
+        });      
+
+        if(showGraph.value) {
+            drawGraph(graphPaths, layers);
+        }
+    });   
+
 
     // get position data and sim connection status
     const { connected, data } = new DataProvider();
     const plot = ref(); 
+    const drawnRoute = ref([]);
 
     watch(connected, (newValue) => emit('updateConnection', newValue));
     watch(data, (newValue) => {
@@ -54,12 +89,25 @@
             return;
         }
 
-        let point = new paper.Point(x, y);
+        if(!layers?.pathLayer || !layers?.aircraftLayer) {
+            console.error('missing paper.js map layers');
+            return;
+        }
 
-        emit("updateCoords", {x, y});
+        layers.aircraftLayer.activate();
+
+        let point = new paper.Point(x, y);
+        let coords = {
+            x: Math.round(x * 10) / 10, 
+            y: Math.round(y * 10) / 10
+        };
+
+        emit("updateCoords", coords);
 
         plot.value = new paper.Path.Circle(point, 6);
         plot.value.fillColor = 'red';
+        
+        layers.pathLayer.activate();
 
         const newSeg = getSegment(x, y);
 
@@ -74,50 +122,26 @@
 
         const point = props.segment.points[0];
         const routeArr = parseRoute(point, newRoute, props.segment);
-        console.log(routeArr)
+
         if(routeArr == false && props.routeFound) {
             emit('updateRouteFound', false);
-            emit('updateRoute', []);
+            emit('updateRouteArr', []);
             return;
         } else if(routeArr) {
             emit('updateRouteFound', true);
-            emit('updateRoute', routeArr);
+            emit('updateRouteArr', routeArr);
         }
     });
 
 
-    const rasters = {};
-    const layers = {};
+    watch(() => props.routeArr, (newRoute) => {
+        clearPaths(drawnRoute.value)
 
-    onMounted(() => {
-        // setup paper canvas
-        const chartFrame = document.querySelector('.chart');
-        const chart = document.querySelector('#chart-stack');
-        const canvas = document.querySelector('#canvas');
+        if(!newRoute.length)
+            return;
 
-        // setup canvas with paper.js and add images to background
-        draw.setupCanvas(canvas, rasters, layers)
-
-        // create map transformations object
-        transformations = new mapTransformations(chartFrame, chart);
-
-        // timeout allows for components to be mounted that initMap relies on (required at least 5ms on my pc)
-        setTimeout(transformations.initMap, 50);
-
-        
-        // add map scroll listener
-        transformations.chartFrame.addEventListener("wheel", (e)=> {
-            if (e.deltaY > 0) {
-                transformations.zoom('out')
-            } else {
-                transformations.zoom('in');
-            }
-        });      
-        
-        if(showGraph.value) {
-            draw.drawGraph(graphPaths);
-        }
-    });    
+        drawnRoute.value = drawRoute(newRoute, props.pxCoords);
+    }); 
 
 
     // temp tools stuff
@@ -127,11 +151,9 @@
 
     watch(showGraph, (show) => {
         if(show) {
-            draw.drawGraph(graphPaths);
+            drawGraph(graphPaths, layers);
         } else {
-            while(graphPaths.length > 0) {
-                graphPaths.pop().remove();
-            }
+            clearPaths(graphPaths);
         }
     });
 

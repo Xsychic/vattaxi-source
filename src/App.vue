@@ -30,6 +30,7 @@
         <Map 
             :pxCoords='pxCoords'
             :routeStringArr='routeStringArr'
+            :routeArr='routeArr'
             :routeFound='routeFound'
             :segment='segment'
             @updateConnection='updateConnection'

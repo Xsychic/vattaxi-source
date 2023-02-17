@@ -23,7 +23,6 @@ export const calculatePixelCoords = (newValue) => {
     const pxPerLong = 1970 / 0.045032; // J4 -> A2
     let yPx = baseYPx + (latitude - baseLat) * pxPerLat;
     let xPx = baseXPx + (longitude - baseLong) * pxPerLong;
-    // console.log(`latitude: ${ latitude }\nlongitude: ${ longitude }\nlatDiff: ${ latitude - baseLat }\nlongDiff: ${ longitude - baseLong }\npxPerLat: ${ pxPerLat }\npxPerLong: ${ pxPerLong }\nlatOffset: ${ (latitude - baseLat) * pxPerLat }\nlongOffset: ${ (longitude - baseLong) * pxPerLong }\nxPx: ${ xPx }\nyPx: ${ yPx }`);
     
     const yLower = 0, yUpper = 3452;
     const xLower = 0, xUpper = 2759;
@@ -61,7 +60,6 @@ export const getSegment = (x = false, y = false) => {
 
 export const parseRoute = (point, route, currentSegment) => {
     const path = traversePoint(point, route, []);
-
 
     if(path && path[1] == currentSegment) {
         // if initially picked wrong point in current segment, remove it and current segment
@@ -189,4 +187,9 @@ const traversePoint = (point, route, path) => {
                 
     if(deadEnd)
         return false;
+}
+
+
+export const drawRoute = (route) => {
+    console.log(route);
 }

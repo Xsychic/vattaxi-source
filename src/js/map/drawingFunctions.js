@@ -2,12 +2,8 @@ import paper from 'paper';
 import Graph from '@/js/graph';
 
 
-const functions = {};
-
-
-
 // function to setup canvas and add map images
-functions.setupCanvas = (canvas, rasters, layers) => {
+export const setupCanvas = (canvas, rasters, layers) => {
     paper.setup(canvas);
 
     // remove styles preventing canvas dragging
@@ -31,13 +27,22 @@ functions.setupCanvas = (canvas, rasters, layers) => {
         raster.position = paper.view.center;
         layers[rasterName] = new paper.Layer(raster); 
     });
-    layers['drawingLayer'] = new paper.Layer();
+    layers['graphLayer'] = new paper.Layer();
+    layers['pathLayer'] = new paper.Layer();
+    layers['aircraftLayer'] = new paper.Layer();
 }
 
 
 // function to draw graph data structure on map
-functions.drawGraph = (graphPaths) => {
+export const drawGraph = (graphPaths, layers) => {
     // plot graph
+
+    if(!layers?.graphLayer || !layers?.pathLayer) {
+        console.error('incomplete layers object passed to graph drawing function');
+        return;
+    }
+
+    layers.graphLayer.activate();
 
     const visited = [];
     const toVisit = [Graph];
@@ -161,9 +166,44 @@ functions.drawGraph = (graphPaths) => {
             }
         });
     }
+
+    layers.pathLayer.activate();
 }
 
 
+export const clearPaths = (paths) => {
+    while(paths.length > 0) {
+        paths.pop().remove();
+    }
+}
 
 
-export default functions;
+export const drawRoute = (route, pxCoords) => {
+    const points = [pxCoords];
+    
+    route.filter((obj) => !obj?.points).map((obj) => {
+        if(obj.x) {
+            points.push({ x: obj.x, y: obj.y});
+        } else if(obj.joinPoint) {
+            points.push(obj.joinPoint);
+            points.push(obj.stopPoint);
+        }
+    });
+
+    const drawnPaths = [];
+
+    for(let i = 0; i < points.length - 1; i++) {
+        let path = new paper.Path();
+        path.strokeColor = '#3498eb';
+        path.strokeWidth = '2';
+        drawnPaths.push(path);
+        
+        const pt1 = points[i];
+        const pt2 = points[i+1];
+
+        path.add(new paper.Point(pt1.x, pt1.y));
+        path.add(new paper.Point(pt2.x, pt2.y));
+    }
+
+    return drawnPaths;
+};
