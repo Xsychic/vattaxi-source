@@ -20,10 +20,9 @@ const points = {
     },
     segFour: {
         left: new Point({x: 1937.3, y: 1092}),
-        right: new Point({x: 1967.1, y: 1085.7})
+        right: new Point({x: 1969, y: 1085.6})
     },
     segFive: {
-        left: new Point({x: 1973.4, y: 1084.4}),
         right: new Point({x: 2010.1, y: 1076.6})
     },
     segSix: {
@@ -216,7 +215,7 @@ export const taxiways = {
         []
     ),
     segFive: new TaxiwaySegment(
-        points.segFive.left,
+        points.segFour.right,
         points.segFive.right,
         'L',
         [
@@ -371,10 +370,9 @@ export const taxiways = {
 // link adjoining (non-adjacent segment) points
 joinPoints(points.segOne.right, points.segTwo.left);
 joinPoints(points.segThree.right, points.segFour.left);
-joinPoints(points.segFour.right, points.segFive.left);
 joinPoints(points.segFour.left, Q.segFour.upper);
+joinPoints(points.segFour.right, Q.segThree.lower);
 joinPoints(points.segFour.right, Q.segFour.upper);
-joinPoints(points.segFive.left, Q.segThree.lower);
 joinPoints(points.segFive.right, Q.segThree.lower);
 joinPoints(points.segFive.right, points.segSix.left);
 joinPoints(points.segSix.left, QX.segFive.lower);

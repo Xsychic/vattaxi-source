@@ -60,7 +60,8 @@ export const getSegment = (x = false, y = false) => {
 
 export const parseRoute = (point, route, currentSegment) => {
     const path = traversePoint(point, route, []);
-
+    console.log('final path')
+    console.log(path)
     if(path && path[1] == currentSegment) {
         // if initially picked wrong point in current segment, remove it and current segment
         return path.slice(2);
@@ -69,7 +70,6 @@ export const parseRoute = (point, route, currentSegment) => {
 }
 
 const traversePoint = (point, route, path) => {
-    let deadEnd = true;
     path.push(point)
 
     if(route == [])
@@ -80,6 +80,8 @@ const traversePoint = (point, route, path) => {
         if(point?.holdingPoint?.name == route[1].slice(1))
             return path;
     }
+
+    const foundPaths = [];
         
     for(let segment of point.adjacentTaxiwaySegments) {
         if(route[1] && route[1][0] == '/') {
@@ -101,20 +103,23 @@ const traversePoint = (point, route, path) => {
             }
         }
 
-        if(route[1] == segment.name) {
-            let newRoute = route.slice(1);
+        if(route.slice(0,2).includes(segment.name)) {
+            let newRoute;
             let pairPoint = segment.points.find(p => p != point);
             
+            if(route[0] == segment.name) {
+                newRoute = route;
+            } else {
+                newRoute = route.slice(1);
+            }
+
             if(!path.includes(pairPoint)) {
-                deadEnd = false;
                 let pathCopy = path.map((el) => el);
                 pathCopy.push(segment);
                 let returnedPath = traversePoint(pairPoint, newRoute, pathCopy);
 
                 if(returnedPath != false)
-                    return returnedPath; 
-                else
-                    deadEnd = true;
+                    foundPaths.push(returnedPath); 
             }
         }
     }
@@ -137,56 +142,34 @@ const traversePoint = (point, route, path) => {
         }
 
         for(let segment of pairPoint.adjacentTaxiwaySegments) {
-            if(route[1] == segment.name) {
+            if(route.slice(0,2).includes(segment.name)) {
                 if(!path.includes(pairPoint)) {
-                    let newRoute = route.slice(1);
-                    deadEnd = false;
+                    let newRoute;
 
-                    let returnedPath = traversePoint(pairPoint, newRoute, path);
+                    if(route[0] == segment.name) {
+                        newRoute = route;
+                    } else {
+                        newRoute = route.slice(1);
+                    }
+                    let pathCopy = path.map((el) => el);
+                    let returnedPath = traversePoint(pairPoint, newRoute, pathCopy);
                     if(returnedPath != false)
-                        return returnedPath;
-                    else
-                        deadEnd = true;
+                        foundPaths.push(returnedPath);
                 }
             }
         }
     }
-
-    for(let segment of point.adjacentTaxiwaySegments) {
-        if(route[0] == segment.name) {
-            let pairPoint = segment.points.find(p => p != point);
-            
-            if(!path.includes(pairPoint)) {
-                deadEnd = false;
-                let pathCopy = path.map((el) => el);
-                pathCopy.push(segment);
-                let returnedPath = traversePoint(pairPoint, route, pathCopy);
-
-                if(returnedPath != false)
-                    return returnedPath; 
-                else
-                    deadEnd = true;
-            }
-        }
-    }
-
-    for(const pairPoint of point.adjoiningPoints) {
-        for(let segment of pairPoint.adjacentTaxiwaySegments) {
-            if(route[0] == segment.name) {
-                if(!path.includes(pairPoint)) {
-                    deadEnd = false;
-                    let returnedPath = traversePoint(pairPoint, route, path);
-                    if(returnedPath != false)
-                        return returnedPath;
-                    else
-                        deadEnd = true;
-                }
-            }
-        }
-    }
-                
-    if(deadEnd)
+     
+    if(foundPaths.length == 0) {
         return false;
+    } else {
+        const pointArr = foundPaths.map((path) => {
+            return path.filter((el) => el.x);
+        });
+        console.log(pointArr)
+        const i = pointArr.reduce((iMin, el, i, arr) => (el.length < arr[iMin].length ? i : iMin), 0);
+        return foundPaths[i];
+    }
 }
 
 
