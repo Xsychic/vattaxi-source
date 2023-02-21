@@ -58,11 +58,71 @@ export const getSegment = (x = false, y = false) => {
 }
 
 
-export const parseRoute = (point, route, currentSegment) => {
+const pythagDistance = (origin, dest) => {
+    const xDiff = dest.x - origin.x;
+    const yDiff = dest.y - origin.y;
+    return Math.sqrt(xDiff ** 2 + yDiff ** 2);
+}
+
+
+export const trimRoute = (coords, routeArr, drawnRoute) => {
+    if(!routeArr.value?.length || !drawnRoute.value?.length) 
+        return;
+
+    // find closest point in route from current position
+    let minDist = 10**6;
+    let minDistIndex;
+    let minDistPoint;
+
+    for(let i = 0; i < routeArr.value.length; i++) {
+        const point = routeArr.value[i];
+        
+        if(point.x) { 
+            const dist = pythagDistance(coords, {x: point.x, y: point.y});
+
+            if(i === 0 && dist < 8) {
+                // current position within 8 pixels of first point, remove this point
+                continue;
+            } else if(dist < minDist) {
+                // new min distance point found
+                minDist = dist;
+                minDistIndex = i;
+                minDistPoint = point;
+            }
+        }
+    }
+    
+    if(minDistIndex === 0) {
+        return;
+    }    
+
+    // remove all points before closest point
+    let pointsRemoved = 0;
+
+    while(routeArr.value[0] !== minDistPoint && routeArr.value.length) {
+        const el = routeArr.value.shift();
+        if(typeof el.x !== 'undefined') {
+            pointsRemoved++;
+        }
+    }
+
+    for(let i = 0; i < pointsRemoved; i++) {
+        if(drawnRoute.value.length) {
+            drawnRoute.value.shift().remove();
+        }
+    }
+};
+
+
+export const parseRoute = (point, route, currentSegment, allSegments) => {
     const path = traversePoint(point, route, []);
-    console.log('final path')
-    console.log(path)
-    if(path && path[1] == currentSegment) {
+
+    if(!path)
+        return false;
+
+    allSegments.value = path.filter((el) => typeof el.name !== 'undefined');
+
+    if(path[1] == currentSegment) {
         // if initially picked wrong point in current segment, remove it and current segment
         return path.slice(2);
     }
@@ -166,13 +226,7 @@ const traversePoint = (point, route, path) => {
         const pointArr = foundPaths.map((path) => {
             return path.filter((el) => el.x);
         });
-        console.log(pointArr)
         const i = pointArr.reduce((iMin, el, i, arr) => (el.length < arr[iMin].length ? i : iMin), 0);
         return foundPaths[i];
     }
-}
-
-
-export const drawRoute = (route) => {
-    console.log(route);
 }

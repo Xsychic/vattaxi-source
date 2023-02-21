@@ -1,15 +1,15 @@
 <script setup>
     import paper from 'paper';
-    import { setupCanvas, drawGraph, drawRoute, clearPaths } from '@/js/map/drawingFunctions';
     import DataProvider from '@/js/map/positionData';
     import TempTools from '@/components/TempTools.vue';
     import mapTransformations from '@/js/map/mapTransformations';
     
-    import { calculatePixelCoords, getSegment, parseRoute } from '@/js/map/mapLogic';
     import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
+    import { calculatePixelCoords, getSegment, parseRoute, trimRoute } from '@/js/map/mapLogic';
+    import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
-    const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound', 'segment', 'routeArr']);
-    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRouteArr', 'updateRouteFound', 'updateSegment']);
+    const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound', 'segment']);
+    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRouteFound', 'updateSegment']);
 
     // transformation functions var
     let transformations;
@@ -65,11 +65,12 @@
         }
     });   
 
-
     // get position data and sim connection status
     const { connected, data } = new DataProvider();
     const plot = ref(); 
     const drawnRoute = ref([]);
+    const routeArr = ref([]);
+    let oldSegment = false;
 
     watch(connected, (newValue) => emit('updateConnection', newValue));
     watch(data, (newValue) => {
@@ -89,29 +90,42 @@
             return;
         }
 
-        if(!layers?.pathLayer || !layers?.aircraftLayer) {
-            console.error('missing paper.js map layers');
-            return;
-        }
-
-        layers.aircraftLayer.activate();
-
-        let point = new paper.Point(x, y);
         let coords = {
             x: Math.round(x * 10) / 10, 
             y: Math.round(y * 10) / 10
         };
 
+        const newSeg = getSegment(x, y);
+        
+        if(!oldSegment || newSeg !== oldSegment) {
+            // segment change - can't be in watcher, changes must happen before route trimmed
+            
+            oldSegment = newSeg;
+            
+            emit('updateSegment', newSeg);
+        }
+
+        trimRoute(coords, routeArr, drawnRoute);
+        plotPosition(coords, plot, layers, routeArr.value, drawnRoute);
+        
         emit("updateCoords", coords);
 
-        plot.value = new paper.Path.Circle(point, 6);
-        plot.value.fillColor = 'red';
         
-        layers.pathLayer.activate();
 
-        const newSeg = getSegment(x, y);
+        
+    });
 
-        emit('updateSegment', newSeg);
+    const allSegments = ref([]);
+    watch(() => props.segment, (newSegment) => {
+        if(!routeArr.value?.length)
+            return;
+
+        const i = allSegments.value.findIndex((el) => el === newSegment);
+
+        if(i == -1) {
+            console.log('user has left marked route!');
+            return;
+        }
     });
 
     
@@ -121,28 +135,24 @@
             return;
 
         const point = props.segment.points[0];
-        const routeArr = parseRoute(point, newRoute, props.segment);
+        const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments);
 
-        if(routeArr == false && props.routeFound) {
+        if(newRouteArr == false && props.routeFound) {
             emit('updateRouteFound', false);
-            emit('updateRouteArr', []);
+            routeArr.value = [];
             return;
-        } else if(routeArr) {
+        } else if(newRouteArr) {
             emit('updateRouteFound', true);
-            emit('updateRouteArr', routeArr);
+            routeArr.value = newRouteArr;
         }
-    });
 
-
-    watch(() => props.routeArr, (newRoute) => {
         clearPaths(drawnRoute.value)
 
-        if(!newRoute.length)
+        if(!newRouteArr || !newRouteArr.length)
             return;
 
-        drawnRoute.value = drawRoute(newRoute, props.pxCoords);
-    }); 
-
+        drawnRoute.value = drawRoute(newRouteArr, props.pxCoords);
+    });
 
     // temp tools stuff
 

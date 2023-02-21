@@ -10,7 +10,6 @@
     const connected = ref(false);
     const pxCoords = ref({});
     const routeStringArr = ref([]);
-    const routeArr = ref([]);
     const routeFound = ref(false);
     const segment = ref();
 
@@ -19,7 +18,6 @@
     const updateCoords = (newCoords) => pxCoords.value = newCoords;
     const updateRouteStringArr = (newRouteStringArr) => routeStringArr.value = newRouteStringArr;
     const updateRouteFound = (routeValidity) => routeFound.value = routeValidity;
-    const updateRouteArr = (newRouteArr) => routeArr.value = newRouteArr;
     const updateSegment = (newSegment) => segment.value = newSegment;
 </script>
 
@@ -30,12 +28,10 @@
         <Map 
             :pxCoords='pxCoords'
             :routeStringArr='routeStringArr'
-            :routeArr='routeArr'
             :routeFound='routeFound'
             :segment='segment'
             @updateConnection='updateConnection'
             @updateCoords='updateCoords' 
-            @updateRouteArr='updateRouteArr'
             @updateRouteFound='updateRouteFound'
             @updateSegment='updateSegment'
         ></Map>

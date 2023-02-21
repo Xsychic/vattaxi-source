@@ -2,6 +2,7 @@ import paper from 'paper';
 import Graph from '@/js/graph';
 
 
+
 // function to setup canvas and add map images
 export const setupCanvas = (canvas, rasters, layers) => {
     paper.setup(canvas);
@@ -31,6 +32,85 @@ export const setupCanvas = (canvas, rasters, layers) => {
     layers['pathLayer'] = new paper.Layer();
     layers['aircraftLayer'] = new paper.Layer();
 }
+
+
+export const plotPosition = ({ x, y }, plot, layers, route, drawnRoute) => {
+
+    if(!layers?.pathLayer || !layers?.aircraftLayer) {
+        console.error('missing paper.js map layers');
+        return;
+    }
+
+    layers.aircraftLayer.activate();
+
+    let point = new paper.Point(x, y);
+
+    plot.value = new paper.Path.Circle(point, 6);
+    plot.value.fillColor = 'red';
+    
+    layers.pathLayer.activate();
+    
+    redrawFirstSegment({x, y}, route, drawnRoute);
+}
+
+
+export const clearPaths = (paths) => {
+    while(paths.length > 0) {
+        paths.pop().remove();
+    }
+}
+
+
+export const redrawFirstSegment = (coords, route, drawnRoute) => {
+    if(route.length && drawnRoute.value.length) {
+        // redraw first section of route
+        let newPath = new paper.Path();
+        newPath.strokeColor = '#3498eb';
+        newPath.strokeWidth = '2';
+
+        newPath.add(new paper.Point(coords.x, coords.y));
+        newPath.add(new paper.Point(route[0].x, route[0].y));
+
+        if(typeof newPath === 'undefined')
+            return;
+
+
+        drawnRoute.value[0].remove();
+        drawnRoute.value[0] = newPath; 
+    }
+}
+
+
+export const drawRoute = (route, pxCoords) => {
+    const points = [pxCoords];
+
+    route.filter((obj) => !obj?.points).map((obj) => {
+        if(obj.x) {
+            points.push({ x: obj.x, y: obj.y});
+        } else if(obj.joinPoint) {
+            points.push(obj.joinPoint);
+            points.push(obj.stopPoint);
+        }
+    });
+
+    const drawnPaths = [];
+
+    for(let i = 0; i < points.length - 1; i++) {
+        let path = new paper.Path();
+        path.strokeColor = '#3498eb';
+        path.strokeWidth = '2';
+        drawnPaths.push(path);
+        
+        const pt1 = points[i];
+        const pt2 = points[i+1];
+
+        path.add(new paper.Point(pt1.x, pt1.y));
+        path.add(new paper.Point(pt2.x, pt2.y));
+    }
+
+    return drawnPaths;
+};
+
 
 
 // function to draw graph data structure on map
@@ -169,41 +249,3 @@ export const drawGraph = (graphPaths, layers) => {
 
     layers.pathLayer.activate();
 }
-
-
-export const clearPaths = (paths) => {
-    while(paths.length > 0) {
-        paths.pop().remove();
-    }
-}
-
-
-export const drawRoute = (route, pxCoords) => {
-    const points = [pxCoords];
-    
-    route.filter((obj) => !obj?.points).map((obj) => {
-        if(obj.x) {
-            points.push({ x: obj.x, y: obj.y});
-        } else if(obj.joinPoint) {
-            points.push(obj.joinPoint);
-            points.push(obj.stopPoint);
-        }
-    });
-
-    const drawnPaths = [];
-
-    for(let i = 0; i < points.length - 1; i++) {
-        let path = new paper.Path();
-        path.strokeColor = '#3498eb';
-        path.strokeWidth = '2';
-        drawnPaths.push(path);
-        
-        const pt1 = points[i];
-        const pt2 = points[i+1];
-
-        path.add(new paper.Point(pt1.x, pt1.y));
-        path.add(new paper.Point(pt2.x, pt2.y));
-    }
-
-    return drawnPaths;
-};
