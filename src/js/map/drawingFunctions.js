@@ -68,8 +68,17 @@ export const redrawFirstSegment = (coords, route, drawnRoute) => {
         newPath.strokeColor = '#3498eb';
         newPath.strokeWidth = '2';
 
+        let x, y;
+        if(route[0].x) {
+            x = route[0].x;
+            y = route[0].y;
+        } else if(route[0].joinPoint) {
+            x = route[0].joinPoint.x;
+            y = route[0].joinPoint.y;
+        }
+
         newPath.add(new paper.Point(coords.x, coords.y));
-        newPath.add(new paper.Point(route[0].x, route[0].y));
+        newPath.add(new paper.Point(x, y));
 
         if(typeof newPath === 'undefined')
             return;

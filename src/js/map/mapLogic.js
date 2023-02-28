@@ -105,9 +105,9 @@ const getBounds = (point, nextEl) => {
     bounds[1][0] = point.x + xAdjBaseline;
     bounds[1][1] = baseLineY(bounds[1][0]);
 
-    let segmentHeight = 12;
+    let segmentHeight = 15;
     let deltaXSideline = Math.sqrt((segmentHeight ** 2) / (1 + gradient ** 2));
-    let xAdjSideline = Math.round(deltaXSideline * 10) / 20;
+    let xAdjSideline = Math.round(deltaXSideline * 10) / 10;
     
     let sideLineC1 = bounds[0][1] - gradient * bounds[0][0];
     let sideLineC2 = bounds[1][1] - gradient * bounds[1][0];
@@ -134,29 +134,58 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
     let visited = 0;
 
     for(let i = 0; i < routeArr.value.length; i++) {
-        const point = routeArr.value[i];
+        let point = routeArr.value[i];
 
         // if already checked first three points then break
         if(visited >= 3)
             break;
         
-        if(point.x) { 
+        if(point.x || point.joinPoint) { 
             visited++;
-            // check if within 8px radius of first point
-            const dist = pythagDistance(coords, {x: point.x, y: point.y});
+            let x, y;
 
-            if(i === 0 && dist < 8) {
+            if(point.joinPoint) {
+                x = point.joinPoint.x;
+                y = point.joinPoint.y;
+            } else {
+                x = point.x;
+                y = point.y;
+            }
+
+            // check if within 8px radius of first point
+            const dist = pythagDistance(coords, {x, y});
+
+            if(i === 0 && dist < 8 && routeArr.value.length > 1) {
                 // current position within 8 pixels of first point, do not count as closest point so it will get removed
                 continue;
             } else {
-                if(i === 0 && dist <= 22) { // if not within 22, cannot be inside detection zone 
+                if(i === 0 && dist <= 25) { // if not within 25, cannot be inside detection zone 
                     // test pip rectangular segment intersecting at first point - only reachable if not within 8pxs
+
+                    if(routeArr.value.length === 1) {
+                        // reached end of route
+                        let lastEl = routeArr.value[0];
+
+                        if(dist < 12){
+                            if(lastEl.joinPoint) {
+                                routeArr.value[0] = routeArr.value[0].stopPoint;
+                            } else {
+                                routeArr.value = [];
+                            }
+                            drawnRoute.value.shift().remove();
+                            return;
+                        }
+                    }
+
                     let bounds;
                     
                     if(routeArr.value[1]) {
                         bounds = getBounds(point, routeArr.value[1]);
                     } else {
-                        bounds = getBounds(point, coords);
+                        if(point.x)
+                            bounds = getBounds(point, coords);
+                        else
+                            bounds = getBounds({x, y}, coords);
                     }
                     
                     // draw bounding box
@@ -175,12 +204,28 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
 
                     if(pointInPolygon([coords.x, coords.y], bounds)) {
                         // current position within detection bounds, do not count current point as closest point so it will get removed
+
+                        if(routeArr.value.length === 1) {
+                            console.log(1)
+                            // reached end of route
+                            let lastEl = routeArr.value[0];
+    
+                            if(lastEl.joinPoint) {
+                                routeArr.value[0] = routeArr.value[0].stopPoint;
+                            } else {
+                                routeArr.value = [];
+                            }
+                            drawnRoute.value.shift().remove();
+                            return;
+                        }
+
                         continue;
                     }
                 }
-                
+
                 if(dist < minDist) {
                     // new min distance point found
+
                     minDist = dist;
                     minDistIndex = i;
                     minDistPoint = point;
@@ -189,7 +234,7 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
 
         }
     }
-    
+
     if(minDistIndex === 0) {
         return;
     }    

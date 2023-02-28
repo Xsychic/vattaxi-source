@@ -9,7 +9,7 @@
     import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
     const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound', 'segment']);
-    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRouteFound', 'updateSegment']);
+    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRouteFound', 'updateSegment', 'clearRoute']);
 
     // transformation functions var
     let transformations;
@@ -108,13 +108,17 @@
         trimRoute(coords, routeArr, drawnRoute);
         plotPosition(coords, plot, layers, routeArr.value, drawnRoute);
         
+        if(!routeArr.value.length) {
+           emit('clearRoute');
+        }
+
         emit("updateCoords", coords);
 
     });
 
     const allSegments = ref([]);
     watch(() => props.segment, (newSegment) => {
-        if(!routeArr.value?.length)
+        if(!routeArr.value?.length || routeArr.value?.length <= 2)
             return;
 
         const i = allSegments.value.findIndex((el) => el === newSegment);

@@ -87,6 +87,11 @@
             routeValid.value = -1;
         }
     });
+
+    watch(() => props.routeStringArr, (newRouteStringArr) => {
+        if(!newRouteStringArr.length)
+            routeString.value = '';
+    })
 </script>
 
 <template>

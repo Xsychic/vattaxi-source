@@ -19,6 +19,10 @@
     const updateRouteStringArr = (newRouteStringArr) => routeStringArr.value = newRouteStringArr;
     const updateRouteFound = (routeValidity) => routeFound.value = routeValidity;
     const updateSegment = (newSegment) => segment.value = newSegment;
+    const clearRoute = () => {
+        routeStringArr.value = [];
+        routeFound.value = false;
+    }
 </script>
 
 <template>
@@ -34,6 +38,7 @@
             @updateCoords='updateCoords' 
             @updateRouteFound='updateRouteFound'
             @updateSegment='updateSegment'
+            @clearRoute='clearRoute'
         ></Map>
         <ControlConsole 
             :modeOnline='modeOnline'
