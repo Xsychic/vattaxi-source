@@ -149,7 +149,7 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
                 // current position within 8 pixels of first point, do not count as closest point so it will get removed
                 continue;
             } else {
-                if(i === 0) {
+                if(i === 0 && dist <= 22) { // if not within 22, cannot be inside detection zone 
                     // test pip rectangular segment intersecting at first point - only reachable if not within 8pxs
                     let bounds;
                     
