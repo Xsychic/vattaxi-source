@@ -129,11 +129,11 @@
 
         </div>
         <textarea class='instructions' id='instructions' name='instructions' rows='4' placeholder='Enter your taxi route' v-model='routeString'></textarea>
-        <div class='route-status route-valid' v-if='routeValid == 1 && routeFound'>
+        <div class='route-status route-valid' v-if='routeString && routeValid == 1 && routeFound'>
             valid route
             <font-awesome-icon icon='fa-solid fa-check'></font-awesome-icon>
         </div>
-        <div class='route-status route-invalid' v-else-if='routeValid == -1 || routeValid == 1 && !routeFound'>
+        <div class='route-status route-invalid' v-else-if='routeValid == -1 && !routeString || routeString && routeValid == 1 && !routeFound'>
             invalid route
             <font-awesome-icon icon='fa-solid fa-times'></font-awesome-icon>
         </div>

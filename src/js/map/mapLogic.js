@@ -206,7 +206,6 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
                         // current position within detection bounds, do not count current point as closest point so it will get removed
 
                         if(routeArr.value.length === 1) {
-                            console.log(1)
                             // reached end of route
                             let lastEl = routeArr.value[0];
     

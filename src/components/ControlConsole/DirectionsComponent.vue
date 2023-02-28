@@ -1,4 +1,8 @@
 <script setup>
+    import { defineProps } from 'vue';
+
+    const props = defineProps(['segment']);
+
     const directions = [
         ['fa-arrow-left', 'NEXT LEFT (Q)'],
         ['fa-arrow-right', 'SECOND RIGHT (L)'],
@@ -10,8 +14,8 @@
     <div class='directions-container'>
         <div class='header-row'>
             <h3 class='title'>Directions</h3>
-            <div class='current-taxiway-strap'>
-                You are on: <span class='current-taxiway'>J</span>
+            <div class='current-taxiway-strap' v-if='segment?.name'>
+                You are on: <span class='current-taxiway'>{{ segment.name }}</span>
             </div>
         </div>
 

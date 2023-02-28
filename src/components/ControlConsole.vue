@@ -23,7 +23,10 @@
             :segment='segment'
             @updateRouteStringArr='updateRouteStringArr'
         />
-        <DirectionsComponent></DirectionsComponent>
+        <DirectionsComponent
+            :segment='segment'
+        />
+        
 
         <div class='mode-switch'>
             <span class='mode-status'>
