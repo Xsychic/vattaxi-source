@@ -6,7 +6,7 @@ node_modules
 /tests/e2e/screenshots/
 
 # local notes
-todo.*
+# todo.*
 route-parsing-plan.txt
 
 # local env files
