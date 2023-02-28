@@ -110,9 +110,6 @@
         
         emit("updateCoords", coords);
 
-        
-
-        
     });
 
     const allSegments = ref([]);

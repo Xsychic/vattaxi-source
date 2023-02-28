@@ -1,3 +1,4 @@
+import paper from 'paper';
 import pointInPolygon from 'point-in-polygon';
 import taxiwaySegments from '@/js/graph/taxiways';
 
@@ -64,6 +65,63 @@ const pythagDistance = (origin, dest) => {
     return Math.sqrt(xDiff ** 2 + yDiff ** 2);
 }
 
+const getBounds = (point, nextEl) => {
+    // function to get bounds of rectangle across taxiway intersecting first point
+    let nextElCoords = {};
+
+    if(nextEl.x) {
+        // second el is a point
+        nextElCoords = { x: nextEl.x, y: nextEl.y };
+    } else if(nextEl.points) {
+        // second el is a taxiway segment
+        let pairPoint = nextEl.points.filter((pt) => pt !== point);
+       
+        if(pairPoint.length !== 1) {
+            console.error('mapLogic.js getBounds() could not get pairPoint from twysegment');
+            return;
+        } 
+
+        let pPt = pairPoint[0];
+        nextElCoords = { x: pPt.x, y: pPt.y };
+    } else if(nextEl.joinPoint) {
+        nextElCoords = nextEl.joinPoint;
+    }
+
+    let gradient = (nextElCoords.y - point.y) / (nextElCoords.x - point.x);
+    let normalGradient = -1 / gradient;
+
+    // change in x = sqrt((desired line length)^2 / (1 + gradient^2))
+    let segmentWidth = 35;
+    let deltaXBaseline = Math.sqrt((segmentWidth ** 2) / (1 + normalGradient ** 2));
+    let xAdjBaseline = Math.round(deltaXBaseline * 10) / 20;
+    
+    let baseLineConstant = point.y - normalGradient * point.x;
+    let baseLineY = (x) => normalGradient * x + baseLineConstant;
+
+    let bounds = [[], [], [], []];
+
+    bounds[0][0] = point.x - xAdjBaseline;
+    bounds[0][1] = baseLineY(bounds[0][0]);
+    bounds[1][0] = point.x + xAdjBaseline;
+    bounds[1][1] = baseLineY(bounds[1][0]);
+
+    let segmentHeight = 12;
+    let deltaXSideline = Math.sqrt((segmentHeight ** 2) / (1 + gradient ** 2));
+    let xAdjSideline = Math.round(deltaXSideline * 10) / 20;
+    
+    let sideLineC1 = bounds[0][1] - gradient * bounds[0][0];
+    let sideLineC2 = bounds[1][1] - gradient * bounds[1][0];
+    let sideLineY = (x, c) => gradient * x + c;
+
+    bounds[2][0] = bounds[1][0] - xAdjSideline;
+    bounds[2][1] = sideLineY(bounds[2][0], sideLineC2);
+    bounds[3][0] = bounds[0][0] - xAdjSideline;
+    bounds[3][1] = sideLineY(bounds[3][0], sideLineC1);
+
+    return bounds;
+}
+
+let boundPaths = [];
 
 export const trimRoute = (coords, routeArr, drawnRoute) => {
     if(!routeArr.value?.length || !drawnRoute.value?.length) 
@@ -73,22 +131,62 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
     let minDist = 10**6;
     let minDistIndex;
     let minDistPoint;
+    let visited = 0;
 
     for(let i = 0; i < routeArr.value.length; i++) {
         const point = routeArr.value[i];
+
+        // if already checked first three points then break
+        if(visited >= 3)
+            break;
         
         if(point.x) { 
+            visited++;
+            // check if within 8px radius of first point
             const dist = pythagDistance(coords, {x: point.x, y: point.y});
 
             if(i === 0 && dist < 8) {
-                // current position within 8 pixels of first point, remove this point
+                // current position within 8 pixels of first point, do not count as closest point so it will get removed
                 continue;
-            } else if(dist < minDist) {
-                // new min distance point found
-                minDist = dist;
-                minDistIndex = i;
-                minDistPoint = point;
+            } else {
+                if(i === 0) {
+                    // test pip rectangular segment intersecting at first point - only reachable if not within 8pxs
+                    let bounds;
+                    
+                    if(routeArr.value[1]) {
+                        bounds = getBounds(point, routeArr.value[1]);
+                    } else {
+                        bounds = getBounds(point, coords);
+                    }
+                    
+                    // draw bounding box
+                    while(boundPaths.length) boundPaths.pop().remove();
+
+                    const boundingPath = new paper.Path();
+                    boundPaths.push(boundingPath);
+                    boundingPath.strokeColor = 'white';
+        
+                    bounds.forEach((bound) => {
+                        let p = new paper.Point(bound[0], bound[1]);
+                        boundingPath.add(p);
+                    });
+        
+                    boundingPath.closed = true;
+
+                    if(pointInPolygon([coords.x, coords.y], bounds)) {
+                        // current position within detection bounds, do not count current point as closest point so it will get removed
+                        continue;
+                    }
+                }
+                
+                if(dist < minDist) {
+                    // new min distance point found
+                    minDist = dist;
+                    minDistIndex = i;
+                    minDistPoint = point;
+                }
             }
+
         }
     }
     
