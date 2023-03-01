@@ -2,7 +2,6 @@
 
 ### PRIORITIES
 - [x] write script which creates list of objects containing bounds and reference to relevant segment
-- [ ] create object with 'wide view' bounds of each taxiway (rough outline containing stands and all taxiway segments of named taxiway)
 - [x] write script which gets current segment from aircraft px coords list of bounds
 - [x] implement route parsing algorithm
 - [x] implement simple route drawing
@@ -26,6 +25,7 @@
 
 ### QOL 
 - [x] support implicit first taxiway
+- [ ] create object with 'wide view' bounds of each taxiway (rough outline containing stands and all taxiway segments of named taxiway)
 - [ ] focus pan/zoom on aircraft location? 
 - [ ] add fancy curves between route segments
 - [ ] rewrite position reporting to have server in js client rather than c#

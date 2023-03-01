@@ -1,13 +1,42 @@
 <script setup>
-    import { defineProps } from 'vue';
+    import { defineProps, computed } from 'vue';
 
-    const props = defineProps(['segment']);
+    const props = defineProps(['segment', 'routeArr', 'directions']);
 
-    const directions = [
-        ['fa-arrow-left', 'NEXT LEFT (Q)'],
-        ['fa-arrow-right', 'SECOND RIGHT (L)'],
-        ['fa-arrow-right', 'TURN RIGHT ONTO STAND 102']
-    ]
+    // const directions = [
+    //     ['fa-arrow-left', 'NEXT LEFT (Q)'],
+    //     ['fa-arrow-right', 'SECOND RIGHT (L)'],
+    //     ['fa-arrow-right', 'TURN RIGHT ONTO STAND 102']
+    // ]
+
+    const directions = computed(() => {
+        let directions = [];
+        
+        if(!props.routeArr?.length)
+            return [];
+
+        for(let i = 0; i < props.directions.length; i++) {
+            let el = props.directions[i].el;
+            if(props.routeArr.includes(el)) {
+                directions.push(props.directions[i]);
+            }
+        }
+
+        return directions;
+    });
+
+    const getIcon = (iconCode) => {
+        switch(iconCode) {
+            case -1:
+                return 'fa-arrow-left';
+            case 0: 
+                return 'fa-arrow-up';
+            case 1:
+                return 'fa-arrow-right';
+            case 2:
+                return 'fa-hand';
+        }
+    }
 </script>
 
 <template>
@@ -20,9 +49,10 @@
         </div>
 
         <div class='directions'>
-            <div class='direction' v-for='direction in directions' :key='direction'>
-                <font-awesome-icon :icon='`fa-solid ${ direction[0] }`'></font-awesome-icon>
-                {{ direction[1] }}
+            <h5 class='no-directions' v-if='!directions?.length'>Enter ATC instructions for directions...</h5>
+            <div class='direction' v-else v-for='direction in directions' :key='direction'>
+                <font-awesome-icon :icon='`fa-solid ${ getIcon(direction.dir) }`'></font-awesome-icon>
+                {{ direction.text }}
             </div>
         </div>
     </div>
@@ -70,6 +100,14 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
+    }
+
+    .no-directions {
+        font-weight: 500;
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        font-style: italic;
     }
 
     .title {

@@ -4,12 +4,13 @@
     import TempTools from '@/components/TempTools.vue';
     import mapTransformations from '@/js/map/mapTransformations';
     
+    import { generateDirections } from '@/js/map/directionLogic';
     import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
     import { calculatePixelCoords, getSegment, parseRoute, trimRoute } from '@/js/map/mapLogic';
     import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
     const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound', 'segment']);
-    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRouteFound', 'updateSegment', 'clearRoute']);
+    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRouteFound', 'updateSegment', 'clearRoute', 'newRouteArr', 'newDirections']);
 
     // transformation functions var
     let transformations;
@@ -116,7 +117,9 @@
 
     });
 
+
     const allSegments = ref([]);
+
     watch(() => props.segment, (newSegment) => {
         if(!routeArr.value?.length || routeArr.value?.length <= 2)
             return;
@@ -138,6 +141,7 @@
         const point = props.segment.points[0];
         const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments);
 
+
         if(newRouteArr == false && props.routeFound) {
             emit('updateRouteFound', false);
             routeArr.value = [];
@@ -147,12 +151,20 @@
             routeArr.value = newRouteArr;
         }
 
+        let directions = generateDirections(routeArr, props.routeStringArr);
+        emit('newRouteArr', routeArr.value);
+        emit('newDirections', directions);
         clearPaths(drawnRoute.value)
 
         if(!newRouteArr || !newRouteArr.length)
             return;
 
         drawnRoute.value = drawRoute(newRouteArr, props.pxCoords);
+    });
+
+
+    watch(routeArr, (newRouteArr) => {
+        emit('newRouteArr', newRouteArr);
     });
 
     // temp tools stuff

@@ -4,7 +4,7 @@
 
     import { defineEmits, defineProps } from 'vue';
 
-    const props = defineProps(['modeOnline', 'routeStringArr', 'routeFound', 'segment']);
+    const props = defineProps(['modeOnline', 'routeStringArr', 'routeFound', 'segment', 'routeArr', 'directions']);
     const emit = defineEmits(['toggleMode', 'updateRouteStringArr']);
 
     const updateRouteStringArr = (newRoute) => emit('updateRouteStringArr', newRoute);
@@ -25,6 +25,8 @@
         />
         <DirectionsComponent
             :segment='segment'
+            :routeArr='routeArr'
+            :directions='directions'
         />
         
 
