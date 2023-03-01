@@ -1,3 +1,4 @@
+import J from '@/js/graph/taxiways/J';
 import K from '@/js/graph/taxiways/K';
 import KA from '@/js/graph/taxiways/KA';
 import L from '@/js/graph/taxiways/L';
@@ -47,6 +48,16 @@ NOTE: SEPARATE FILES SHOULD NOT BE LINKED AT A POINT AT WHICH THE TWO
 */
 
 // link files
+
+// J to P
+joinPoints(J.segESix.right, P.segSix.upper);
+joinPoints(J.segESix.right, P.segSix.lower);
+
+// J to Q
+joinPoints(J.segEThree.right, Q.segSeven.lower);
+joinPoints(J.segEThree.right, Q.segEight.lower);
+joinPoints(J.segEFour.left, Q.segSeven.lower);
+joinPoints(J.segEFour.left, Q.segEight.lower);
 
 // K to Q
 joinPoints(K.segOne.right, Q.segFour.lower);

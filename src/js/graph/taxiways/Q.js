@@ -29,7 +29,10 @@ const points = {
         lower: new Point({x: 2017, y: 1384})
     },
     segEight: {
-        lower: new Point({x: 2027, y: 1428})
+        lower: new Point({x: 2025.6, y: 1423.2})
+    },
+    segNine: {
+        lower: new Point({x: 2027.9, y: 1432.2})
     }
 }
 
@@ -139,12 +142,24 @@ export const taxiways = {
         'Q',
         [
             {x: 2030, y: 1382},
-            {x: 2038, y: 1429},
-            {x: 2008, y: 1432},
+            {x: 2040.2, y: 1424.4},
+            {x: 2007.2, y: 1430},
             {x: 1997, y: 1389.5}
         ],
         []
-    ) 
+    ),
+    segNine: new TaxiwaySegment(
+        points.segEight.lower,
+        points.segNine.lower,
+        'Q',
+        [
+            {x: 2040.2, y: 1424.4},
+            {x: 2041.4, y: 1429.8},
+            {x: 2009.2, y: 1435.4},
+            {x: 2007.2, y: 1430},
+        ],
+        []
+    )
 } 
 
 // link adjoining (non-adjacent segment) points
