@@ -11,7 +11,7 @@
         -> at least 2 elements in route
         -> terminates at stand/holding point
         -> contains existing instructions (stand/taxiway/holding point exist)
-- [ ] implement directions algorithm
+- [x] implement directions algorithm
 - [ ] wrong turn detection - visual alert, don't fire if entering a stand
 - [ ] complete graph
 - [x] destination detection
@@ -21,7 +21,11 @@
 - [ ] fix `L Q /Q1` from blue section between segments to the left of S112 (drawn path doubles back)
 - [x] fix doubled-back path drawn if user passes by point proximity detection radius
 - [ ] remove aircraft and path plots if connection to sim lost
+- [ ] remove drawn paths when instructions input is (manually) cleared
 - [x] stop 'wrong turn' detection if turning onto stand
+- [ ] fix wrong turn detection misfiring
+- [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
+- [ ] fix wrong/missing directions when turning off initial taxiway segment - e.g. S574 segment onto QC
 
 ### QOL 
 - [x] support implicit first taxiway
@@ -29,6 +33,7 @@
 - [ ] focus pan/zoom on aircraft location? 
 - [ ] add fancy curves between route segments
 - [ ] rewrite position reporting to have server in js client rather than c#
+- [ ] add direction counter - i.e. take third right instead of turn right
 
 ### ON HOLD
 - [ ] write unit tests, particularly for functions in js files
