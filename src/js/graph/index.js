@@ -1,4 +1,5 @@
 import K from '@/js/graph/taxiways/K';
+import KA from '@/js/graph/taxiways/KA';
 import L from '@/js/graph/taxiways/L';
 import P from '@/js/graph/taxiways/P';
 import Q from '@/js/graph/taxiways/Q';
@@ -52,6 +53,14 @@ joinPoints(K.segOne.right, Q.segFour.lower);
 joinPoints(K.segOne.right, Q.segFive.lower);
 joinPoints(K.segTwo.left, Q.segFour.lower);
 joinPoints(K.segTwo.left, Q.segFive.lower);
+
+// K to KA
+joinPoints(K.segFive.right, KA.segOne.lower);
+joinPoints(K.segSix.right, KA.segOne.lower);
+
+// KA to L
+joinPoints(KA.segOne.upper, L.segNine.right);
+joinPoints(KA.segOne.upper, L.segTen.left);
 
 // L to P
 joinPoints(P.segOne.upper, L.segSeven.right);
