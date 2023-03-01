@@ -178,8 +178,10 @@ export const drawGraph = (graphPaths, layers) => {
             
             const intercept = point.y - hpGradient * point.x;
             const y = (x) => hpGradient * x + intercept;
-            const firstPoint = new paper.Point(point.x - hpSpan, y(point.x - hpSpan));
-            const secondPoint = new paper.Point(point.x + hpSpan, y(point.x + hpSpan));
+            const requiredDeltaX = (len, gradient) => Math.sqrt(len ** 2 / (1 + gradient ** 2));
+            const deltaX = requiredDeltaX(hpSpan, hpGradient);
+            const firstPoint = new paper.Point(point.x - deltaX, y(point.x - deltaX));
+            const secondPoint = new paper.Point(point.x + deltaX, y(point.x + deltaX));
             hpPath.add(firstPoint);
             hpPath.add(secondPoint);
             graphPaths.push(hpPath);
