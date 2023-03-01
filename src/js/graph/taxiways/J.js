@@ -8,6 +8,6 @@ export const taxiways = {
 }
 
 // join two halves of J
-joinPoints(JWest.segWN.right, JEast.segEOne.left);
+joinPoints(JWest.segWTwelve.right, JEast.segEOne.left);
 
 export default { ...JEast, ...JWest};

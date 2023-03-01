@@ -69,6 +69,12 @@ joinPoints(K.segTwo.left, Q.segFive.lower);
 joinPoints(K.segFive.right, KA.segOne.lower);
 joinPoints(K.segSix.right, KA.segOne.lower);
 
+// K to P
+joinPoints(K.segTwo.right, P.segTwo.upper);
+joinPoints(K.segTwo.right, P.segThree.upper);
+joinPoints(K.segThree.left, P.segTwo.upper);
+joinPoints(K.segThree.left, P.segTwo.lower);
+
 // KA to L
 joinPoints(KA.segOne.upper, L.segNine.right);
 joinPoints(KA.segOne.upper, L.segTen.left);
