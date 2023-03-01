@@ -19,9 +19,9 @@
         */
         
         // create regexs
-        const singleTaxiways = ['Q', 'L'];
+        const singleTaxiways = ['K', 'L', 'P', 'Q'];
         const singleTwysExp = `[${ singleTaxiways.join('') }]`;
-        const doubleTaxiways = ['QA', 'QB', 'QC'];
+        const doubleTaxiways = ['KA', 'QA', 'QB', 'QC'];
         let doubleTwysExp = '';
 
         for(let i = 0; i < doubleTaxiways.length; i++) {
@@ -30,7 +30,7 @@
                 doubleTwysExp += '|';
         }
 
-        const standExp = `(?:S\\d{1,3}[LR]?)`;
+        const standExp = `(?:S\\d{1,3}[LREW]?)`;
         const holdingPointExp = String.raw`(?:\/[a-z]{1,2}|\/[abcdeghjmnpqrstuwyz][1-7])`;
 
         // global flag must not be used
