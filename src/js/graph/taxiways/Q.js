@@ -1,6 +1,5 @@
 import Point from '@/js/graph/Point';
 import Stand from '@/js/graph/Stand';
-import QX from '@/js/graph/taxiways/QX';
 import { joinPoints } from '@/js/graph/tools';
 import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 
@@ -149,9 +148,6 @@ export const taxiways = {
 } 
 
 // link adjoining (non-adjacent segment) points
-joinPoints(points.segOne.upper, QX.QC.left);
-joinPoints(points.segOne.lower, QX.QB.left);
-joinPoints(points.segTwo.lower, QX.QB.left);
 joinPoints(points.segThree.lower, points.segFour.upper);
 
 // add taxiway reference to point instances
