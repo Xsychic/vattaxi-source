@@ -11,7 +11,7 @@
     const pxCoords = ref({});
     const routeStringArr = ref([]);
     const routeFound = ref(false);
-    const segment = ref();
+    const segment = ref(false);
     const routeArr = ref([]);
     const directions = ref([]);
 

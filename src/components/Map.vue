@@ -15,10 +15,6 @@
     // transformation functions var
     let transformations;
 
-    // for temp tools - REMOVE
-    var locator = ref();
-    const tool = ref(false);
-
     // filter vars
     const showFilters = ref(false);
     const layerStatus = ref({
@@ -96,13 +92,15 @@
             y: Math.round(y * 10) / 10
         };
 
-        const newSeg = getSegment(x, y);
+        // find list of possible segments and select the best if any found
+        let newSeg = getSegment(x, y, oldSegment);
+
+        if(Array.isArray(newSeg))
+            newSeg = newSeg[0];
         
         if(!oldSegment || newSeg !== oldSegment) {
             // segment change - can't be in watcher, changes must happen before route trimmed
-            
             oldSegment = newSeg;
-            
             emit('updateSegment', newSeg);
         }
 
@@ -169,6 +167,10 @@
 
     // temp tools stuff
 
+    var locator = ref();
+    var segment = ref(false);
+    const locatorTool = ref(false);
+    const segmentTool = ref(false);
     const showGraph = ref(true);
     const graphPaths = [];
 
@@ -180,22 +182,84 @@
         }
     });
 
-    const toggleTool = () => {
-        if(tool.value) {
-            tool.value.remove();
-            locator.value = {};
-            tool.value = false;
-        } else {
-            tool.value = new paper.Tool();
+    const toolOn = () => {
+        return locatorTool.value || segmentTool.value;
+    }
 
-            tool.value.onMouseUp = (event) => {
+    const turnOffTools = () => {
+        if(locatorTool.value) {
+            locatorTool.value.remove();
+            locator.value = {};
+            locatorTool.value = false;
+        } else if(segmentTool.value) {
+            segmentTool.value.remove();
+            segment.value = false;
+            segmentTool.value = false;
+        }
+    }
+
+    const toggleLocatorTool = () => {
+        if(toolOn()) {
+            turnOffTools();
+        } else {
+            locatorTool.value = new paper.Tool();
+
+            locatorTool.value.onMouseUp = (event) => {
                 event.scale = transformations.scale;
                 locator.value = event;
                 // write points to clipboard in json format
                 navigator.clipboard.writeText(`{x: ${Math.round(10* event.point.x / event.scale)/10}, y: ${Math.round(10*event.point.y / event.scale)/10}}`);
             }
 
-            tool.value.activate();
+            locatorTool.value.activate();
+        }
+    }
+
+
+    const toggleSegmentTool = () => {
+        if(toolOn()) {
+            turnOffTools();
+        } else {
+            segmentTool.value = new paper.Tool();
+
+            segmentTool.value.onMouseUp = (event) => {
+                event.scale = transformations.scale;
+                const adjustedX = Math.round(10 * event.point.x / event.scale) / 10;
+                const adjustedY = Math.round(10 * event.point.y / event.scale) / 10;
+                
+                let seg = getSegment(adjustedX, adjustedY);
+
+                if(seg) {
+                    if(!Array.isArray(seg)) {
+                        seg = [seg];
+                    }
+
+                    // point in only one segment
+                    let formattedSegment = `(${adjustedX}, ${adjustedY}), ${ (seg.length > 1 ? 'Twys' : 'Twy' ) } `;
+                    let formatPoint = (point) => `(${ point.x }, ${ point.y })`;
+                    console.clear();
+
+                    for(let i = 0; i < seg.length; i++) {
+                        formattedSegment += seg[i].name + ' ';
+                        let printString = `Twy ${ seg[i].name } bounds: `;
+
+                        for(let j = 0; j < seg[i].bounds.length; j++) {
+                            let pt = seg[i].bounds[j];
+                            printString += formatPoint(pt);
+                            
+                            if(j !== seg[i].bounds.length - 1)
+                                printString += ', '
+                        }
+                        console.log(printString);
+                    }
+
+                    segment.value = formattedSegment;
+                } else {
+                    segment.value = `(${adjustedX}, ${adjustedY}) not in segment`;
+                }
+            }
+
+            segmentTool.value.activate();
         }
     }
 
@@ -209,7 +273,15 @@
 
 <template>
     <div class='chart'>
-        <TempTools :plot='plot' :locator='locator' :showGraph='showGraph' @locatorTool='toggleTool' @toggleGraph='showGraph = !showGraph'></TempTools>
+        <TempTools 
+            :plot='plot' 
+            :locator='locator' 
+            :segment='segment'
+            :showGraph='showGraph' 
+            @locatorTool='toggleLocatorTool' 
+            @segmentTool='toggleSegmentTool' 
+            @toggleGraph='showGraph = !showGraph'
+        />
         <div id="chart-wrapper">
             <div id="chart-stack">
                 <!-- 3452 2759 -->

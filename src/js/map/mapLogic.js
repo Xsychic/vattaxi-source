@@ -36,7 +36,7 @@ export const calculatePixelCoords = (newValue) => {
 }
 
 
-export const getSegment = (x = false, y = false) => {
+export const getSegment = (x = false, y = false, currentSegment = false) => {
     const segments = [];
 
     if(x == false || y == false) {
@@ -53,9 +53,14 @@ export const getSegment = (x = false, y = false) => {
         }
     }
 
+    // return different value depending on number of matching segments found and if any of them match the current segment
     if(segments.length == 0)
         return false;
-    return segments[0];
+    if(segments.length == 1)
+        return segments[0];
+    if(currentSegment && segments.includes(currentSegment))
+        return currentSegment
+    return segments;
 }
 
 
