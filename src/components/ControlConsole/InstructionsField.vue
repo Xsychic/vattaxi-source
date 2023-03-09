@@ -19,9 +19,9 @@
         */
         
         // create regexs
-        const singleTaxiways = ['J', 'K', 'L', 'P', 'Q'];
+        const singleTaxiways = ['J', 'K', 'L', 'N', 'P', 'Q'];
         const singleTwysExp = `[${ singleTaxiways.join('') }]`;
-        const doubleTaxiways = ['KA', 'QA', 'QB', 'QC'];
+        const doubleTaxiways = ['AN', 'KA', 'QA', 'QB', 'QC'];
         let doubleTwysExp = '';
 
         for(let i = 0; i < doubleTaxiways.length; i++) {

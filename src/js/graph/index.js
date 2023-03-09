@@ -1,7 +1,9 @@
+import AN from '@/js/graph/taxiways/AN';
 import J from '@/js/graph/taxiways/J';
 import K from '@/js/graph/taxiways/K';
 import KA from '@/js/graph/taxiways/KA';
 import L from '@/js/graph/taxiways/L';
+import N from '@/js/graph/taxiways/N';
 import P from '@/js/graph/taxiways/P';
 import Q from '@/js/graph/taxiways/Q';
 import QX from '@/js/graph/taxiways/QX';
@@ -49,6 +51,21 @@ NOTE: SEPARATE FILES SHOULD NOT BE LINKED AT A POINT AT WHICH THE TWO
 
 // link files
 
+// AN to N
+joinPoints(AN.segTwo.right, N.segFive.lower);
+joinPoints(AN.segThree.left, N.segSix.upper);
+
+// AN to P
+joinPoints(AN.segOne.right, P.segSix.lower);
+joinPoints(AN.segTwo.left, P.segSeven.upper);
+joinPoints(AN.segTwo.right, P.segSeven.lower);
+
+// J to N
+joinPoints(J.segENine.left, N.segThree.lower);
+joinPoints(J.segENine.left, N.segFour.upper);
+joinPoints(J.segENine.right, N.segThree.lower);
+joinPoints(J.segENine.right, N.segFour.upper);
+
 // J to P
 joinPoints(J.segESix.right, P.segSix.upper);
 joinPoints(J.segESix.right, P.segSix.lower);
@@ -68,6 +85,10 @@ joinPoints(K.segTwo.left, Q.segFive.lower);
 // K to KA
 joinPoints(K.segFive.right, KA.segOne.lower);
 joinPoints(K.segSix.right, KA.segOne.lower);
+
+// K to N
+joinPoints(K.segThree.right, N.segOne.upper);
+joinPoints(K.segFour.right, N.segOne.upper);
 
 // K to P
 joinPoints(K.segTwo.right, P.segTwo.upper);
@@ -92,6 +113,9 @@ joinPoints(L.segFive.right, Q.segThree.lower);
 // L to QA
 joinPoints(L.segSix.left, QX.segFive.lower);
 joinPoints(L.segSix.right, QX.segFive.lower);
+
+// N to P
+joinPoints(N.segFive.lower, P.segSeven.lower);
 
 // Q to QC & QB
 joinPoints(Q.segOne.upper, QX.QC.left);

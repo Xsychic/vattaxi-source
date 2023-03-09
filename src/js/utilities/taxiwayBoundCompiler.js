@@ -1,13 +1,15 @@
 // import every 
+import { taxiways as AN } from '@/js/graph/taxiways/AN';
 import { taxiways as J } from '@/js/graph/taxiways/J';
 import { taxiways as K } from '@/js/graph/taxiways/K';
 import { taxiways as KA } from '@/js/graph/taxiways/KA';
 import { taxiways as L } from '@/js/graph/taxiways/L';
+import { taxiways as N } from '@/js/graph/taxiways/N';
 import { taxiways as P } from '@/js/graph/taxiways/P';
 import { taxiways as Q } from '@/js/graph/taxiways/Q';
 import { taxiways as QX } from '@/js/graph/taxiways/QX';
 
-const taxiways = {J, K, KA, L, P, Q, QX};
+const taxiways = {AN, J, K, KA, L, N, P, Q, QX};
 
 /*
 

@@ -167,10 +167,12 @@
 
     // temp tools stuff
 
-    var locator = ref();
+    var locator = ref(false);
     var segment = ref(false);
     const locatorTool = ref(false);
     const segmentTool = ref(false);
+    const locatorToolOn = ref(false);
+    const segmentToolOn = ref(false);
     const showGraph = ref(true);
     const graphPaths = [];
 
@@ -182,26 +184,24 @@
         }
     });
 
-    const toolOn = () => {
-        return locatorTool.value || segmentTool.value;
-    }
-
     const turnOffTools = () => {
         if(locatorTool.value) {
             locatorTool.value.remove();
-            locator.value = {};
             locatorTool.value = false;
+            locator.value = false;
         } else if(segmentTool.value) {
             segmentTool.value.remove();
-            segment.value = false;
             segmentTool.value = false;
+            segment.value = false;
         }
     }
 
-    const toggleLocatorTool = () => {
-        if(toolOn()) {
-            turnOffTools();
-        } else {
+    const toggleLocatorTool = () => {   
+        turnOffTools();
+        
+        if(!locatorToolOn.value) {
+            locatorToolOn.value = true;
+            segmentToolOn.value = false;
             locatorTool.value = new paper.Tool();
 
             locatorTool.value.onMouseUp = (event) => {
@@ -212,14 +212,18 @@
             }
 
             locatorTool.value.activate();
+        } else {
+            locatorToolOn.value = false;
         }
     }
 
 
     const toggleSegmentTool = () => {
-        if(toolOn()) {
-            turnOffTools();
-        } else {
+        turnOffTools();
+
+        if(!segmentToolOn.value) {
+            segmentToolOn.value = true;
+            locatorToolOn.value = false;
             segmentTool.value = new paper.Tool();
 
             segmentTool.value.onMouseUp = (event) => {
@@ -233,22 +237,22 @@
                     if(!Array.isArray(seg)) {
                         seg = [seg];
                     }
-
+                    
                     // point in only one segment
                     let formattedSegment = `(${adjustedX}, ${adjustedY}), ${ (seg.length > 1 ? 'Twys' : 'Twy' ) } `;
-                    let formatPoint = (point) => `(${ point.x }, ${ point.y })`;
+                    let formatPoint = (point) => `{x: ${ point.x }, y: ${ point.y }}`;
                     console.clear();
 
                     for(let i = 0; i < seg.length; i++) {
                         formattedSegment += seg[i].name + ' ';
-                        let printString = `Twy ${ seg[i].name } bounds: `;
+                        let printString = `Twy ${ seg[i].name } bounds:\n`;
 
                         for(let j = 0; j < seg[i].bounds.length; j++) {
                             let pt = seg[i].bounds[j];
                             printString += formatPoint(pt);
                             
                             if(j !== seg[i].bounds.length - 1)
-                                printString += ', '
+                                printString += ',\n'
                         }
                         console.log(printString);
                     }
@@ -260,6 +264,8 @@
             }
 
             segmentTool.value.activate();
+        } else {
+            segmentToolOn.value = false;
         }
     }
 
@@ -277,6 +283,8 @@
             :plot='plot' 
             :locator='locator' 
             :segment='segment'
+            :locatorToolOn='locatorToolOn'
+            :segmentToolOn='segmentToolOn'
             :showGraph='showGraph' 
             @locatorTool='toggleLocatorTool' 
             @segmentTool='toggleSegmentTool' 

@@ -1,19 +1,15 @@
 <script setup>
     import { ref, defineProps, defineEmits } from 'vue';
 
-    const props = defineProps(['plot', 'locator', 'segment', 'showGraph']);
+    const props = defineProps(['plot', 'locator', 'segment', 'showGraph', 'locatorToolOn', 'segmentToolOn']);
     const emit = defineEmits(['locatorTool', 'segmentTool', 'toggleGraph']);
 
-    const locatorToolOn = ref(false);
-    const segmentToolOn = ref(false);
 
     const locatorTool = () => {
-        locatorToolOn.value = !locatorToolOn.value;
         emit("locatorTool"); 
     }
 
     const segmentTool = () => {
-        segmentToolOn.value = !segmentToolOn.value;
         emit('segmentTool');
     }
 </script>
@@ -22,7 +18,12 @@
     <div class='tools'>
         <div class='block'>Plotted position: {{ (plot?.position ? `x: ${Math.round(plot.position.x)}, y: ${Math.round(plot.position.y)}` : 'No plot') }}</div>
         <div class='block' @click='locatorTool'>
-            Locator: {{ (locator?.point ? `x: ${ Math.round(locator.point.x) }, y: ${ Math.round(locator.point.y) }, scale: ${ Math.round(locator.scale * 100) / 100 } Ax: ${ Math.round(locator.point.x / locator.scale*10)/10 }, Ay: ${ Math.round(locator.point.y / locator.scale*10)/10 }` : (locatorToolOn ? 'On' : 'Off')) }}
+            Locator: {{ ( locator !== false ? `
+                x: ${ Math.round(locator.point.x) }, 
+                y: ${ Math.round(locator.point.y) }, 
+                scale: ${ Math.round(locator.scale * 100) / 100 } 
+                Ax: ${ Math.round(locator.point.x / locator.scale * 10) / 10 }, 
+                Ay: ${ Math.round(locator.point.y / locator.scale * 10) / 10 }` : (locatorToolOn ? 'On' : 'Off')) }}
         </div>
         <div class='block' @click='segmentTool'>
             Segment: {{ ( segment !== false ? segment : (segmentToolOn ? 'On' : 'Off') ) }}
