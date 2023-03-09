@@ -1,4 +1,6 @@
+import { taxiways as A } from '@/js/graph/taxiways/A';
 import { taxiways as AN } from '@/js/graph/taxiways/AN';
+import { taxiways as AS } from '@/js/graph/taxiways/AS';
 import { taxiways as J } from '@/js/graph/taxiways/J';
 import { taxiways as K } from '@/js/graph/taxiways/K';
 import { taxiways as KA } from '@/js/graph/taxiways/KA';
@@ -7,9 +9,54 @@ import { taxiways as N } from '@/js/graph/taxiways/N';
 import { taxiways as P } from '@/js/graph/taxiways/P';
 import { taxiways as Q } from '@/js/graph/taxiways/Q';
 import { taxiways as QX } from '@/js/graph/taxiways/QX';
+import { taxiways as Z } from '@/js/graph/taxiways/Z';
 
 
 const data = {
+	"A": [
+		{
+			"object": A.segOne,
+			"bounds": [
+				[2594.8, 1289.7],
+				[2600.3, 1319.7],
+				[2594.2, 1326.6],
+				[2563.5, 1333.3],
+				[2559.1, 1298.3]
+			]
+		},
+		{
+			"object": A.segTwo,
+			"bounds": [
+				[2600.3, 1319.7],
+				[2619.7, 1313.7],
+				[2618.3, 1350.1],
+				[2591.8, 1347.7],
+				[2586.2, 1328.7],
+				[2594.2, 1326.6]
+			]
+		},
+		{
+			"object": A.segThree,
+			"bounds": [
+				[2586.2, 1328.7],
+				[2591.8, 1347.7],
+				[2595, 1352.2],
+				[2561.4, 1358.8],
+				[2563.5, 1333.3]
+			]
+		},
+		{
+			"object": A.segFour,
+			"bounds": [
+				[2595, 1352.2],
+				[2603.1, 1357.4],
+				[2606.5, 1408.7],
+				[2550.8, 1418.7],
+				[2544.3, 1367.3],
+				[2561.4, 1358.8]
+			]
+		}
+	],
 	"AN": [
 		{
 			"object": AN.segOne,
@@ -64,6 +111,28 @@ const data = {
 				[2709.3, 1281.5],
 				[2713.6, 1308.3],
 				[2654.7, 1322.5]
+			]
+		}
+	],
+	"AS": [
+		{
+			"object": AS.segOne,
+			"bounds": [
+				[2390.2, 1410.8],
+				[2470.8, 1391.7],
+				[2477.7, 1425.4],
+				[2405.1, 1435.3]
+			]
+		},
+		{
+			"object": AS.segTwo,
+			"bounds": [
+				[2470.8, 1391.7],
+				[2546.7, 1376.8],
+				[2567.8, 1380.8],
+				[2561.8, 1417.5],
+				[2534.3, 1414.2],
+				[2477.7, 1425.4]
 			]
 		}
 	],
@@ -882,6 +951,44 @@ const data = {
 				[1938, 817],
 				[1962, 806],
 				[1966, 813]
+			]
+		}
+	],
+	"Z": [
+		{
+			"object": Z.segOne,
+			"bounds": [
+				[2315.3, 1314.2],
+				[2387.4, 1306.8],
+				[2395.3, 1349.3],
+				[2325.5, 1356.4]
+			]
+		},
+		{
+			"object": Z.segTwo,
+			"bounds": [
+				[2387.4, 1306.8],
+				[2547.4, 1272.5],
+				[2556.6, 1316.9],
+				[2395.3, 1349.3]
+			]
+		},
+		{
+			"object": Z.segThree,
+			"bounds": [
+				[2547.4, 1272.5],
+				[2612.4, 1258.7],
+				[2623.4, 1302.1],
+				[2556.6, 1316.9]
+			]
+		},
+		{
+			"object": Z.segFour,
+			"bounds": [
+				[2612.4, 1258.7],
+				[2707.7, 1244.8],
+				[2712.8, 1275.5],
+				[2623.4, 1302.1]
 			]
 		}
 	]

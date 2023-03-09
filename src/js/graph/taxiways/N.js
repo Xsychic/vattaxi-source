@@ -21,8 +21,8 @@ const points = {
         lower: new Point({x: 2392.3, y: 1311.9})
     },
     segFive: {
-        upper: new Point({x: 2400.1, y: 1348}),
-        lower: new Point({x: 2401.8, y: 1353.8})
+        upper: new Point({x: 2399.7, y: 1346.2}),
+        lower: new Point({x: 2403.5, y: 1356.5})
     },
     segSix: {
         upper: new Point({x: 2408, y: 1364.3}),
