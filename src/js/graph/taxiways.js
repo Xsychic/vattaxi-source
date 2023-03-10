@@ -1,6 +1,7 @@
 import { taxiways as A } from '@/js/graph/taxiways/A';
 import { taxiways as AN } from '@/js/graph/taxiways/AN';
 import { taxiways as AS } from '@/js/graph/taxiways/AS';
+import { taxiways as B } from '@/js/graph/taxiways/B';
 import { taxiways as C } from '@/js/graph/taxiways/C';
 import { taxiways as J } from '@/js/graph/taxiways/J';
 import { taxiways as K } from '@/js/graph/taxiways/K';
@@ -63,6 +64,15 @@ const data = {
 				[2550.8, 1418.7],
 				[2544.3, 1367.3],
 				[2561.4, 1358.8]
+			]
+		},
+		{
+			"object": A.segFive,
+			"bounds": [
+				[2606.5, 1408.7],
+				[2610.2, 1451],
+				[2568.5, 1458.9],
+				[2550.8, 1418.7]
 			]
 		}
 	],
@@ -142,6 +152,36 @@ const data = {
 				[2561.8, 1417.5],
 				[2534.3, 1414.2],
 				[2477.7, 1425.4]
+			]
+		}
+	],
+	"B": [
+		{
+			"object": B.segOne,
+			"bounds": [
+				[2449, 1429.8],
+				[2453.7, 1481],
+				[2422.9, 1487.6],
+				[2417.3, 1436.3]
+			]
+		},
+		{
+			"object": B.segTwo,
+			"bounds": [
+				[2417.9, 1436.5],
+				[2429.9, 1443.8],
+				[2423.6, 1465.8],
+				[2375.8, 1445.7]
+			]
+		},
+		{
+			"object": B.segThree,
+			"bounds": [
+				[2417.9, 1436.5],
+				[2413.5, 1474],
+				[2383, 1497.3],
+				[2335.4, 1506.9],
+				[2375.8, 1445.7]
 			]
 		}
 	],
@@ -715,6 +755,15 @@ const data = {
 				[2677.7, 1395.2],
 				[2634.5, 1404.2],
 				[2630.5, 1370.4]
+			]
+		},
+		{
+			"object": M.segFive,
+			"bounds": [
+				[2677.7, 1395.2],
+				[2670.1, 1439.5],
+				[2644.2, 1443.7],
+				[2634.5, 1404.2]
 			]
 		}
 	],

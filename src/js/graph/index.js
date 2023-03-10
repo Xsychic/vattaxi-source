@@ -1,6 +1,7 @@
 import A from '@/js/graph/taxiways/A';
 import AN from '@/js/graph/taxiways/AN';
 import AS from '@/js/graph/taxiways/AS';
+import B from '@/js/graph/taxiways/B';
 import C from '@/js/graph/taxiways/C';
 import J from '@/js/graph/taxiways/J';
 import K from '@/js/graph/taxiways/K';
@@ -133,6 +134,15 @@ joinPoints(AS.segOne.left, P.segEight.upper);
 
 // AS to N
 joinPoints(AS.segOne.right, N.segSeven.lower);
+
+// B to N
+joinPoints(B.segOne.upper, N.segEight.lower);
+
+// B to P
+joinPoints(B.segTwo.upper, P.segEight.lower);
+
+// BR to P
+joinPoints(B.segThree.upper, P.segEight.lower);
 
 // C to J
 joinPoints(C.segOne.upper, J.segEFour.right);

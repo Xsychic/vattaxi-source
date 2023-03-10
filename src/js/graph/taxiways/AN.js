@@ -15,7 +15,7 @@ const points = {
     },
     segThree: {
         left: new Point({x: 2426.2, y: 1372.7}),
-        right: new Point({x: 2547.6, y: 1346.7})
+        right: new Point({x: 2553.6, y: 1344})
     },
     segFour: {
         left: new Point({x: 2568.8, y: 1341.7}),

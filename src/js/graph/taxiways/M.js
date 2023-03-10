@@ -20,6 +20,10 @@ const points = {
     segFour: {
         upper: new Point({x: 2649.4, y: 1373.9}, {name: 'M3'}),
         lower: new Point({x: 2655, y: 1399.7}, {name: 'M1'})
+    },
+    segFive: {
+        upper: new Point({x: 2658.8, y: 1421.3}),
+        lower: new Point({x: 2658.5, y: 1439.5})
     }
 }
 
@@ -81,6 +85,20 @@ export const taxiways = {
             {x: 2630.5, y: 1370.4},
         ],
         []
+    ),
+    segFive: new TaxiwaySegment(
+        points.segFive.upper,
+        points.segFive.lower,
+        'M',
+        [
+            {x: 2677.7, y: 1395.2},
+
+            {x: 2670.1, y: 1439.5},
+            {x: 2644.2, y: 1443.7},
+
+            {x: 2634.5, y: 1404.2},
+        ],
+        []
     )
 }
 
@@ -88,6 +106,7 @@ export const taxiways = {
 joinPoints(points.segOne.lower, points.segTwo.upper);
 joinPoints(points.segTwo.lower, points.segThree.upper);
 joinPoints(points.segThree.lower, points.segFour.upper);
+joinPoints(points.segFour.lower, points.segFive.upper);
 
 
 // add taxiway reference to point instances in QA

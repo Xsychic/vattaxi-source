@@ -31,6 +31,8 @@
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
 - [ ] fix path doubling back when route starts with turn off current segment (low priority, instructions *shouldn't* be given)
 - [ ] if terminating holding point is first point on taxiway not included in instructions then invalid route (e.g A1 via AS) 
+- [ ] 'invalid route' when in segment that contains holding point that trying to route to
+- [ ] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)
 
 ### QOL 
 - [x] support implicit first taxiway
@@ -39,3 +41,4 @@
 - [ ] add fancy curves between route segments
 - [ ] rewrite position reporting to have server in js client rather than c#
 - [ ] add direction counter - i.e. take third right instead of turn right
+- [ ] create boundary zone for 26L/08R

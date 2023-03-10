@@ -20,6 +20,10 @@ const points = {
     segFour: {
         upper: new Point({x: 2576.1, y: 1367.6}, {name: 'A3'}),
         lower: new Point({x: 2583.7, y: 1406.9}, {name: 'A1'})
+    },
+    segFive: {
+        upper: new Point({x: 2589.5, y: 1436.6}),
+        lower: new Point({x: 2583.5, y: 1454.2})
     }
 }
 
@@ -86,12 +90,27 @@ export const taxiways = {
         ],
         []
     ),
+    segFive: new TaxiwaySegment(
+        points.segFive.upper,
+        points.segFive.lower,
+        'A',
+        [
+            {x: 2606.5, y: 1408.7},
+
+            {x: 2610.2, y: 1451},
+            {x: 2568.5, y: 1458.9},
+
+            {x: 2550.8, y: 1418.7},
+        ],
+        []
+    )
 }
 
 // link adjoining (non-adjacent segment) points
 joinPoints(points.segOne.lower, points.segTwo.upper);
 joinPoints(points.segOne.lower, points.segThree.upper);
 joinPoints(points.segThree.lower, points.segFour.upper);
+joinPoints(points.segFour.lower, points.segFive.upper);
 
 
 // add taxiway reference to point instances in QA
