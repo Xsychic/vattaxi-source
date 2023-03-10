@@ -67,22 +67,37 @@
 
 
         if(!props.segment) {
+            // if there's no current segment, the route can't be valid as there's not starting point
             routeValid.value = 0;
             return;
         }
 
         if(route[0] !== props.segment.name) {
+            // if the first part of the route isn't the current segment, the route can't be valid
             route.unshift(props.segment.name);
         }
 
         if(route.length < 2) {
-            // route at least has two elements
+            // route needs at least two elements
             // can't be in validation function for feedback v-else-if
             if(props.routeStringArr.length != 0) {
                 routeValid.value = 0;
                 emit('updateRouteStringArr', []);
             }
             return;
+        }
+
+        const hpRegex = /\/[abcdeghjmnpqrstuwy][1234567]/i
+        const terminator = route[route.length - 1];
+
+        if(hpRegex.test(terminator)) {
+            // last point is a named holding point - if taxiway of same name not in route, add it
+            const hpIdentRegex = /\/([abcdeghjmnpqrstuwy])[1234567]/i
+            const ident = terminator.match(hpIdentRegex)[1];
+
+            if(route[route.length - 2] !== ident) {
+                route.splice(route.length - 1, 0, ident);
+            }
         }
 
         if(isValidRoute(route)) {
@@ -138,7 +153,7 @@
             valid route
             <font-awesome-icon icon='fa-solid fa-check'></font-awesome-icon>
         </div>
-        <div class='route-status route-invalid' v-else-if='routeValid == -1 && !routeString || routeString && routeValid == 1 && !routeFound'>
+        <div class='route-status route-invalid' v-else-if='routeValid == -1 && routeString || routeString && routeValid == 1 && !routeFound'>
             invalid route
             <font-awesome-icon icon='fa-solid fa-times'></font-awesome-icon>
         </div>

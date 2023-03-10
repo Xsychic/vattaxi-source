@@ -23,14 +23,14 @@
 - [x] fix doubled-back path drawn if user passes by point proximity detection radius
 - [x] when current position in two or more segments, don't change current segment if current segment is one of them, otherwise pick first
 - [x] remove drawn paths when instructions input is (manually) cleared
+- [x] sometimes shortest route (by pixels) not picked (e.g, KA K P) 
 - [ ] fix `L Q /Q1` from blue section between segments to the left of S112 (drawn path doubles back)
 - [ ] remove aircraft and path plots if connection to sim lost
 - [ ] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
 - [ ] fix path doubling back when route starts with turn off current segment (low priority, instructions *shouldn't* be given)
-- [ ] sometimes shortest route (by pixels) not picked (e.g, KA K P) 
-- [ ] if final holding point is first point on taxiway not included in instructions then invalid route (e.g A1 via AS) 
+- [ ] if terminating holding point is first point on taxiway not included in instructions then invalid route (e.g A1 via AS) 
 
 ### QOL 
 - [x] support implicit first taxiway
