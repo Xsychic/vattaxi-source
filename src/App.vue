@@ -6,7 +6,6 @@
 
     import { ref } from 'vue'
 
-    const modeOnline = ref(true);
     const connected = ref(false);
     const pxCoords = ref({});
     const routeStringArr = ref([]);
@@ -15,7 +14,6 @@
     const routeArr = ref([]);
     const directions = ref([]);
 
-    const toggleMode = () => modeOnline.value = !modeOnline.value;
     const updateConnection = (newStatus) => connected.value = newStatus;
     const updateCoords = (newCoords) => pxCoords.value = newCoords;
     const updateRouteStringArr = (newRouteStringArr) => routeStringArr.value = newRouteStringArr;
@@ -49,13 +47,11 @@
             @newDirections='newDirections'
         ></Map>
         <ControlConsole 
-            :modeOnline='modeOnline'
             :routeStringArr='routeStringArr'
             :routeFound='routeFound'
             :segment='segment'
             :routeArr='routeArr'
             :directions='directions'
-            @toggleMode='toggleMode' 
             @updateRouteStringArr='updateRouteStringArr'
         ></ControlConsole>
     </div>

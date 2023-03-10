@@ -4,8 +4,8 @@
 
     import { defineEmits, defineProps } from 'vue';
 
-    const props = defineProps(['modeOnline', 'routeStringArr', 'routeFound', 'segment', 'routeArr', 'directions']);
-    const emit = defineEmits(['toggleMode', 'updateRouteStringArr']);
+    const props = defineProps(['routeStringArr', 'routeFound', 'segment', 'routeArr', 'directions']);
+    const emit = defineEmits(['updateRouteStringArr']);
 
     const updateRouteStringArr = (newRoute) => emit('updateRouteStringArr', newRoute);
 
@@ -28,20 +28,6 @@
             :routeArr='routeArr'
             :directions='directions'
         />
-        
-
-        <div class='mode-switch'>
-            <span class='mode-status'>
-                App Mode: Online
-                <div class='status-light'></div>
-            </span>
-
-            <!-- switch from https://www.w3schools.com/howto/howto_css_switch.asp -->
-            <label class="switch">
-                <input type="checkbox" :checked='modeOnline' @change='emit("toggleMode")'>
-                <span class="slider round"></span>
-            </label>
-        </div>
     </div>
 
     

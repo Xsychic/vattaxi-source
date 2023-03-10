@@ -164,6 +164,8 @@ joinPoints(J.segEFour.left, Q.segEight.lower);
 // J to R
 joinPoints(J.segETwo.right, R.segFive.upper);
 joinPoints(J.segEThree.left, R.segFive.upper);
+joinPoints(J.segETwo.right, R.segFive.lower);
+joinPoints(J.segEThree.left, R.segFive.lower);
 
 // J to S
 joinPoints(J.segWTwelve.right, S.segTwo.lower);
