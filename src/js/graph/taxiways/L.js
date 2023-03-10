@@ -167,8 +167,7 @@ export const taxiways = {
             {x: 1650, y: 1138},
             {x: 1674, y: 1123},
             {x: 1692, y: 1118},
-            {x: 1697, y: 1150},
-            {x: 1680, y: 1158},
+            {x: 1697.4, y: 1156.6},
             {x: 1660, y: 1156}
         ],
         Object.values(segOneStands)
@@ -182,7 +181,7 @@ export const taxiways = {
             {x: 1873.3, y: 1080.1},
             {x: 1883.6, y: 1132},
             {x: 1721.9, y: 1165.9},
-            {x: 1697, y: 1150}
+            {x: 1697.4, y: 1156.6},
         ],
         Object.values(segTwoStands)
     ),

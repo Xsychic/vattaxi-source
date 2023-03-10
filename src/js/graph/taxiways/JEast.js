@@ -10,7 +10,7 @@ const points = {
         right: new Point({x: 1896.3, y: 1425.8})
     },
     segETwo: {
-        right: new Point({x: 1940.6, y: 1420.2})
+        right: new Point({x: 1948.1, y: 1419})
     },
     segEThree: {
         left: new Point({x: 1984.3, y: 1410.7}),

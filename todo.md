@@ -19,10 +19,12 @@
 - [ ] write unit tests, particularly for functions in js files
 
 ### Bugs
-
+- [x] stop 'wrong turn' detection if turning onto stand
+- [x] fix doubled-back path drawn if user passes by point proximity detection radius
+- [x] when current position in two or more segments, don't change current segment if current segment is one of them, otherwise pick first
+- [x] remove drawn paths when instructions input is (manually) cleared
 - [ ] fix `L Q /Q1` from blue section between segments to the left of S112 (drawn path doubles back)
 - [ ] remove aircraft and path plots if connection to sim lost
-- [ ] remove drawn paths when instructions input is (manually) cleared
 - [ ] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
@@ -37,10 +39,3 @@
 - [ ] add fancy curves between route segments
 - [ ] rewrite position reporting to have server in js client rather than c#
 - [ ] add direction counter - i.e. take third right instead of turn right
-
-
-
-### Solved Bugs
-- [x] stop 'wrong turn' detection if turning onto stand
-- [x] fix doubled-back path drawn if user passes by point proximity detection radius
-- [x] when current position in two or more segments, don't change current segment if current segment is one of them, otherwise pick first

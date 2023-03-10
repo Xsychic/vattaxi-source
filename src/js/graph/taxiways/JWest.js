@@ -49,7 +49,7 @@ const points = {
     },
     segWTwelve: {
         left: new Point({x: 1518.1, y: 1506.3}),
-        right: new Point({x: 1731.1, y: 1461.1})
+        right: new Point({x: 1735.7, y: 1461.2})
     }
 }
 
