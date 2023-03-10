@@ -5,8 +5,12 @@ import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 
 // points for taxiway segments
 const points = {
+    segZero: {
+        upper: new Point({x: 1956.9, y: 1103.2}),
+        lower: new Point({x: 1958.3, y: 1111.7})
+    },    
     segOne: {
-        upper: new Point({x: 1953.5, y: 1121.4}),
+        upper: new Point({x: 1953.5, y: 1123.9}),
         lower: new Point({x: 1920.7, y: 1171})
     },
     segTwo: {
@@ -43,20 +47,35 @@ const segFourStands = {
 
 // taxiway segments
 export const taxiways = {
+    segZero: new TaxiwaySegment(
+        points.segZero.upper,
+        points.segZero.lower,
+        'R',
+        [
+            {x: 1978.5, y: 1091},
+            {x: 1965.6, y: 1125.5},
+            {x: 1944.3, y: 1100.2},
+            {x: 1949.4, y: 1079.3}
+        ],
+        []
+    ),
     segOne: new TaxiwaySegment(
         points.segOne.upper, 
         points.segOne.lower, 
         'R', 
         [
-            {x: 1964.5, y: 1124.3},
+            {x: 1965.6, y: 1125.5},
 
             {x: 1933.7, y: 1184.8},
             {x: 1915.5, y: 1150.1},
 
-            {x: 1946.6, y: 1101.8},
+            {x: 1944.3, y: 1100.2},
         ],
         []
     ),
+    // segOneB: new TaxiwaySegment(
+
+    // ),
     segTwo: new TaxiwaySegment(
         points.segTwo.upper,
         points.segTwo.lower,
@@ -130,6 +149,7 @@ export const taxiways = {
 }
 
 // link adjoining (non-adjacent segment) points
+joinPoints(points.segZero.lower, points.segOne.upper);
 joinPoints(points.segOne.lower, points.segTwo.lower);
 joinPoints(points.segThree.lower, points.segFour.upper);
 joinPoints(points.segFour.lower, points.segFive.upper);

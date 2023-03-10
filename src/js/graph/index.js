@@ -131,7 +131,9 @@ joinPoints(J.segENine.right, N.segFour.upper);
 // J to P
 joinPoints(J.segESix.right, P.segSix.upper);
 joinPoints(J.segESix.right, P.segSix.lower);
+joinPoints(J.segEEight.left, P.segSix.upper);
 joinPoints(J.segEEight.right, P.segFive.lower);
+// console.log(P.segSix.upper.adjoiningPoints);
 
 // J to Q
 joinPoints(J.segEThree.right, Q.segSeven.lower);
@@ -177,6 +179,10 @@ joinPoints(K.segTwo.right, P.segThree.upper);
 joinPoints(K.segThree.left, P.segTwo.upper);
 joinPoints(K.segThree.left, P.segTwo.lower);
 
+// K to R
+joinPoints(K.segOne.left, R.segThree.lower);
+joinPoints(K.segOne.left, R.segFour.upper);
+
 // KA to L
 joinPoints(KA.segOne.upper, L.segNine.right);
 joinPoints(KA.segOne.upper, L.segTen.left);
@@ -198,6 +204,8 @@ joinPoints(L.segSix.right, QX.segFive.lower);
 // L to R
 joinPoints(L.segTwo.right, R.segTwo.upper);
 joinPoints(L.segThree.right, R.segTwo.upper);
+joinPoints(L.segFour.left, R.segZero.upper);
+joinPoints(L.segFour.right, R.segZero.upper);
 
 // L to S
 joinPoints(L.segOne.right, S.segOne.upper);
@@ -240,7 +248,7 @@ joinPoints(Q.segOne.lower, QX.QB.left);
 joinPoints(Q.segTwo.lower, QX.QB.left);
 
 // Q to R
-joinPoints(Q.segFour.upper, R.segOne.upper);
+joinPoints(Q.segThree.lower, R.segZero.upper);
 
 // V to W
 joinPoints(V.segOne.right, W.segFour.lower);

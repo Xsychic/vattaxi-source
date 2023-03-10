@@ -29,6 +29,7 @@ const points = {
 // stands for taxiway segments
 const segOneStands = {
     '1': new Stand({x: 2704.7, y: 1219.3}, {x: 2754.9, y: 1209.2}, '1'),
+    '10': new Stand({x: 2711.7, y: 1224.2}, {x: 2699.7, y: 1163.9}, '10'),
 }
 
 const segTwoStands = {

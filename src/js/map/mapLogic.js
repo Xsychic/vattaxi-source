@@ -311,6 +311,7 @@ const traversePoint = (point, route, path) => {
         }
 
         if(route.slice(0,2).includes(segment.name)) {
+            // segment is in first two elements of route
             let newRoute;
             let pairPoint = segment.points.find(p => p != point);
             
@@ -367,13 +368,40 @@ const traversePoint = (point, route, path) => {
         }
     }
      
-    if(foundPaths.length == 0) {
+    if(foundPaths.length === 0) {
         return false;
+    } else if(foundPaths.length === 1) {
+        return foundPaths[0];
     } else {
+        // more than one path found, pick the one with the shortest pixel distance between points
+        
+        // remove non-points from paths
         const pointArr = foundPaths.map((path) => {
             return path.filter((el) => el.x);
         });
-        const i = pointArr.reduce((iMin, el, i, arr) => (el.length < arr[iMin].length ? i : iMin), 0);
+
+        // calculate pixel distance of path between points
+        const distances = [];
+        const calcDistance = (pt1, pt2) => Math.sqrt((pt2.x - pt1.x) ** 2 + (pt2.y - pt1.y) ** 2);
+
+        // calculate pixel distance of each path that has the fewest number of points
+        for(let i = 0; i < pointArr.length; i++) {
+            const path = pointArr[i];
+            let distance = 0;
+            
+            for(let j = 0; j < path.length - 1; j++) {
+                const p1 = path[j];
+                const p2 = path[j+1];
+
+                distance += calcDistance(p1, p2);
+            }
+
+            distances.push(distance);
+        }
+        
+        // pick path with shortest pixel distance
+        const i = distances.reduce((iMin, el, i, arr) => (el < arr[iMin] ? i : iMin), 0);
+
         return foundPaths[i];
     }
 }
