@@ -6,7 +6,7 @@ import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 // points for taxiway segments
 const points = {
     segOne: {
-        upper: new Point({x: 2579.2, y: 1301.2}),
+        upper: new Point({x: 2580.8, y: 1307.3}),
         lower: new Point({x: 2583.3, y: 1319.1})
     },
     segTwo: {

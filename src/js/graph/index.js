@@ -5,10 +5,13 @@ import J from '@/js/graph/taxiways/J';
 import K from '@/js/graph/taxiways/K';
 import KA from '@/js/graph/taxiways/KA';
 import L from '@/js/graph/taxiways/L';
+import M from '@/js/graph/taxiways/M';
 import N from '@/js/graph/taxiways/N';
 import P from '@/js/graph/taxiways/P';
 import Q from '@/js/graph/taxiways/Q';
 import QX from '@/js/graph/taxiways/QX';
+import V from '@/js/graph/taxiways/V';
+import W from '@/js/graph/taxiways/W';
 import Z from '@/js/graph/taxiways/Z';
 
 import { joinPoints } from '@/js/graph/tools';
@@ -63,9 +66,22 @@ joinPoints(A.segFour.upper, AN.segThree.right);
 // A to AS
 joinPoints(A.segFour.lower, AS.segTwo.right);
 
+// A to M
+joinPoints(A.segTwo.lower, M.segTwo.lower);
+joinPoints(A.segTwo.lower, M.segThree.lower);
+
+// A to V
+joinPoints(A.segTwo.lower, V.segOne.left);
+
 // A to Z
 joinPoints(A.segOne.upper, Z.segTwo.right);
 joinPoints(A.segOne.upper, Z.segThree.left);
+
+// AN to M
+joinPoints(AN.segFive.left, M.segTwo.lower);
+joinPoints(AN.segFive.left, M.segThree.lower);
+joinPoints(AN.segFive.right, M.segTwo.lower);
+joinPoints(AN.segFive.right, M.segThree.upper);
 
 // AN to N
 joinPoints(AN.segTwo.right, N.segFive.lower);
@@ -76,11 +92,22 @@ joinPoints(AN.segOne.right, P.segSix.lower);
 joinPoints(AN.segTwo.left, P.segSeven.upper);
 joinPoints(AN.segTwo.right, P.segSeven.lower);
 
+// AN to V
+joinPoints(AN.segFive.left, V.segOne.left);
+
+// AN to W
+joinPoints(AN.segSix.right, W.segThree.lower);
+joinPoints(AN.segSix.right, W.segFour.upper);
+
 // AS to P
 joinPoints(AS.segOne.left, P.segEight.upper);
 
 // AS to N
 joinPoints(AS.segOne.right, N.segSeven.lower);
+
+// J to M
+joinPoints(J.segETwelve.right, M.segOne.upper);
+joinPoints(J.segEThirteen.left, M.segOne.upper);
 
 // J to N
 joinPoints(J.segENine.left, N.segThree.lower);
@@ -98,6 +125,9 @@ joinPoints(J.segEThree.right, Q.segSeven.lower);
 joinPoints(J.segEThree.right, Q.segEight.lower);
 joinPoints(J.segEFour.left, Q.segSeven.lower);
 joinPoints(J.segEFour.left, Q.segEight.lower);
+
+// J to W
+joinPoints(J.segEThirteen.right, W.segOne.lower)
 
 // J to Z
 joinPoints(J.segESix.right, Z.segOne.left);
@@ -140,6 +170,16 @@ joinPoints(L.segFive.right, Q.segThree.lower);
 joinPoints(L.segSix.left, QX.segFive.lower);
 joinPoints(L.segSix.right, QX.segFive.lower);
 
+// M to V
+joinPoints(M.segThree.lower, V.segOne.left);
+joinPoints(M.segFour.upper, V.segOne.left);
+
+// M to Z
+joinPoints(M.segOne.lower, Z.segThree.right);
+joinPoints(M.segOne.lower, Z.segFour.left);
+joinPoints(M.segTwo.upper, Z.segThree.right);
+joinPoints(M.segTwo.upper, Z.segFour.left);
+
 // N to P
 joinPoints(N.segFive.lower, P.segSeven.lower);
 
@@ -158,5 +198,14 @@ joinPoints(Q.segOne.upper, QX.QC.left);
 joinPoints(Q.segOne.lower, QX.QB.left);
 joinPoints(Q.segTwo.lower, QX.QB.left);
 
+// V to W
+joinPoints(V.segOne.right, W.segFour.lower);
+joinPoints(V.segOne.right, W.segFive.upper);
+joinPoints(V.segTwo.left, W.segFour.lower);
+joinPoints(V.segTwo.left, W.segFive.upper);
+
+// W to Z
+joinPoints(W.segTwo.lower, Z.segFour.right);
+joinPoints(W.segThree.upper, Z.segFour.right);
 
 export default L.segOne.left;
