@@ -21,7 +21,7 @@
         // create regexs
         const singleTaxiways = ['A', 'C', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'U', 'V', 'W', 'Z'];
         const singleTwysExp = `[${ singleTaxiways.join('') }]`;
-        const doubleTaxiways = ['AN', 'AS', 'KA', 'NA', 'QA', 'QB', 'QC'];
+        const doubleTaxiways = ['AN', 'AS', 'KA', 'NA', 'QA', 'QB', 'QC', '08L/26R'];
         let doubleTwysExp = '';
 
         for(let i = 0; i < doubleTaxiways.length; i++) {
@@ -57,9 +57,14 @@
     }
 
     watch(routeString, (newRoute, oldRoute) => {
+        // replace runway designations with full runway description
+        newRoute = newRoute.replace(/(08L|26R)/i, '08L/26R');
+        newRoute = newRoute.replace(/(08R|26L)/i, '08R/26L');
+
         // split route into array on 1+ whitespace chars
         let route = newRoute.split(/\s+/g).filter((el) => el);
         route = route.map((el) => el.toUpperCase());
+
 
         if(!props.segment) {
             routeValid.value = 0;

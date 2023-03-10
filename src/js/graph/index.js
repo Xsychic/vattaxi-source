@@ -13,6 +13,7 @@ import P from '@/js/graph/taxiways/P';
 import Q from '@/js/graph/taxiways/Q';
 import QX from '@/js/graph/taxiways/QX';
 import R from '@/js/graph/taxiways/R';
+import R08L from '@/js/graph/taxiways/R08L';
 import S from '@/js/graph/taxiways/S';
 import U from '@/js/graph/taxiways/U';
 import V from '@/js/graph/taxiways/V';
@@ -61,6 +62,25 @@ NOTE: SEPARATE FILES SHOULD NOT BE LINKED AT A POINT AT WHICH THE TWO
 */
 
 // link files
+
+// 08L/26R to AN
+joinPoints(R08L.segTen.right, AN.segOne.left);
+
+// 08L/26R to C
+joinPoints(R08L.segTen.right, C.segOne.lower);
+joinPoints(R08L.segTen.right, C.segTwo.upper);
+
+// 08L/26R to J
+joinPoints(R08L.segOne.left, J.segWFour.right);
+joinPoints(R08L.segEleven.upper, J.segWSeven.left);
+
+// 08L/26R to Q
+joinPoints(R08L.segNine.left, Q.segNine.lower);
+joinPoints(R08L.segNine.right, Q.segNine.lower);
+
+// 08L/26R to R
+joinPoints(R08L.segSeven.right, R.segSix.lower);
+joinPoints(R08L.segEight.right, R.segSix.lower);
 
 // A to AN
 joinPoints(A.segTwo.lower, AN.segFive.left);

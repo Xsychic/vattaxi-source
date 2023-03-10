@@ -13,6 +13,7 @@ import { taxiways as P } from '@/js/graph/taxiways/P';
 import { taxiways as Q } from '@/js/graph/taxiways/Q';
 import { taxiways as QX } from '@/js/graph/taxiways/QX';
 import { taxiways as R } from '@/js/graph/taxiways/R';
+import { taxiways as R08L } from '@/js/graph/taxiways/R08L';
 import { taxiways as S } from '@/js/graph/taxiways/S';
 import { taxiways as U } from '@/js/graph/taxiways/U';
 import { taxiways as V } from '@/js/graph/taxiways/V';
@@ -1045,12 +1046,21 @@ const data = {
 	],
 	"R": [
 		{
+			"object": R.segZero,
+			"bounds": [
+				[1978.5, 1091],
+				[1965.6, 1125.5],
+				[1944.3, 1100.2],
+				[1949.4, 1079.3]
+			]
+		},
+		{
 			"object": R.segOne,
 			"bounds": [
-				[1964.5, 1124.3],
+				[1965.6, 1125.5],
 				[1933.7, 1184.8],
 				[1915.5, 1150.1],
-				[1946.6, 1101.8]
+				[1944.3, 1100.2]
 			]
 		},
 		{
@@ -1096,6 +1106,116 @@ const data = {
 				[1995.4, 1450.5],
 				[1955.2, 1459.4],
 				[1950.7, 1436.5]
+			]
+		}
+	],
+	"R08L": [
+		{
+			"object": R08L.segOne,
+			"bounds": [
+				[626.2, 1744],
+				[729, 1717.6],
+				[741.7, 1760.3],
+				[634.4, 1779]
+			]
+		},
+		{
+			"object": R08L.segTwo,
+			"bounds": [
+				[729, 1717.6],
+				[797.7, 1703.4],
+				[804.4, 1746.4],
+				[741.7, 1760.3]
+			]
+		},
+		{
+			"object": R08L.segThree,
+			"bounds": [
+				[797.7, 1703.4],
+				[871.1, 1687.2],
+				[874.7, 1730.9],
+				[804.4, 1746.4]
+			]
+		},
+		{
+			"object": R08L.segFour,
+			"bounds": [
+				[871.1, 1687.2],
+				[933.4, 1673.6],
+				[944.2, 1717.1],
+				[874.7, 1730.9]
+			]
+		},
+		{
+			"object": R08L.segFive,
+			"bounds": [
+				[933.4, 1673.6],
+				[1434.9, 1563.2],
+				[1443.1, 1609.1],
+				[944.2, 1717.1]
+			]
+		},
+		{
+			"object": R08L.segSix,
+			"bounds": [
+				[1434.9, 1563.2],
+				[1524, 1545.5],
+				[1534.1, 1589.1],
+				[1443.1, 1609.1]
+			]
+		},
+		{
+			"object": R08L.segSeven,
+			"bounds": [
+				[1524, 1545.5],
+				[1964.6, 1452.8],
+				[1970.5, 1493],
+				[1534.1, 1589.1]
+			]
+		},
+		{
+			"object": R08L.segEight,
+			"bounds": [
+				[1964.6, 1452.8],
+				[2001, 1444.1],
+				[2008.8, 1484.9],
+				[1970.5, 1493]
+			]
+		},
+		{
+			"object": R08L.segNine,
+			"bounds": [
+				[2001, 1444.1],
+				[2049.8, 1434],
+				[2057.4, 1474.6],
+				[2008.8, 1484.9]
+			]
+		},
+		{
+			"object": R08L.segTen,
+			"bounds": [
+				[2049.8, 1434],
+				[2180.4, 1405.9],
+				[2185.7, 1448.8],
+				[2057.4, 1474.6]
+			]
+		},
+		{
+			"object": R08L.segEleven,
+			"bounds": [
+				[679.2, 1698.5],
+				[681.9, 1724.8],
+				[654.9, 1732],
+				[654.9, 1694.5]
+			]
+		},
+		{
+			"object": R08L.segTwelve,
+			"bounds": [
+				[681.9, 1724.8],
+				[701.9, 1749],
+				[671.2, 1755.7],
+				[654.9, 1732]
 			]
 		}
 	],

@@ -14,13 +14,14 @@ import { taxiways as P } from '@/js/graph/taxiways/P';
 import { taxiways as Q } from '@/js/graph/taxiways/Q';
 import { taxiways as QX } from '@/js/graph/taxiways/QX';
 import { taxiways as R } from '@/js/graph/taxiways/R';
+import { taxiways as R08L } from '@/js/graph/taxiways/R08L';
 import { taxiways as S } from '@/js/graph/taxiways/S';
 import { taxiways as U } from '@/js/graph/taxiways/U';
 import { taxiways as V } from '@/js/graph/taxiways/V';
 import { taxiways as W } from '@/js/graph/taxiways/W';
 import { taxiways as Z } from '@/js/graph/taxiways/Z';
 
-const taxiways = {A, AN, AS, C, J, K, KA, L, M, N, NA, P, Q, QX, R, S, U, V, W, Z};
+const taxiways = {A, AN, AS, C, J, K, KA, L, M, N, NA, P, Q, QX, R, R08L, S, U, V, W, Z};
 
 /*
 
