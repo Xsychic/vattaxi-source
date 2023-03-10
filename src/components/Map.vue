@@ -133,6 +133,8 @@
     
     watch(() => props.routeStringArr, (newRoute) => {
         // if route string array changes, parse new route
+        clearPaths(drawnRoute.value);
+
         if(!props.segment)
             return;
 
@@ -152,7 +154,6 @@
         let directions = generateDirections(routeArr, props.routeStringArr);
         emit('newRouteArr', routeArr.value);
         emit('newDirections', directions);
-        clearPaths(drawnRoute.value)
 
         if(!newRouteArr || !newRouteArr.length)
             return;
