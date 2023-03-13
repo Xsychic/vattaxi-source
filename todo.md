@@ -13,7 +13,7 @@
         -> contains existing instructions (stand/taxiway/holding point exist)
 - [x] implement directions algorithm
 - [ ] wrong turn detection - visual alert, don't fire if entering a stand
-- [ ] complete graph
+- [x] complete graph
 - [x] destination detection
 - [ ] draw hold bars when plotting input route
 - [ ] write unit tests, particularly for functions in js files

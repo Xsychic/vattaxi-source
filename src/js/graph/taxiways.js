@@ -20,6 +20,7 @@ import { taxiways as Q } from '@/js/graph/taxiways/Q';
 import { taxiways as QX } from '@/js/graph/taxiways/QX';
 import { taxiways as R } from '@/js/graph/taxiways/R';
 import { taxiways as R08L } from '@/js/graph/taxiways/R08L';
+import { taxiways as R26L } from '@/js/graph/taxiways/R26L';
 import { taxiways as S } from '@/js/graph/taxiways/S';
 import { taxiways as T } from '@/js/graph/taxiways/T';
 import { taxiways as U } from '@/js/graph/taxiways/U';
@@ -1427,6 +1428,17 @@ const data = {
 				[701.9, 1749],
 				[671.2, 1755.7],
 				[654.9, 1732]
+			]
+		}
+	],
+	"R26L": [
+		{
+			"object": R26L.segOne,
+			"bounds": [
+				[619, 1854.3],
+				[2691.3, 1408.4],
+				[2707.2, 1479],
+				[636.6, 1920.5]
 			]
 		}
 	],
