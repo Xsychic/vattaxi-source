@@ -25,6 +25,7 @@ import T from '@/js/graph/taxiways/T';
 import U from '@/js/graph/taxiways/U';
 import V from '@/js/graph/taxiways/V';
 import W from '@/js/graph/taxiways/W';
+import Y from '@/js/graph/taxiways/Y';
 import Z from '@/js/graph/taxiways/Z';
 
 import { joinPoints } from '@/js/graph/tools';
@@ -333,6 +334,9 @@ joinPoints(V.segOne.right, W.segFour.lower);
 joinPoints(V.segOne.right, W.segFive.upper);
 joinPoints(V.segTwo.left, W.segFour.lower);
 joinPoints(V.segTwo.left, W.segFive.upper);
+
+// W to Y
+joinPoints(W.segFive.lower, Y.segNine.right);
 
 // W to Z
 joinPoints(W.segTwo.lower, Z.segFour.right);
