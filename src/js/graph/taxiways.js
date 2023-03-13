@@ -3,6 +3,11 @@ import { taxiways as AN } from '@/js/graph/taxiways/AN';
 import { taxiways as AS } from '@/js/graph/taxiways/AS';
 import { taxiways as B } from '@/js/graph/taxiways/B';
 import { taxiways as C } from '@/js/graph/taxiways/C';
+import { taxiways as D } from '@/js/graph/taxiways/D';
+import { taxiways as E } from '@/js/graph/taxiways/E';
+import { taxiways as FR } from '@/js/graph/taxiways/FR';
+import { taxiways as G } from '@/js/graph/taxiways/G';
+import { taxiways as H } from '@/js/graph/taxiways/H';
 import { taxiways as J } from '@/js/graph/taxiways/J';
 import { taxiways as K } from '@/js/graph/taxiways/K';
 import { taxiways as KA } from '@/js/graph/taxiways/KA';
@@ -222,6 +227,161 @@ const data = {
 				[2057.6, 1565],
 				[2093.7, 1527.6],
 				[2148.8, 1490.3]
+			]
+		}
+	],
+	"D": [
+		{
+			"object": D.segOne,
+			"bounds": [
+				[1979.6, 1487.2],
+				[1936.3, 1530.1],
+				[1913.5, 1503.4],
+				[1948.9, 1479.8]
+			]
+		},
+		{
+			"object": D.segTwo,
+			"bounds": [
+				[1936.3, 1530.1],
+				[1837.1, 1614],
+				[1767.1, 1628.5],
+				[1913.5, 1503.4]
+			]
+		}
+	],
+	"E": [
+		{
+			"object": E.segOne,
+			"bounds": [
+				[1413.2, 1598.8],
+				[1423, 1628.1],
+				[1383.2, 1641.9],
+				[1378.8, 1606.2]
+			]
+		},
+		{
+			"object": E.segTwo,
+			"bounds": [
+				[1423, 1628.1],
+				[1555.8, 1674.3],
+				[1479.1, 1691.4],
+				[1383.2, 1641.9]
+			]
+		}
+	],
+	"FR": [
+		{
+			"object": FR.segOne,
+			"bounds": [
+				[909.2, 1654.4],
+				[927.9, 1677.2],
+				[888.2, 1687.5],
+				[879.5, 1659.8]
+			]
+		},
+		{
+			"object": FR.segTwo,
+			"bounds": [
+				[927.9, 1677.2],
+				[1035.1, 1707.2],
+				[996.2, 1727.5],
+				[888.2, 1687.5]
+			]
+		},
+		{
+			"object": FR.segThree,
+			"bounds": [
+				[1035.1, 1707.2],
+				[1226.7, 1744.3],
+				[1139.6, 1764],
+				[996.2, 1727.5]
+			]
+		}
+	],
+	"G": [
+		{
+			"object": G.segOne,
+			"bounds": [
+				[911.8, 1653.3],
+				[890.7, 1702.1],
+				[864.5, 1702.1],
+				[879.4, 1654.3]
+			]
+		},
+		{
+			"object": G.segTwo,
+			"bounds": [
+				[890.7, 1702.1],
+				[904.7, 1723.4],
+				[847.7, 1734.7],
+				[864.5, 1702.1]
+			]
+		},
+		{
+			"object": G.segThree,
+			"bounds": [
+				[904.7, 1723.4],
+				[886.1, 1759.3],
+				[845.3, 1769],
+				[847.7, 1734.7]
+			]
+		},
+		{
+			"object": G.segFour,
+			"bounds": [
+				[886.1, 1759.3],
+				[901.2, 1814.4],
+				[860.9, 1823.8],
+				[845.3, 1769]
+			]
+		},
+		{
+			"object": G.segFive,
+			"bounds": [
+				[890.5, 1744.7],
+				[922.2, 1754.4],
+				[910.6, 1782.8],
+				[887.2, 1773],
+				[876.2, 1760.6]
+			]
+		},
+		{
+			"object": G.segSix,
+			"bounds": [
+				[922.2, 1754.4],
+				[1029.3, 1786.7],
+				[959.6, 1802.7],
+				[910.6, 1782.8]
+			]
+		}
+	],
+	"H": [
+		{
+			"object": H.segOne,
+			"bounds": [
+				[767.7, 1737.7],
+				[772, 1775.1],
+				[738, 1783.1],
+				[725.2, 1746]
+			]
+		},
+		{
+			"object": H.segTwo,
+			"bounds": [
+				[772, 1775.1],
+				[780.3, 1801.5],
+				[746.6, 1811.9],
+				[738, 1783.1]
+			]
+		},
+		{
+			"object": H.segThree,
+			"bounds": [
+				[780.3, 1801.5],
+				[807.3, 1834.8],
+				[770.2, 1842.8],
+				[746.6, 1811.9]
 			]
 		}
 	],

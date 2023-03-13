@@ -6,17 +6,13 @@ import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 // points for taxiway segments
 const points = {
     segOne: {
-        upper: new Point(),
-        lower: new Point()
+        upper: new Point({x: 1397, y: 1609.5}),
+        lower: new Point({x: 1398.7, y: 1626.4}, {name: 'E1', gradient: -0.2})
     },
     segTwo: {
-
+        upper: new Point({x: 1412.9, y: 1641.2}),
+        lower: new Point({x: 1493.4, y: 1669.8})
     },
-}
-
-// stands for taxiway segments
-const segOneStands = {
-    '': new Stand(, , ''),
 }
 
 
@@ -25,18 +21,28 @@ export const taxiways = {
     segOne: new TaxiwaySegment(
         points.segOne.upper, 
         points.segOne.lower, 
-        '', 
+        'E', 
         [
+            {x: 1413.2, y: 1598.8},
 
+            {x: 1423, y: 1628.1},
+            {x: 1383.2, y: 1641.9},
+
+            {x: 1378.8, y: 1606.2}
         ],
-        Object.values(segOneStands)
+        []
     ),
     segTwo: new TaxiwaySegment(
         points.segTwo.upper,
         points.segTwo.lower,
-        '',
+        'E',
         [
+            {x: 1423, y: 1628.1},
 
+            {x: 1555.8, y: 1674.3},
+            {x: 1479.1, y: 1691.4},
+
+            {x: 1383.2, y: 1641.9},
         ],
         []
     ),

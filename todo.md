@@ -42,3 +42,8 @@
 - [ ] rewrite position reporting to have server in js client rather than c#
 - [ ] add direction counter - i.e. take third right instead of turn right
 - [ ] create boundary zone for 26L/08R
+- [ ] invalidate routes requiring a single turn of more than approx 100 degrees
+
+### Potential Future Improvements
+- [ ] improve location data update efficiency and increase frequency
+- [ ] improve plotting accuracy

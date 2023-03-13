@@ -1,22 +1,15 @@
 import Point from '@/js/graph/Point';
-import Stand from '@/js/graph/Stand';
-import { joinPoints } from '@/js/graph/tools';
 import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 
 // points for taxiway segments
 const points = {
     segOne: {
-        upper: new Point(),
-        lower: new Point()
+        upper: new Point({x: 1963.5, y: 1484}),
+        lower: new Point({x: 1925.5, y: 1516.5}, {name: 'D1'})
     },
     segTwo: {
-
+        lower: new Point({x: 1790.3, y: 1623.8})
     },
-}
-
-// stands for taxiway segments
-const segOneStands = {
-    '': new Stand(, , ''),
 }
 
 
@@ -25,25 +18,32 @@ export const taxiways = {
     segOne: new TaxiwaySegment(
         points.segOne.upper, 
         points.segOne.lower, 
-        '', 
+        'D', 
         [
+            {x: 1979.6, y: 1487.2},
 
+            {x: 1936.3, y: 1530.1},
+            {x: 1913.5, y: 1503.4},
+
+            {x: 1948.9, y: 1479.8}
         ],
-        Object.values(segOneStands)
+        []
     ),
     segTwo: new TaxiwaySegment(
-        points.segTwo.upper,
+        points.segOne.lower,
         points.segTwo.lower,
-        '',
+        'D',
         [
+            {x: 1936.3, y: 1530.1},
 
+            {x: 1837.1, y: 1614},
+            {x: 1767.1, y: 1628.5},
+
+            {x: 1913.5, y: 1503.4},
         ],
         []
     ),
 }
-
-// link adjoining (non-adjacent segment) points
-joinPoints(points.segOne.lower, points.segTwo.upper);
 
 
 // add taxiway reference to point instances in QA

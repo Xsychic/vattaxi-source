@@ -3,6 +3,11 @@ import AN from '@/js/graph/taxiways/AN';
 import AS from '@/js/graph/taxiways/AS';
 import B from '@/js/graph/taxiways/B';
 import C from '@/js/graph/taxiways/C';
+import D from '@/js/graph/taxiways/D';
+import E from '@/js/graph/taxiways/E';
+import FR from '@/js/graph/taxiways/FR';
+import G from '@/js/graph/taxiways/G';
+import H from '@/js/graph/taxiways/H';
 import J from '@/js/graph/taxiways/J';
 import K from '@/js/graph/taxiways/K';
 import KA from '@/js/graph/taxiways/KA';
@@ -71,6 +76,25 @@ joinPoints(R08L.segTen.right, AN.segOne.left);
 // 08L/26R to C
 joinPoints(R08L.segTen.right, C.segOne.lower);
 joinPoints(R08L.segTen.right, C.segTwo.upper);
+
+// 08L/26R to D
+joinPoints(R08L.segEight.left, D.segOne.upper);
+
+// 08L/26R to E
+joinPoints(R08L.segFive.right, E.segOne.upper);
+
+// 08L/26R to FR
+joinPoints(R08L.segFive.left, FR.segTwo.upper);
+
+// 08L/26R to G
+joinPoints(R08L.segThree.right, G.segOne.lower);
+joinPoints(R08L.segFour.left, G.segOne.lower);
+joinPoints(R08L.segThree.left, G.segTwo.lower);
+joinPoints(R08L.segFour.left, G.segTwo.upper);
+
+// 08L/26R to H
+joinPoints(R08L.segTwo.left, H.segOne.upper);
+joinPoints(R08L.segTwo.right, H.segOne.upper);
 
 // 08L/26R to J
 joinPoints(R08L.segOne.left, J.segWFour.right);
@@ -153,6 +177,17 @@ joinPoints(B.segThree.upper, P.segEight.lower);
 // C to J
 joinPoints(C.segOne.upper, J.segEFour.right);
 joinPoints(C.segOne.upper, J.segEFive.right);
+
+// D to R
+joinPoints(D.segOne.upper, R.segSix.lower);
+
+// FR to J
+joinPoints(FR.segOne.upper, J.segWEight.right);
+joinPoints(FR.segOne.upper, J.segWNine.right);
+
+// J to G
+joinPoints(J.segWEight.right, G.segOne.upper);
+joinPoints(J.segWNine.right, G.segOne.upper);
 
 // J to M
 joinPoints(J.segETwelve.right, M.segOne.upper);

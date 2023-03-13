@@ -4,6 +4,11 @@ import { taxiways as AN } from '@/js/graph/taxiways/AN';
 import { taxiways as AS } from '@/js/graph/taxiways/AS';
 import { taxiways as B } from '@/js/graph/taxiways/B';
 import { taxiways as C } from '@/js/graph/taxiways/C';
+import { taxiways as D } from '@/js/graph/taxiways/D';
+import { taxiways as E } from '@/js/graph/taxiways/E';
+import { taxiways as FR } from '@/js/graph/taxiways/FR';
+import { taxiways as G } from '@/js/graph/taxiways/G';
+import { taxiways as H } from '@/js/graph/taxiways/H';
 import { taxiways as J } from '@/js/graph/taxiways/J';
 import { taxiways as K } from '@/js/graph/taxiways/K';
 import { taxiways as KA } from '@/js/graph/taxiways/KA';
@@ -23,7 +28,7 @@ import { taxiways as V } from '@/js/graph/taxiways/V';
 import { taxiways as W } from '@/js/graph/taxiways/W';
 import { taxiways as Z } from '@/js/graph/taxiways/Z';
 
-const taxiways = {A, AN, AS, B, C, J, K, KA, L, M, N, NA, P, Q, QX, R, R08L, S, T, U, V, W, Z};
+const taxiways = {A, AN, AS, B, C, D, E, FR, G, H, J, K, KA, L, M, N, NA, P, Q, QX, R, R08L, S, T, U, V, W, Z};
 
 /*
 
