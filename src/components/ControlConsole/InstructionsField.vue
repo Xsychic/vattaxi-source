@@ -19,7 +19,7 @@
         */
         
         // create regexs
-        const singleTaxiways = ['A', 'C', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'U', 'V', 'W', 'Z'];
+        const singleTaxiways = ['A', 'C', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Z'];
         const singleTwysExp = `[${ singleTaxiways.join('') }]`;
         const doubleTaxiways = ['AN', 'AS', 'KA', 'NA', 'QA', 'QB', 'QC', '08L/26R'];
         let doubleTwysExp = '';
@@ -32,12 +32,13 @@
 
         const standExp = `(?:S\\d{1,3}[LREW]?)`;
         const holdingPointExp = String.raw`(?:\/[a-z]{1,2}|\/[abcdeghjmnpqrstuwyz][1-7])`;
+        const maintenanceAreaExp = `(?:MA1|MA2)`;
 
         // global flag must not be used
         const validElementString = String.raw`^(${ singleTwysExp }{1}|${ doubleTwysExp })$`;
         const validElement = new RegExp(validElementString, 'mi');
 
-        const validTerminatorString = String.raw`^(${ standExp }|${ holdingPointExp })$`;
+        const validTerminatorString = String.raw`^(${ standExp }|${ holdingPointExp }|${ maintenanceAreaExp })$`;
         const validTerminator = new RegExp(validTerminatorString, 'mi');
 
         // route ends in termination point

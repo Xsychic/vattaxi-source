@@ -298,9 +298,14 @@ const traversePoint = (point, route, path) => {
         }
 
         if(route[0] == segment.name) {
-            if(route[1] && route[1][0] == 'S' && route[1].length > 1) {
-                // next point is a stand
-                let standName = route[1].slice(1);
+            if(route[1] && route[1].length > 1 && (route[1][0] == 'S' || route[1][0] == 'M' && route[1][1] == 'A') ) {
+                // next point is a stand or maintenance area
+                let standName = route[1];
+                
+                if(route[1][0] == 'S')
+                    // terminator is stand
+                    route[1].slice(1);
+
                 let stand = segment.stands.find((stand) => standName == stand.name);
 
                 if(typeof stand != 'undefined') {

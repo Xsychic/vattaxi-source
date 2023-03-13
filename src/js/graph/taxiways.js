@@ -16,6 +16,7 @@ import { taxiways as QX } from '@/js/graph/taxiways/QX';
 import { taxiways as R } from '@/js/graph/taxiways/R';
 import { taxiways as R08L } from '@/js/graph/taxiways/R08L';
 import { taxiways as S } from '@/js/graph/taxiways/S';
+import { taxiways as T } from '@/js/graph/taxiways/T';
 import { taxiways as U } from '@/js/graph/taxiways/U';
 import { taxiways as V } from '@/js/graph/taxiways/V';
 import { taxiways as W } from '@/js/graph/taxiways/W';
@@ -1286,6 +1287,47 @@ const data = {
 				[1784.3, 1430.9],
 				[1727.3, 1441.5],
 				[1722.8, 1426.3]
+			]
+		}
+	],
+	"T": [
+		{
+			"object": T.segOne,
+			"bounds": [
+				[1561.3, 1325.2],
+				[1492.6, 1342.8],
+				[1472.9, 1316.8],
+				[1441.5, 1295.5],
+				[1437.3, 1269.7],
+				[1470.8, 1239.2],
+				[1541.3, 1222.8]
+			]
+		},
+		{
+			"object": T.segTwo,
+			"bounds": [
+				[1472.9, 1316.8],
+				[1501.2, 1458.6],
+				[1471.9, 1464.6],
+				[1441.5, 1295.5]
+			]
+		},
+		{
+			"object": T.segThree,
+			"bounds": [
+				[1501.2, 1458.6],
+				[1517.6, 1517.6],
+				[1474.6, 1530.3],
+				[1471.9, 1464.6]
+			]
+		},
+		{
+			"object": T.segFour,
+			"bounds": [
+				[1517.6, 1517.6],
+				[1527.9, 1552.4],
+				[1482.6, 1562.8],
+				[1474.6, 1530.3]
 			]
 		}
 	],
