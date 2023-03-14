@@ -261,8 +261,8 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
 };
 
 
-export const parseRoute = (point, route, currentSegment, allSegments) => {
-    const path = traversePoint(point, route, []);
+export const parseRoute = (point, route, currentSegment, allSegments, coords) => {
+    let path = traversePoint(point, route, []);
 
     if(!path)
         return false;
@@ -271,8 +271,37 @@ export const parseRoute = (point, route, currentSegment, allSegments) => {
 
     if(path[1] == currentSegment) {
         // if initially picked wrong point in current segment, remove it and current segment
-        return path.slice(2);
+        path = path.slice(2);
     }
+
+
+    if(path[0].x && path[1].x) {
+        // if first two route elements are points, check if the path doubles back on itself
+        const pointOne = coords;
+        const pointTwo = path[0];
+        const pointThree = path[1];
+
+        if(typeof pointOne.x !== 'undefined') {
+            // calculate inside angle between vectors joining points one and two, and two and three
+
+            // vectors must point away from point at which they meet
+            const vecOne = { x: pointOne.x - pointTwo.x, y: pointOne.y - pointTwo.y };
+            const vecTwo = { x: pointThree.x - pointTwo.x, y: pointThree.y - pointTwo.y };
+
+            // cos theta = (a . b) / (|a||b|)
+            const vecMag = (vec) => Math.sqrt(vec.x ** 2 + vec.y ** 2);
+            const dotProd = (vOne, vTwo) => vOne.x * vTwo.x + vOne.y * vTwo.y;
+            const angle = Math.acos(dotProd(vecOne, vecTwo) / (vecMag(vecOne) * vecMag(vecTwo))); // angle in radians
+
+            const degToRad = (deg) => deg / 180 * Math.PI;
+
+            if(angle < degToRad(70)) {
+                // initial path doubles back, remove first point
+                path = path.slice(1);
+            }
+        }
+    }
+
     return path;
 }
 
@@ -316,13 +345,15 @@ const traversePoint = (point, route, path) => {
         }
 
         if(route.slice(0,2).includes(segment.name)) {
-            // segment is in first two elements of route
+            // name of segment selected is in first two elements of route
             let newRoute;
             let pairPoint = segment.points.find(p => p != point);
             
             if(route[0] == segment.name) {
+                // segment is on same taxiway as previous segment
                 newRoute = route;
             } else {
+                // segment is on the next taxiway compared to previous segment
                 newRoute = route.slice(1);
             }
 
@@ -356,12 +387,15 @@ const traversePoint = (point, route, path) => {
 
         for(let segment of pairPoint.adjacentTaxiwaySegments) {
             if(route.slice(0,2).includes(segment.name)) {
+                // route includes name of taxiway linked to adjoining point in first two elements of route array
                 if(!path.includes(pairPoint)) {
                     let newRoute;
 
                     if(route[0] == segment.name) {
+                        // adjoining segment part of same taxiway as previous segment
                         newRoute = route;
                     } else {
+                        // adjoining taxiway on next taxiway compared to previous segment
                         newRoute = route.slice(1);
                     }
                     let pathCopy = path.map((el) => el);

@@ -19,6 +19,7 @@
 - [ ] write unit tests, particularly for functions in js files
 
 ### Bugs
+- [ ] fix path doubling back when route starts with turn off current segment (low priority, instructions *shouldn't* be given)
 - [x] stop 'wrong turn' detection if turning onto stand
 - [x] fix doubled-back path drawn if user passes by point proximity detection radius
 - [x] when current position in two or more segments, don't change current segment if current segment is one of them, otherwise pick first
@@ -29,7 +30,6 @@
 - [ ] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
-- [ ] fix path doubling back when route starts with turn off current segment (low priority, instructions *shouldn't* be given)
 - [ ] if terminating holding point is first point on taxiway not included in instructions then invalid route (e.g A1 via AS) 
 - [ ] 'invalid route' when in segment that contains holding point that trying to route to
 - [ ] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)

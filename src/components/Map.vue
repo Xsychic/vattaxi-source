@@ -139,7 +139,7 @@
             return;
 
         const point = props.segment.points[0];
-        const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments);
+        const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments, props.pxCoords);
 
 
         if(newRouteArr == false && props.routeFound) {
