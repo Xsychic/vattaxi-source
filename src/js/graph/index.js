@@ -151,10 +151,10 @@ joinPoints(R26L.segOne.right, M.segFive.lower);
 joinPoints(R26L.segOne.right, Y.segOne.left);
 
 // A to AN
-joinPoints(A.segTwo.lower, AN.segFive.left);
-joinPoints(A.segThree.upper, AN.segFour.left);
-joinPoints(A.segThree.lower, AN.segFour.right);
-joinPoints(A.segFour.upper, AN.segThree.right);
+joinPoints(A.segTwo.lower, AN.segSix.left);
+joinPoints(A.segThree.upper, AN.segFive.left);
+joinPoints(A.segThree.lower, AN.segFive.right);
+joinPoints(A.segFour.upper, AN.segFour.right);
 
 // A to AS
 joinPoints(A.segFour.lower, AS.segTwo.right);
@@ -175,29 +175,30 @@ joinPoints(AN.segOne.left, C.segOne.lower);
 joinPoints(AN.segOne.left, C.segTwo.upper);
 
 // AN to M
-joinPoints(AN.segFive.left, M.segTwo.lower);
-joinPoints(AN.segFive.left, M.segThree.lower);
-joinPoints(AN.segFive.right, M.segTwo.lower);
-joinPoints(AN.segFive.right, M.segThree.upper);
+joinPoints(AN.segSix.left, M.segTwo.lower);
+joinPoints(AN.segSix.left, M.segThree.lower);
+joinPoints(AN.segSix.right, M.segTwo.lower);
+joinPoints(AN.segSix.right, M.segThree.upper);
 
 // AN to N
-joinPoints(AN.segTwo.right, N.segFive.lower);
-joinPoints(AN.segThree.left, N.segSix.upper);
+joinPoints(AN.segThree.left, N.segFive.lower);
+joinPoints(AN.segThree.right, N.segSix.upper);
 
 // AN to P
 joinPoints(AN.segOne.right, P.segSix.lower);
-joinPoints(AN.segTwo.left, P.segSeven.upper);
+joinPoints(AN.segTwo.left, P.segEight.upper);
+joinPoints(AN.segThree.left, P.segEight.lower);
 joinPoints(AN.segTwo.right, P.segSeven.lower);
 
 // AN to V
-joinPoints(AN.segFive.left, V.segOne.left);
+joinPoints(AN.segSix.left, V.segOne.left);
 
 // AN to W
-joinPoints(AN.segSix.right, W.segThree.lower);
-joinPoints(AN.segSix.right, W.segFour.upper);
+joinPoints(AN.segSeven.right, W.segThree.lower);
+joinPoints(AN.segSeven.right, W.segFour.upper);
 
 // AS to P
-joinPoints(AS.segOne.left, P.segEight.upper);
+joinPoints(AS.segOne.left, P.segNine.upper);
 
 // AS to N
 joinPoints(AS.segOne.right, N.segSeven.lower);
@@ -206,10 +207,10 @@ joinPoints(AS.segOne.right, N.segSeven.lower);
 joinPoints(B.segOne.upper, N.segEight.lower);
 
 // B to P
-joinPoints(B.segTwo.upper, P.segEight.lower);
+joinPoints(B.segTwo.upper, P.segNine.lower);
 
 // BR to P
-joinPoints(B.segThree.upper, P.segEight.lower);
+joinPoints(B.segThree.upper, P.segNine.lower);
 
 // C to J
 joinPoints(C.segOne.upper, J.segEFour.right);
@@ -291,7 +292,7 @@ joinPoints(K.segFour.right, N.segOne.upper);
 // K to P
 joinPoints(K.segTwo.right, P.segTwo.upper);
 joinPoints(K.segTwo.right, P.segThree.upper);
-joinPoints(K.segThree.left, P.segTwo.upper);
+joinPoints(K.segThree.left, P.segOne.lower);
 joinPoints(K.segThree.left, P.segTwo.lower);
 
 // K to R
@@ -341,7 +342,7 @@ joinPoints(N.segOne.lower, NA.segOne.right);
 joinPoints(N.segTwo.upper, NA.segOne.right);
 
 // N to P
-joinPoints(N.segFive.lower, P.segSeven.lower);
+joinPoints(N.segFive.lower, P.segEight.lower);
 
 // N to Z
 joinPoints(N.segFour.lower, Z.segOne.right);

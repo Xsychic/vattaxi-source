@@ -28,10 +28,13 @@ const points = {
         lower: new Point({x: 2345.8, y: 1357.5})
     },
     segSeven: {
+        lower: new Point({x: 2357.1, y: 1378.1})
+    },
+    segEight: {
         upper: new Point({x: 2369.4, y: 1395}),
         lower: new Point({x: 2380.1, y: 1409.9})
     },
-    segEight: {
+    segNine: {
         upper: new Point({x: 2387.4, y: 1419.8}),
         lower: new Point({x: 2400.3, y: 1439.6}, {name: 'B1', gradient: -0.23})
     }
@@ -94,8 +97,7 @@ export const taxiways = {
         'P',
         [
             {x: 2343.1, y: 1254},
-            {x: 2348.5, y: 1281.4},
-            {x: 2342.6, y: 1299.2},
+            {x: 2351.6, y: 1297.4},
             {x: 2309.8, y: 1306},
             {x: 2303.4, y: 1261.1},
         ],
@@ -106,29 +108,42 @@ export const taxiways = {
         points.segSix.lower,
         'P',
         [
-            {x: 2342.6, y: 1299.2},
-            {x: 2354.2, y: 1311.2},
-            {x: 2361, y: 1363.2},
-            {x: 2330.3, y: 1375.1},
+            {x: 2351.6, y: 1297.4},
+            {x: 2361.6, y: 1353.5},
+            {x: 2325.8, y: 1359.2},
             {x: 2309.8, y: 1306},
         ],
         []
     ),
     segSeven: new TaxiwaySegment(
-        points.segSeven.upper,
+        points.segSix.lower,
         points.segSeven.lower,
         'P',
         [
-            {x: 2361, y: 1363.2},
-            {x: 2399.2, y: 1404.5},
-            {x: 2363.8, y: 1422.7},
-            {x: 2330.3, y: 1375.1},
+            {x: 2361.6, y: 1353.5},
+
+            {x: 2382.5, y: 1384.1},
+            {x: 2343.6, y: 1397.6},
+
+            {x: 2325.8, y: 1359.2},
         ],
         []
     ),
     segEight: new TaxiwaySegment(
         points.segEight.upper,
         points.segEight.lower,
+        'P',
+        [
+            {x: 2382.5, y: 1384.1},
+            {x: 2399.2, y: 1404.5},
+            {x: 2363.8, y: 1422.7},
+            {x: 2343.6, y: 1397.6},
+        ],
+        []
+    ),
+    segNine: new TaxiwaySegment(
+        points.segNine.upper,
+        points.segNine.lower,
         'P',
         [
             {x: 2399.2, y: 1404.5},
@@ -145,8 +160,8 @@ joinPoints(points.segOne.lower, points.segTwo.upper);
 joinPoints(points.segTwo.lower, points.segThree.upper);
 joinPoints(points.segThree.lower, points.segFour.upper);
 joinPoints(points.segFive.lower, points.segSix.upper);
-joinPoints(points.segSix.lower, points.segSeven.upper);
 joinPoints(points.segSeven.lower, points.segEight.upper);
+joinPoints(points.segEight.lower, points.segNine.upper);
 
 
 // add taxiway reference to point instances

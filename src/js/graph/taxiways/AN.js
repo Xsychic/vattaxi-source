@@ -11,21 +11,24 @@ const points = {
     },
     segTwo: {
         left: new Point({x: 2347, y: 1389.4}),
-        right: new Point({x: 2390.5, y: 1379.8})
+        right: new Point({x: 2373, y: 1383.6})
     },
     segThree: {
-        left: new Point({x: 2426.2, y: 1372.7}),
-        right: new Point({x: 2553.6, y: 1344})
+        left: new Point({x: 2390.8, y: 1380.2}),
+        right: new Point({x: 2426.2, y: 1372.7})
     },
     segFour: {
+        right: new Point({x: 2553.6, y: 1344})
+    },
+    segFive: {
         left: new Point({x: 2568.8, y: 1341.7}),
         right: new Point({x: 2597, y: 1335.6})
     },
-    segFive: {
+    segSix: {
         left: new Point({x: 2615.8, y: 1332.2}),
         right: new Point({x: 2650, y: 1309})
     },
-    segSix: {
+    segSeven: {
         right: new Point({x: 2709.9, y: 1295.1})
     }
 }
@@ -54,30 +57,44 @@ export const taxiways = {
         [
             {x: 2335.9, y: 1367.6},
 
-            {x: 2396.8, y: 1356.9},
-            {x: 2402.8, y: 1395.4},
+            {x: 2377.2, y: 1360.7},
+            {x: 2387, y: 1399.8},
 
             {x: 2346, y: 1410.8},
         ],
         []
     ),
     segThree: new TaxiwaySegment(
-        points.segThree.left,
+        points.segThree.left, 
         points.segThree.right,
         'AN',
         [
-            {x: 2396.8, y: 1356.9},
+            {x: 2377.2, y: 1360.7},
 
-            {x: 2560, y: 1326.2},
-            {x: 2563.9, y: 1361.4},
+            {x: 2421.2, y: 1353.1},
+            {x: 2431.5, y: 1392},
 
-            {x: 2402.8, y: 1395.4},
+            {x: 2387, y: 1399.8},
         ],
         []
     ),
     segFour: new TaxiwaySegment(
-        points.segFour.left,
+        points.segThree.right,
         points.segFour.right,
+        'AN',
+        [
+            {x: 2421.2, y: 1353.1},
+
+            {x: 2560, y: 1326.2},
+            {x: 2563.9, y: 1361.4},
+
+            {x: 2431.5, y: 1392},
+        ],
+        []
+    ),
+    segFive: new TaxiwaySegment(
+        points.segFive.left,
+        points.segFive.right,
         'AN',
         [
             {x: 2560, y: 1326.2},
@@ -89,9 +106,9 @@ export const taxiways = {
         ],
         []
     ),
-    segFive: new TaxiwaySegment(
-        points.segFive.left,
-        points.segFive.right,
+    segSix: new TaxiwaySegment(
+        points.segSix.left,
+        points.segSix.right,
         'AN',
         [
             {x: 2595.1, y: 1320.3},
@@ -104,9 +121,9 @@ export const taxiways = {
         ],
         []
     ),
-    segSix: new TaxiwaySegment(
-        points.segFive.right,
+    segSeven: new TaxiwaySegment(
         points.segSix.right,
+        points.segSeven.right,
         'AN',
         [
             {x: 2646.5, y: 1295.1},
@@ -123,8 +140,8 @@ export const taxiways = {
 // link adjoining (non-adjacent segment) points
 joinPoints(points.segOne.right, points.segTwo.left);
 joinPoints(points.segTwo.right, points.segThree.left);
-joinPoints(points.segThree.right, points.segFour.left);
 joinPoints(points.segFour.right, points.segFive.left);
+joinPoints(points.segFive.right, points.segSix.left);
 
 
 // add taxiway reference to point instances in QA
