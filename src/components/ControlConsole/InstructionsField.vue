@@ -93,6 +93,7 @@
 
         if(hpRegex.test(terminator)) {
             // last point is a named holding point - if taxiway of same name not in route, add it (except g1,g2,a2,b1)
+            // these exceptions are because these taxiways are on taxiways with different names
             const hpIdentRegex = /(?:\/([cdehjmnpqrstuwy])[1234567])|(?:\/(g)3|\/(fr)|\/(a)1|\/(a)3)/i
             let ident = terminator.match(hpIdentRegex);
 
@@ -139,6 +140,9 @@
                                 <em>A</em> - taxiway A
                             </li>
                             <li>
+                                <em>08L</em> - runway 08L
+                            </li>
+                            <li>
                                 <em>/J</em> - hold short of taxiway J
                             </li>
                             <li>
@@ -146,6 +150,9 @@
                             </li>
                             <li>
                                 <em>S552</em> - stand 552
+                            </li>
+                            <li>
+                                <em>MA1</em> - maintenance area 1
                             </li>
                         </ul>
 

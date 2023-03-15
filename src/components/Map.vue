@@ -134,16 +134,16 @@
     watch(() => props.routeStringArr, (newRoute) => {
         // if route string array changes, parse new route
         clearPaths(drawnRoute.value);
-        console.log(newRoute)
+
         if(!props.segment)
             return;
 
         const point = props.segment.points[0];
         const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments, props.pxCoords);
 
-
-        if(newRouteArr == false && props.routeFound) {
-            emit('updateRouteFound', false);
+        if(newRouteArr === false) {
+            if(props.routeFound)
+                emit('updateRouteFound', false);
             routeArr.value = [];
             return;
         } else if(newRouteArr) {
