@@ -31,12 +31,13 @@ public partial class SimConnectServer : Form {
 
     public SimConnectServer() {
         try {
-            createConnection();
-            // js app could have been closed while trying to create connection with simulator
+            
+            // keep trying to make connection with server
+            while(connection == null && remainActive)
+                createConnection();
+            
             if(connection != null && remainActive)
                 getData();
-            else if(remainActive)
-                createConnection();
             else
                 Application.Exit();
         } catch(Exception e) {
@@ -128,7 +129,6 @@ public partial class SimConnectServer : Form {
                 // terminates C# process
                 closeConnection();
         }
-        closeConnection();
     }
 
     void simconnect_OnRecvSimObjectData(SimConnect sender, SIMCONNECT_RECV_SIMOBJECT_DATA data) {
