@@ -19,13 +19,14 @@
 - [ ] write unit tests, particularly for functions in js files
 
 ### Bugs
-- [ ] fix path doubling back when route starts with turn off current segment (low priority, instructions *shouldn't* be given)
+- [x] fix path doubling back when route starts with turn off current segment (low priority, instructions *shouldn't* be given)
 - [x] stop 'wrong turn' detection if turning onto stand
 - [x] fix doubled-back path drawn if user passes by point proximity detection radius
 - [x] when current position in two or more segments, don't change current segment if current segment is one of them, otherwise pick first
 - [x] remove drawn paths when instructions input is (manually) cleared
 - [x] sometimes shortest route (by pixels) not picked (e.g, KA K P) 
-- [ ] fix `L Q /Q1` from blue section between segments to the left of S112 (drawn path doubles back)
+- [ ] too keenly adding implicit last taxiway - e.g. on L putting just /q1 draws the full route, also putting Q /Q1 shows invalid route. Should remove this but need to look at holding point at first points on new taxiway and also those on different twy (e.g. A2, W1)
+- [x] fix `L Q /Q1` from blue section between segments to the left of S112 (drawn path doubles back)
 - [ ] remove aircraft and path plots if connection to sim lost
 - [ ] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
@@ -43,6 +44,7 @@
 - [ ] add direction counter - i.e. take third right instead of turn right
 - [ ] create boundary zone for 26L/08R
 - [ ] invalidate routes requiring a single turn of more than approx 100 degrees
+- [ ] button to trigger route parsing to improve performance or a delay after typing finished
 
 ### Potential Future Improvements
 - [ ] improve location data update efficiency and increase frequency

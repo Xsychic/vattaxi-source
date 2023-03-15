@@ -95,10 +95,13 @@
             // last point is a named holding point - if taxiway of same name not in route, add it (except g1,g2,a2,b1)
             const hpIdentRegex = /(?:\/([cdehjmnpqrstuwy])[1234567])|(?:\/(g)3|\/(fr)|\/(a)1|\/(a)3)/i
             let ident = terminator.match(hpIdentRegex);
+
             
-            if(ident && route[route.length - 2] !== ident) {
+            if(ident) {
+
                 ident = ident.filter((el) => el ? true : false);
-                if(ident[0]) {
+
+                if(ident[1] && route[route.length - 2] !== ident[1]) {
                     route.splice(route.length - 1, 0, ident[1]);
                 }
             }

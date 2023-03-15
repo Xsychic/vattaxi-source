@@ -134,7 +134,7 @@
     watch(() => props.routeStringArr, (newRoute) => {
         // if route string array changes, parse new route
         clearPaths(drawnRoute.value);
-
+        console.log(newRoute)
         if(!props.segment)
             return;
 

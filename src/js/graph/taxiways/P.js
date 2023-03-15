@@ -18,7 +18,7 @@ const points = {
     },
     segFour: {
         upper: new Point({x: 2323.4, y: 1249.4}),
-        lower: new Point({x: 2324.4, y: 1257.4}, {name: 'P1'})
+        lower: new Point({x: 2324.4, y: 1257.4}, {name: 'P1', gradient: -0.2})
     },
     segFive: {
         lower: new Point({x: 2330.9, y: 1286.2})

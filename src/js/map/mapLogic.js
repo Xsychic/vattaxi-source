@@ -275,7 +275,7 @@ export const parseRoute = (point, route, currentSegment, allSegments, coords) =>
     }
 
 
-    if(path[0].x && path[1].x) {
+    if(path[0]?.x && path[1]?.x) {
         // if first two route elements are points, check if the path doubles back on itself
         const pointOne = coords;
         const pointTwo = path[0];
