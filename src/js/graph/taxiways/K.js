@@ -27,7 +27,7 @@ const points = {
         right: new Point({x: 2509.2, y: 1095.2})
     },
     segSeven: {
-        right: new Point({x: 2509.4, y: 1096})
+        right: new Point({x: 2688.8, y: 1057.6})
     }
 }
 

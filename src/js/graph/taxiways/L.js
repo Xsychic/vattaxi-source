@@ -369,6 +369,7 @@ joinPoints(points.segThree.right, points.segFour.left);
 joinPoints(points.segFive.right, points.segSix.left);
 joinPoints(points.segSix.right, points.segSeven.left);
 joinPoints(points.segNine.right, points.segTen.left);
+joinPoints(points.segNine.right, points.segTen.right);
 joinPoints(points.segTen.right, points.segEleven.left);
 joinPoints(points.segEleven.right, points.segTwelve.left);
 joinPoints(points.segTwelve.right, points.segThirteen.left);
