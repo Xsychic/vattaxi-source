@@ -47,6 +47,8 @@ export const plotPosition = ({ x, y }, plot, layers, route, drawnRoute) => {
 
     plot.value = new paper.Path.Circle(point, 6);
     plot.value.fillColor = 'red';
+    plot.value.strokeColor = 'black';
+    plot.value.strokeWidth = '1';
     
     layers.pathLayer.activate();
     
@@ -90,6 +92,38 @@ export const redrawFirstSegment = (coords, route, drawnRoute) => {
 }
 
 
+const drawStopBar = (point, colour) => {
+    // set hp path
+    const hpPath = new paper.Path();
+    hpPath.strokeColor = colour;//'#0015ff';
+    hpPath.strokeWidth = '7';
+    const hpSpan = 14;
+
+    let hpGradient; 
+
+    // create hp equation and use to calc point coords
+    if(typeof point?.holdingPoint?.gradient === 'undefined') {
+        // no gradient defined, use the gradient of the segment this point is joined to and calculate normal for hp gradient
+        const pairPoint = point.adjacentTaxiwaySegments[0].points.find((p) => p != point);
+        const segmentGradient = (point.y - pairPoint.y) / (point.x - pairPoint.x);      
+        hpGradient = -1 / segmentGradient;
+    } else {
+        hpGradient = point.holdingPoint.gradient;
+    }
+    
+    const intercept = point.y - hpGradient * point.x;
+    const y = (x) => hpGradient * x + intercept;
+    const requiredDeltaX = (len, gradient) => Math.sqrt(len ** 2 / (1 + gradient ** 2));
+    const deltaX = requiredDeltaX(hpSpan, hpGradient);
+    const firstPoint = new paper.Point(point.x - deltaX, y(point.x - deltaX));
+    const secondPoint = new paper.Point(point.x + deltaX, y(point.x + deltaX));
+    hpPath.add(firstPoint);
+    hpPath.add(secondPoint);
+    
+    return hpPath
+}
+
+
 export const drawRoute = (route, pxCoords) => {
     const points = [pxCoords];
 
@@ -98,7 +132,7 @@ export const drawRoute = (route, pxCoords) => {
             points.push({ x: obj.x, y: obj.y});
         } else if(obj.joinPoint) {
             points.push(obj.joinPoint);
-            points.push(obj.stopPoint);
+            points.push({...obj.stopPoint, stand: true});
         }
     });
 
@@ -115,6 +149,10 @@ export const drawRoute = (route, pxCoords) => {
 
         path.add(new paper.Point(pt1.x, pt1.y));
         path.add(new paper.Point(pt2.x, pt2.y));
+    }
+
+    if(!points[points.length - 1]?.stand && typeof route[route.length - 1].x !== 'undefined') {
+        drawnPaths.push(drawStopBar(route[route.length - 1], 'red'));
     }
 
     return drawnPaths;
@@ -157,36 +195,8 @@ export const drawGraph = (graphPaths, layers) => {
         visited.push(point);
 
         if(point.holdingPoint) {
-            
-            // set hp path
-            const hpPath = new paper.Path();
-            hpPath.strokeColor = '#0015ff';
-            hpPath.strokeWidth = '7';
-            const hpSpan = 14;
-
-            let hpGradient; 
-
-            // create hp equation and use to calc point coords
-            if(typeof point.holdingPoint.gradient == 'undefined') {
-                // naive way to pick a gradient point
-                const pairPoint = point.adjacentTaxiwaySegments[0].points.find((p) => p != point);
-                const segmentGradient = (point.y - pairPoint.y) / (point.x - pairPoint.x);      
-                hpGradient = -1 / segmentGradient;
-            } else {
-                hpGradient = point.holdingPoint.gradient;
-            }
-            
-            const intercept = point.y - hpGradient * point.x;
-            const y = (x) => hpGradient * x + intercept;
-            const requiredDeltaX = (len, gradient) => Math.sqrt(len ** 2 / (1 + gradient ** 2));
-            const deltaX = requiredDeltaX(hpSpan, hpGradient);
-            const firstPoint = new paper.Point(point.x - deltaX, y(point.x - deltaX));
-            const secondPoint = new paper.Point(point.x + deltaX, y(point.x + deltaX));
-            hpPath.add(firstPoint);
-            hpPath.add(secondPoint);
-            graphPaths.push(hpPath);
+            graphPaths.push(drawStopBar(point, '#0015ff'));
         }
-
         
         // draw features for adjacent segments if senior point
         point.adjacentTaxiwaySegments.forEach((segment) => {

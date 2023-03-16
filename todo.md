@@ -15,7 +15,7 @@
 - [ ] wrong turn detection - visual alert, don't fire if entering a stand
 - [x] complete graph
 - [x] destination detection
-- [ ] draw hold bars when plotting input route
+- [x] draw hold bars when plotting input route
 - [ ] write unit tests, particularly for functions in js files
 
 ### Bugs
@@ -37,7 +37,7 @@
 ### QOL 
 - [x] support implicit first taxiway
 - [x] create boundary zone for 26L/08R
-- [ ] update instructions modal with runway and maintenance area formats
+- [x] update instructions modal with runway and maintenance area formats
 - [ ] create tool to simulate aircraft position when sim not connected
 - [ ] create object with 'wide view' bounds of each taxiway (rough outline containing stands and all taxiway segments of named taxiway)
 - [ ] button to trigger route parsing to improve performance or a delay after typing finished
