@@ -1,6 +1,7 @@
 import paper from 'paper';
 import pointInPolygon from 'point-in-polygon';
 import taxiwaySegments from '@/js/graph/taxiways';
+import { faTruckMedical } from '@fortawesome/free-solid-svg-icons';
 
 
 export const calculatePixelCoords = (newValue) => {
@@ -8,7 +9,7 @@ export const calculatePixelCoords = (newValue) => {
         
     const latLower = 51.10631, latUpper = 51.20330;
     const longLower = -0.28233, longUpper = -0.07946;
-    
+
     // if no position coords or coords out of bounds
     if(!latitude || !longitude || latitude < latLower || latitude > latUpper || longitude < longLower || longitude > longUpper) {
         return {oob: true };
@@ -25,8 +26,8 @@ export const calculatePixelCoords = (newValue) => {
     let yPx = baseYPx + (latitude - baseLat) * pxPerLat;
     let xPx = baseXPx + (longitude - baseLong) * pxPerLong;
     
-    const yLower = 0, yUpper = 3452;
-    const xLower = 0, xUpper = 2759;
+    const yLower = 0, yUpper = 2765;
+    const xLower = 0, xUpper = 3455;
     
     if(xPx < xLower || xPx > xUpper || yPx < yLower || yPx > yUpper) {
         return { oob: true }
@@ -36,7 +37,8 @@ export const calculatePixelCoords = (newValue) => {
 }
 
 
-export const getSegment = (x = false, y = false, currentSegment = false) => {
+export const getSegment = (x = false, y = false, currentSegment = false, route = false) => {
+    // function to check which segment the aircraft is in
     const segments = [];
 
     if(x == false || y == false) {
@@ -59,7 +61,8 @@ export const getSegment = (x = false, y = false, currentSegment = false) => {
     if(segments.length == 1)
         return segments[0];
     if(currentSegment && segments.includes(currentSegment))
-        return currentSegment
+        // aircraft still in old segment
+        return currentSegment;
     return segments;
 }
 

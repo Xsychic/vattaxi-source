@@ -96,11 +96,6 @@ export const generateDirections = (routeArr, routeStringArr) => {
                 let ptTwo = routeArr.value[i - 1];
                 let ptThree = routeArr.value[i + 1];
 
-                // believe this is unnecessary
-                // if(ptOne === ptTwo) {
-                //     ptOne = routeArr.value[currentTwy.i - 1];
-                // }
-
                 if(typeof ptThree === 'undefined') {
                     // el is stand
 
