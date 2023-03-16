@@ -6,7 +6,7 @@
     
     const showTooltip = ref(false);
     const routeString = ref('');
-    const routeValid = ref(0);
+    const routeValid = ref(false);
 
     const isValidRoute = (route) => {
         /*
@@ -69,7 +69,7 @@
 
         if(!props.segment) {
             // if there's no current segment, the route can't be valid as there's not starting point
-            routeValid.value = 0;
+            routeValid.value = false;
             return;
         }
 
@@ -82,7 +82,7 @@
             // route needs at least two elements
             // can't be in validation function for feedback v-else-if
             if(props.routeStringArr.length != 0) {
-                routeValid.value = 0;
+                routeValid.value = false;
                 emit('updateRouteStringArr', []);
             }
             return;
@@ -109,17 +109,17 @@
         }
 
         if(isValidRoute(route)) {
-            routeValid.value = 1;
+            routeValid.value = true;
             emit('updateRouteStringArr', route);
         } else {
-            routeValid.value = -1;
+            routeValid.value = false;
         }
     });
 
     watch(() => props.routeStringArr, (newRouteStringArr) => {
-        if(!newRouteStringArr.length)
+        if(!newRouteStringArr.length && routeValid.value)
             routeString.value = '';
-    })
+    });
 </script>
 
 <template>
@@ -163,11 +163,11 @@
 
         </div>
         <textarea class='instructions' id='instructions' name='instructions' rows='4' placeholder='Enter your taxi route' v-model='routeString'></textarea>
-        <div class='route-status route-valid' v-if='routeString && routeValid == 1 && routeFound'>
+        <div class='route-status route-valid' v-if='routeString && routeValid && routeFound'>
             valid route
             <font-awesome-icon icon='fa-solid fa-check'></font-awesome-icon>
         </div>
-        <div class='route-status route-invalid' v-else-if='routeValid == -1 && routeString || routeString && routeValid == 1 && !routeFound'>
+        <div class='route-status route-invalid' v-else-if='!routeValid && routeString || routeString && routeValid && !routeFound'>
             invalid route
             <font-awesome-icon icon='fa-solid fa-times'></font-awesome-icon>
         </div>
