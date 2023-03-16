@@ -8,7 +8,6 @@
     import { ref } from 'vue'
 
     const connected = ref(false);
-    const pxCoords = ref({});
     const routeStringArr = ref([]);
     const routeFound = ref(false);
     const segment = ref(false);
@@ -16,7 +15,6 @@
     const directions = ref([]);
 
     const updateConnection = (newStatus) => connected.value = newStatus;
-    const updateCoords = (newCoords) => pxCoords.value = newCoords;
     const updateRouteStringArr = (newRouteStringArr) => routeStringArr.value = newRouteStringArr;
     const updateRouteFound = (routeValidity) => routeFound.value = routeValidity;
     const updateSegment = (newSegment) => segment.value = newSegment;
@@ -35,12 +33,10 @@
     
     <div class="content">
         <Map 
-            :pxCoords='pxCoords'
             :routeStringArr='routeStringArr'
             :routeFound='routeFound'
             :segment='segment'
             @updateConnection='updateConnection'
-            @updateCoords='updateCoords' 
             @updateRouteFound='updateRouteFound'
             @updateSegment='updateSegment'
             @clearRoute='clearRoute'

@@ -30,7 +30,7 @@
 - [x] if terminating holding point is first point on taxiway not included in instructions then invalid route (e.g A1 via AS) 
 - [x] 'invalid route' when in segment that contains holding point that trying to route to
 - [x] remove aircraft and path plots if connection to sim lost
-- [ ] route instructions cleared when position updated and route invalid
+- [x] route instructions cleared when position updated and route invalid
 - [ ] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
@@ -44,6 +44,7 @@
 - [x] support implicit first taxiway
 - [x] create boundary zone for 26L/08R
 - [x] update instructions modal with runway and maintenance area formats
+- [ ] make wrong turn detection optional (experimental)
 - [ ] create tool to simulate aircraft position when sim not connected
 - [ ] create object with 'wide view' bounds of each taxiway (rough outline containing stands and all taxiway segments of named taxiway)
 - [ ] button to trigger route parsing to improve performance or a delay after typing finished

@@ -5,12 +5,12 @@
     import mapTransformations from '@/js/map/mapTransformations';
     
     import { generateDirections } from '@/js/map/directionLogic';
-    import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
-    import { calculatePixelCoords, getSegment, parseRoute, trimRoute } from '@/js/map/mapLogic';
+    import { ref, onMounted, watch, computed, defineProps, defineEmits } from 'vue';
+    import { calculatePixelCoords, getSegment, parseRoute, trimRoute, pythagDistance } from '@/js/map/mapLogic';
     import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
-    const props = defineProps(['pxCoords', 'routeStringArr', 'routeFound', 'segment']);
-    const emit = defineEmits(['updateConnection', 'updateCoords', 'updateRouteFound', 'updateSegment', 'clearRoute', 'newRouteArr', 'newDirections']);
+    const props = defineProps(['routeStringArr', 'routeFound', 'segment']);
+    const emit = defineEmits(['updateConnection', 'updateRouteFound', 'updateSegment', 'clearRoute', 'newRouteArr', 'newDirections']);
 
     // transformation functions var
     let transformations;
@@ -66,7 +66,9 @@
     const { connected, data } = new DataProvider();
     const plot = ref(); 
     const drawnRoute = ref([]);
+    const allSegments = ref([]);
     const routeArr = ref([]);
+    const pxCoords = ref({});
     let oldSegment = false;
 
     watch(connected, (connectionStatus) => {
@@ -84,6 +86,7 @@
         }
     });
 
+
     watch(data, (newValue) => {
         // get x and y pixel coords and check if in bounds of map
         const { x, y, oob = false } = calculatePixelCoords(newValue);
@@ -95,8 +98,8 @@
         if(oob) {
             if(plot.value) {
                 plot.value = false;
+                pxCoords.value = {};
                 emit('updateSegment', false);
-                emit("updateCoords", {});
             }
             return;
         }
@@ -113,13 +116,11 @@
             // more than one possible segment returned
             
             if(routeArr?.value?.length) {
-                let routeSegments = routeArr.value.filter((el) => typeof el.name !== 'undefined');
-
                 // existing route, check if any of the returned segments are in the route
                 for(let i = 0; i < newSeg.length; i++) {
-                    let seg = newSeg[i];
+                    const seg = newSeg[i];
 
-                    if(routeSegments.includes(seg)) {
+                    if(props.routeStringArr.includes(seg.name)) {
                         newSeg = seg;
                         break;
                     }
@@ -128,6 +129,8 @@
 
             if(Array.isArray(newSeg)) {
                 // duplicated check to catch circumstance that there is no current route or no current segment is in route
+                console.log('newseg')
+                console.log(newSeg)
                 newSeg = newSeg[0];
             }
         }
@@ -145,22 +148,64 @@
            emit('clearRoute');
         }
 
-        emit("updateCoords", coords);
-
+        pxCoords.value = coords;
     });
 
 
-    const allSegments = ref([]);
+    watch(() => props.segment, (newSegment, oldSegment) => {
+        // segment changed - wrong turn detection
 
-    watch(() => props.segment, (newSegment) => {
-        if(!allSegments.value?.length || !routeArr.value?.length || routeArr.value?.length <= 2)
+        if(!routeArr.value?.length || !routeArr.value?.length) {
+            // no active route - no wrong turn detection
             return;
+        }
 
-        const i = allSegments.value.includes(newSegment);
-
-        if(!i) {
-            console.log('user has left marked route!');
+        if(typeof routeArr.value?.length !== 'undefined' && routeArr.value.length <= 2 && !newSegment) {
+            // near end of route - if not in segment, could be turning onto stand so don't trigger
             return;
+        }
+
+        if(!allSegments.value.includes(newSegment)) {
+            // aircraft not within any of the route segments - check within radius of points in current and next segment
+            
+            let segments = [];
+            let followingRoute = false;
+
+            if(oldSegment && allSegments.value.includes(oldSegment))
+                segments.push(oldSegment);
+
+            for(const el of routeArr.value) {
+                if(el.points && (!oldSegment || el.points !== oldSegment)) {
+                    segments.push(el);
+                    break;
+                }
+            }
+
+            // array used to keep track of which points have had proximity checked
+            let points = [];
+            const proximityThreshold = 28;
+
+            for(const segment of segments) {
+                for(const point of segment.points) {
+                    if(!points.includes(point)) {
+                        // if point (from either old segment or next in )
+                        if(pythagDistance(pxCoords.value, point) <= proximityThreshold) {
+                            followingRoute = true;
+                            break;
+                        }
+                    }
+                }
+                if(followingRoute)
+                    break;
+            }
+
+            if(!followingRoute) {
+                console.log('user has left marked route!');
+                console.log(oldSegment);
+                console.log(newSegment);
+                console.log(points)
+                return;
+            }
         }
     });
 
@@ -173,8 +218,8 @@
             return;
 
         const point = props.segment.points[0];
-        const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments, props.pxCoords);
-        console.log(allSegments.value);
+        const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments, pxCoords.value);
+
         if(newRouteArr && newRouteArr[0]?.x) {
             // make sure at least one taxiway segment linked to first point is in the allSegments array to prevent wrong turn detection tripping at start of route
             let firstPoint = newRouteArr[0];
@@ -189,11 +234,13 @@
             }
 
             if(inc === false && firstPoint.adjacentTaxiwaySegments.length) {
+                // no taxiway segment linked to first point is in the allSegments array
                 allSegments.value.splice(0, 0, firstPoint.adjacentTaxiwaySegments[0])
             }
         }
 
         if(!newRouteArr) {
+            // if no route found
             if(props.routeFound)
                 emit('updateRouteFound', false);
             routeArr.value = [];
@@ -203,14 +250,15 @@
             routeArr.value = newRouteArr;
         }
 
-        let directions = generateDirections(routeArr, props.routeStringArr);
+        // route found - generate directions and draw route
+        let directions = generateDirections(routeArr, newRoute);
         emit('newRouteArr', routeArr.value);
         emit('newDirections', directions);
 
         if(!newRouteArr || !newRouteArr.length)
             return;
 
-        drawnRoute.value = drawRoute(newRouteArr, props.pxCoords);
+        drawnRoute.value = drawRoute(newRouteArr, pxCoords.value);
     });
 
 
@@ -294,7 +342,7 @@
                     // point in only one segment
                     let formattedSegment = `(${adjustedX}, ${adjustedY}), ${ (seg.length > 1 ? 'Twys' : 'Twy' ) } `;
                     let formatPoint = (point) => `{x: ${ point.x }, y: ${ point.y }}`;
-                    console.clear();
+                    // console.clear();
 
                     for(let i = 0; i < seg.length; i++) {
                         formattedSegment += seg[i].name + ' ';

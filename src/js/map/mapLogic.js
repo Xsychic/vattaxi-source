@@ -66,7 +66,7 @@ export const getSegment = (x = false, y = false, currentSegment = false, route =
 }
 
 
-const pythagDistance = (origin, dest) => {
+export const pythagDistance = (origin, dest) => {
     const xDiff = dest.x - origin.x;
     const yDiff = dest.y - origin.y;
     return Math.sqrt(xDiff ** 2 + yDiff ** 2);
@@ -373,7 +373,7 @@ const traversePoint = (point, route, path) => {
     for(const pairPoint of point.adjoiningPoints) {
         if(route[1] && route[1][0] == '/') {
             // some kind of hold short/holding point instruction next
-            if(pairPoint?.holdingPoint?.name == route[1]) {
+            if(pairPoint?.holdingPoint?.name === route[1].slice(1)) {
                 // next point in route is a named holding point at pairPoint
                 // TODO: test this works
                 path.push(pairPoint);   
@@ -382,24 +382,26 @@ const traversePoint = (point, route, path) => {
 
             for(let tw of pairPoint.adjacentTaxiwaySegments) {
                 // next point in route is a hold short instruction that matches next segment
-                if(route[1].slice(1) == tw.name)
+                if(route[1].slice(1) === tw.name)
                     return path;
             }
         }
-
+        
         for(let segment of pairPoint.adjacentTaxiwaySegments) {
             if(route.slice(0,2).includes(segment.name)) {
                 // route includes name of taxiway linked to adjoining point in first two elements of route array
+
                 if(!path.includes(pairPoint)) {
                     let newRoute;
 
-                    if(route[0] == segment.name) {
+                    if(route[0] === segment.name) {
                         // adjoining segment part of same taxiway as previous segment
                         newRoute = route;
                     } else {
                         // adjoining taxiway on next taxiway compared to previous segment
                         newRoute = route.slice(1);
                     }
+
                     let pathCopy = path.map((el) => el);
                     let returnedPath = traversePoint(pairPoint, newRoute, pathCopy);
                     if(returnedPath != false)
@@ -407,8 +409,9 @@ const traversePoint = (point, route, path) => {
                 }
             }
         }
+
     }
-     
+
     if(foundPaths.length === 0) {
         return false;
     } else if(foundPaths.length === 1) {
