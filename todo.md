@@ -16,6 +16,7 @@
 - [x] complete graph
 - [x] destination detection
 - [x] draw hold bars when plotting input route
+- [ ] play test
 - [ ] write unit tests, particularly for functions in js files
 
 ### Bugs
@@ -28,7 +29,7 @@
 - [x] fix `L Q /Q1` from blue section between segments to the left of S112 (drawn path doubles back)
 - [x] if terminating holding point is first point on taxiway not included in instructions then invalid route (e.g A1 via AS) 
 - [x] 'invalid route' when in segment that contains holding point that trying to route to
-- [ ] remove aircraft and path plots if connection to sim lost
+- [x] remove aircraft and path plots if connection to sim lost
 - [ ] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC

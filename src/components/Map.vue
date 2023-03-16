@@ -69,7 +69,21 @@
     const routeArr = ref([]);
     let oldSegment = false;
 
-    watch(connected, (newValue) => emit('updateConnection', newValue));
+    watch(connected, (connectionStatus) => {
+        emit('updateConnection', connectionStatus);
+    
+        if(!connectionStatus) {
+            if(plot.value) {
+                plot.value.remove();
+                plot.value = false;
+            }
+
+            if(drawnRoute.value?.length) {
+                clearPaths(drawnRoute.value);
+            }
+        }
+    });
+
     watch(data, (newValue) => {
         // get x and y pixel coords and check if in bounds of map
         const { x, y, oob = false } = calculatePixelCoords(newValue);
