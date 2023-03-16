@@ -87,7 +87,7 @@
     watch(data, (newValue) => {
         // get x and y pixel coords and check if in bounds of map
         const { x, y, oob = false } = calculatePixelCoords(newValue);
-
+        
         if(plot.value) {
             plot.value.remove();
         }
@@ -109,8 +109,28 @@
         // find list of possible segments and select the best if any found
         let newSeg = getSegment(x, y, oldSegment);
 
-        if(Array.isArray(newSeg))
-            newSeg = newSeg[0];
+        if(Array.isArray(newSeg)) {
+            // more than one possible segment returned
+            
+            if(routeArr?.value?.length) {
+                let routeSegments = routeArr.value.filter((el) => typeof el.name !== 'undefined');
+
+                // existing route, check if any of the returned segments are in the route
+                for(let i = 0; i < newSeg.length; i++) {
+                    let seg = newSeg[i];
+
+                    if(routeSegments.includes(seg)) {
+                        newSeg = seg;
+                        break;
+                    }
+                }
+            }
+
+            if(Array.isArray(newSeg)) {
+                // duplicated check to catch circumstance that there is no current route or no current segment is in route
+                newSeg = newSeg[0];
+            }
+        }
         
         if(!oldSegment || newSeg !== oldSegment) {
             // segment change - can't be in watcher, changes must happen before route trimmed
@@ -133,12 +153,12 @@
     const allSegments = ref([]);
 
     watch(() => props.segment, (newSegment) => {
-        if(!routeArr.value?.length || routeArr.value?.length <= 2)
+        if(!allSegments.value?.length || !routeArr.value?.length || routeArr.value?.length <= 2)
             return;
 
-        const i = allSegments.value.findIndex((el) => el === newSegment);
+        const i = allSegments.value.includes(newSegment);
 
-        if(i == -1) {
+        if(!i) {
             console.log('user has left marked route!');
             return;
         }
@@ -154,13 +174,31 @@
 
         const point = props.segment.points[0];
         const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments, props.pxCoords);
+        console.log(allSegments.value);
+        if(newRouteArr && newRouteArr[0]?.x) {
+            // make sure at least one taxiway segment linked to first point is in the allSegments array to prevent wrong turn detection tripping at start of route
+            let firstPoint = newRouteArr[0];
+            let inc = false;
 
-        if(newRouteArr === false) {
+            for(let i = 0; i < firstPoint.adjacentTaxiwaySegments.length; i++) {
+                let segment = firstPoint.adjacentTaxiwaySegments[i];
+                if(allSegments.value.includes(segment)) {
+                    inc = true;
+                    break;
+                }
+            }
+
+            if(inc === false && firstPoint.adjacentTaxiwaySegments.length) {
+                allSegments.value.splice(0, 0, firstPoint.adjacentTaxiwaySegments[0])
+            }
+        }
+
+        if(!newRouteArr) {
             if(props.routeFound)
                 emit('updateRouteFound', false);
             routeArr.value = [];
             return;
-        } else if(newRouteArr) {
+        } else {
             emit('updateRouteFound', true);
             routeArr.value = newRouteArr;
         }

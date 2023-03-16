@@ -1,7 +1,6 @@
 import paper from 'paper';
 import pointInPolygon from 'point-in-polygon';
 import taxiwaySegments from '@/js/graph/taxiways';
-import { faTruckMedical } from '@fortawesome/free-solid-svg-icons';
 
 
 export const calculatePixelCoords = (newValue) => {
