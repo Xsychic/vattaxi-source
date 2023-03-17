@@ -38,12 +38,6 @@ const points = {
     }
 }
 
-// stands for taxiway segments
-// const segOneStands = {
-//     '': new Stand(, , ''),
-// }
-
-
 // taxiway segments
 export const taxiways = {
     segOne: new TaxiwaySegment(
@@ -51,13 +45,12 @@ export const taxiways = {
         points.segOne.lower, 
         'N', 
         [
-            {x: 2366.4, y: 1097.2},
-            {x: 2387.3, y: 1154.7},
+            {x: 2384.4, y: 1142.6},
 
             {x: 2398.8, y: 1212.3},
             {x: 2355.6, y: 1221.6},
 
-            {x: 2336.5, y: 1154.4}
+            {x: 2335.1, y: 1147.3}
         ],
         []
     ),

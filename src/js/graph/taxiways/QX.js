@@ -91,8 +91,8 @@ export const taxiways = {
         [
             {x: 2021, y: 801},
             {x: 2028, y: 837},
-            {x: 1992, y: 846},
-            {x: 1983, y: 809}
+            {x: 1983.2, y: 847.9},
+            {x: 1975.5, y: 810.5}
         ],
         Object.values(segTwoStands)
     ),

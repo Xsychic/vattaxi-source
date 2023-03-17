@@ -16,7 +16,6 @@
 - [x] complete graph
 - [x] destination detection
 - [x] draw hold bars when plotting input route
-- [ ] play test
 - [ ] write unit tests, particularly for functions in js files
 
 ### Bugs

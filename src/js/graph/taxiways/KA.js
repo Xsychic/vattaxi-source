@@ -1,6 +1,5 @@
 import Point from '@/js/graph/Point';
 import Stand from '@/js/graph/Stand';
-import { joinPoints } from '@/js/graph/tools';
 import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 
 // points for taxiway segments
@@ -27,12 +26,9 @@ export const taxiways = {
         'KA', 
         [
             {x: 2443.5, y: 982.9},
-            // {x: 2438.2, y: 954.9},
             {x: 2490.7, y: 978.4},
-            {x: 2515.2, y: 1065.7},
-            {x: 2506.4, y: 1081.4},
-            {x: 2467.7, y: 1089.1},
-            {x: 2457, y: 1077.6},
+            {x: 2512.5, y: 1077.6},
+            {x: 2461.6, y: 1088.8},
             {x: 2447.1, y: 997.6}
         ],
         Object.values(segOneStands)
