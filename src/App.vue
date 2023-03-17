@@ -13,6 +13,7 @@
     const segment = ref(false);
     const routeArr = ref([]);
     const directions = ref([]);
+    const turnDetection = ref(true);
 
     const updateConnection = (newStatus) => connected.value = newStatus;
     const updateRouteStringArr = (newRouteStringArr) => routeStringArr.value = newRouteStringArr;
@@ -20,6 +21,7 @@
     const updateSegment = (newSegment) => segment.value = newSegment;
     const newRouteArr = (newRouteArr) => routeArr.value = newRouteArr;
     const newDirections = (newDirections) => directions.value = newDirections;
+    const toggleTurnDetection = () => turnDetection.value = !turnDetection.value;
     const clearRoute = () => {
         routeStringArr.value = [];
         routeFound.value = false;
@@ -36,6 +38,7 @@
             :routeStringArr='routeStringArr'
             :routeFound='routeFound'
             :segment='segment'
+            :turnDetection='turnDetection'
             @updateConnection='updateConnection'
             @updateRouteFound='updateRouteFound'
             @updateSegment='updateSegment'
@@ -49,7 +52,9 @@
             :segment='segment'
             :routeArr='routeArr'
             :directions='directions'
+            :turnDetection='turnDetection'
             @updateRouteStringArr='updateRouteStringArr'
+            @toggleTurnDetection='toggleTurnDetection'
         ></ControlConsole>
     </div>
 
@@ -64,7 +69,9 @@
         /* accent colours */
         --green: #43cf2d;
         --blue: #1aa0c9;
+        --orange: #e08d2a;
         --red: #dd112b;
+        --yellow: #ffcc00;
 
         /* shades */
         --off-white: #eeeeee;

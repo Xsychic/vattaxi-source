@@ -49,7 +49,7 @@ export const getSegment = (x = false, y = false, currentSegment = false, route =
         for(let i = 0; i < boundObjs.length; i++) {
             const boundObj = boundObjs[i];
             if(pointInPolygon([x, y], boundObj.bounds)) {
-                segments.push(boundObj.object)
+                segments.push(boundObj.object);
             }
         }
     }
@@ -73,7 +73,7 @@ export const pythagDistance = (origin, dest) => {
 }
 
 const getBounds = (point, nextEl) => {
-    // function to get bounds of rectangle across taxiway intersecting first point
+    // function to get bounds of a rectangle across current taxiway intersecting first point
     let nextElCoords = {};
 
     if(nextEl.x) {

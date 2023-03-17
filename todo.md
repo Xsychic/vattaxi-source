@@ -48,6 +48,7 @@
 - [ ] create tool to simulate aircraft position when sim not connected
 - [ ] create object with 'wide view' bounds of each taxiway (rough outline containing stands and all taxiway segments of named taxiway)
 - [ ] button to trigger route parsing to improve performance or a delay after typing finished
+- [ ] button to clear route
 
 ### Potential Future Improvements
 - [ ] too keenly adding implicit last taxiway - e.g. on L putting just /q1 draws the full route, also putting Q /Q1 shows invalid route. 

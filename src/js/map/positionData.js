@@ -91,7 +91,7 @@ class DataProvider {
             if(this.reqTimeoutCounter == this.timeoutCap) {
                 // need to post message to user
                 alert("Unable to connect to the simulator, please ensure it is running and if still not connected then please try restarting this application.");
-                console.log("Timeout cap exceeded, likely unresolvable loss in connection to simconnect client, please restart the application.");
+                console.log("Timeout cap exceeded, possible unresolvable loss in connection to simconnect client, please restart the application if the simulator is already running.");
             }
     
             if(this.continueFetchingData) {

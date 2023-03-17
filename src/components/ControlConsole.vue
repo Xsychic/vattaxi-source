@@ -4,8 +4,8 @@
 
     import { defineEmits, defineProps } from 'vue';
 
-    const props = defineProps(['routeStringArr', 'routeFound', 'segment', 'routeArr', 'directions']);
-    const emit = defineEmits(['updateRouteStringArr']);
+    const props = defineProps(['routeStringArr', 'routeFound', 'segment', 'routeArr', 'directions', 'turnDetection']);
+    const emit = defineEmits(['updateRouteStringArr', 'toggleTurnDetection']);
 
     const updateRouteStringArr = (newRoute) => emit('updateRouteStringArr', newRoute);
 
@@ -28,9 +28,19 @@
             :routeArr='routeArr'
             :directions='directions'
         />
-    </div>
 
-    
+        <div class='turn-detection-switch'>
+            <span class='turn-detection-status'>
+                Wrong Turn Notifications (Experimental)
+            </span>
+
+            <!-- switch from https://www.w3schools.com/howto/howto_css_switch.asp -->
+            <label class="switch">
+                <input type="checkbox" :checked='turnDetection' @change='emit("toggleTurnDetection")'>
+                <span class="slider round"></span>
+            </label>
+        </div>
+    </div>
 </template>
 
 <style scoped>
@@ -66,44 +76,20 @@
         transform: translateX(16px);
     }
 
-    .mode-status {
+    .turn-detection-status {
         display: flex;
         align-items: center;
         font-weight: 500;
         font-size: 17px;
     }
 
-    .mode-switch {
+    .turn-detection-switch {
         display: flex;
         width: 100%;
         justify-content: space-between;
         align-items: center;
         position: absolute;
         bottom: 0;
-    }
-
-    .title {
-        margin: 0;
-        font-size: 24px;
-    }
-
-    .settings {
-        font-size: 18px;
-        position: relative;
-        bottom: 1px;
-    }
-
-    .settings:active, .settings:focus, .settings:hover {
-        color: var(--middle-grey);
-        cursor: pointer;
-    }
-
-    .status-light {
-        height: 9px;
-        width: 9px;
-        background: var(--green);
-        border-radius: 50%;
-        margin: 0 3px 0 5px;
     }
 
     /* The switch - the box around the slider */
@@ -153,5 +139,10 @@
 
     .slider.round:before {
         border-radius: 50%;
+    }
+
+    .title {
+        margin: 0;
+        font-size: 24px;
     }
 </style>

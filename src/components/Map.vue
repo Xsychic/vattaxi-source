@@ -3,13 +3,14 @@
     import DataProvider from '@/js/map/positionData';
     import TempTools from '@/components/TempTools.vue';
     import mapTransformations from '@/js/map/mapTransformations';
+    import WrongTurnBanner from '@/components/Map/WrongTurnBanner.vue';
     
     import { generateDirections } from '@/js/map/directionLogic';
     import { ref, onMounted, watch, computed, defineProps, defineEmits } from 'vue';
     import { calculatePixelCoords, getSegment, parseRoute, trimRoute, pythagDistance } from '@/js/map/mapLogic';
     import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
-    const props = defineProps(['routeStringArr', 'routeFound', 'segment']);
+    const props = defineProps(['routeStringArr', 'routeFound', 'segment', 'turnDetection']);
     const emit = defineEmits(['updateConnection', 'updateRouteFound', 'updateSegment', 'clearRoute', 'newRouteArr', 'newDirections']);
 
     // transformation functions var
@@ -69,6 +70,7 @@
     const allSegments = ref([]);
     const routeArr = ref([]);
     const pxCoords = ref({});
+    const displayBanner = ref(false);
     let oldSegment = false;
 
     watch(connected, (connectionStatus) => {
@@ -129,8 +131,6 @@
 
             if(Array.isArray(newSeg)) {
                 // duplicated check to catch circumstance that there is no current route or no current segment is in route
-                console.log('newseg')
-                console.log(newSeg)
                 newSeg = newSeg[0];
             }
         }
@@ -155,8 +155,8 @@
     watch(() => props.segment, (newSegment, oldSegment) => {
         // segment changed - wrong turn detection
 
-        if(!routeArr.value?.length || !routeArr.value?.length) {
-            // no active route - no wrong turn detection
+        if(!routeArr.value?.length || !routeArr.value?.length || !props.turnDetection) {
+            // no active route or turn detection disabled - skip wrong turn detection
             return;
         }
 
@@ -200,11 +200,9 @@
             }
 
             if(!followingRoute) {
+                // user is not following route correctly
                 console.log('user has left marked route!');
-                console.log(oldSegment);
-                console.log(newSegment);
-                console.log(points)
-                return;
+                displayBanner.value = true;
             }
         }
     });
@@ -391,6 +389,9 @@
             @segmentTool='toggleSegmentTool' 
             @toggleGraph='showGraph = !showGraph'
         />
+
+        <WrongTurnBanner @closeBanner='displayBanner = false' v-if='displayBanner' />
+
         <div id="chart-wrapper">
             <div id="chart-stack">
                 <!-- 3452 2759 -->
