@@ -5,10 +5,10 @@
     import mapTransformations from '@/js/map/mapTransformations';
     import WrongTurnBanner from '@/components/Map/WrongTurnBanner.vue';
     
-    import { checkWrongTurn } from '@/js/map/segmentLogic';
     import { generateDirections } from '@/js/map/directionLogic';
+    import { getSegment, checkWrongTurn } from '@/js/map/segmentLogic';
     import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
-    import { calculatePixelCoords, getSegment, parseRoute, trimRoute } from '@/js/map/mapLogic';
+    import { calculatePixelCoords, parseRoute, trimRoute } from '@/js/map/mapLogic';
     import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
     const props = defineProps(['routeStringArr', 'routeFound', 'segment', 'turnDetection']);
@@ -113,28 +113,7 @@
         };
 
         // find list of possible segments and select the best if any found
-        let newSeg = getSegment(x, y, oldSegment);
-
-        if(Array.isArray(newSeg)) {
-            // more than one possible segment returned
-            
-            if(routeArr?.value?.length) {
-                // existing route, check if any of the returned segments are in the route
-                for(let i = 0; i < newSeg.length; i++) {
-                    const seg = newSeg[i];
-
-                    if(props.routeStringArr.includes(seg.name)) {
-                        newSeg = seg;
-                        break;
-                    }
-                }
-            }
-
-            if(Array.isArray(newSeg)) {
-                // duplicated check to catch circumstance that there is no current route or no current segment is in route
-                newSeg = newSeg[0];
-            }
-        }
+        let newSeg = getSegment(x, y, oldSegment, props, routeArr);
         
         if(!oldSegment || newSeg !== oldSegment) {
             // segment change - can't be in watcher, changes must happen before route trimmed
@@ -157,7 +136,7 @@
         if(!props.turnDetection)
             return;
 
-        checkWrongTurn(newSegment, oldSegment, allSegments, routeArr, pxCoords, displayBanner);
+        checkWrongTurn(newSegment, oldSegment, allSegments, routeArr, pxCoords, props, displayBanner);
     });
 
     
@@ -283,7 +262,7 @@
                 const adjustedX = Math.round(10 * event.point.x / event.scale) / 10;
                 const adjustedY = Math.round(10 * event.point.y / event.scale) / 10;
                 
-                let seg = getSegment(adjustedX, adjustedY);
+                let seg = getSegment(adjustedX, adjustedY, false, props, routeArr, true);
 
                 if(seg) {
                     if(!Array.isArray(seg)) {

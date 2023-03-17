@@ -1,6 +1,5 @@
 import paper from 'paper';
 import pointInPolygon from 'point-in-polygon';
-import taxiwaySegments from '@/js/graph/taxiways';
 
 
 export const calculatePixelCoords = (newValue) => {
@@ -35,35 +34,6 @@ export const calculatePixelCoords = (newValue) => {
     return { x: xPx, y: yPx };
 }
 
-
-export const getSegment = (x = false, y = false, currentSegment = false, route = false) => {
-    // function to check which segment the aircraft is in
-    const segments = [];
-
-    if(x == false || y == false) {
-        console.log("no coords for get segment :(");
-        return [];
-    }
-
-    for(const [taxiway, boundObjs] of Object.entries(taxiwaySegments)) {
-        for(let i = 0; i < boundObjs.length; i++) {
-            const boundObj = boundObjs[i];
-            if(pointInPolygon([x, y], boundObj.bounds)) {
-                segments.push(boundObj.object);
-            }
-        }
-    }
-
-    // return different value depending on number of matching segments found and if any of them match the current segment
-    if(segments.length == 0)
-        return false;
-    if(segments.length == 1)
-        return segments[0];
-    if(currentSegment && segments.includes(currentSegment))
-        // aircraft still in old segment
-        return currentSegment;
-    return segments;
-}
 
 
 export const pythagDistance = (origin, dest) => {
