@@ -3,12 +3,6 @@
 
     const props = defineProps(['segment', 'routeArr', 'directions']);
 
-    // const directions = [
-    //     ['fa-arrow-left', 'NEXT LEFT (Q)'],
-    //     ['fa-arrow-right', 'SECOND RIGHT (L)'],
-    //     ['fa-arrow-right', 'TURN RIGHT ONTO STAND 102']
-    // ]
-
     const directions = computed(() => {
         let directions = [];
         

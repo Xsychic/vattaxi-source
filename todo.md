@@ -12,7 +12,7 @@
         -> terminates at stand/holding point
         -> contains existing instructions (stand/taxiway/holding point exist)
 - [x] implement directions algorithm
-- [ ] wrong turn detection - visual alert, don't fire if entering a stand
+- [x] wrong turn detection - visual alert, don't fire if entering a stand
 - [x] complete graph
 - [x] destination detection
 - [x] draw hold bars when plotting input route
@@ -31,7 +31,7 @@
 - [x] 'invalid route' when in segment that contains holding point that trying to route to
 - [x] remove aircraft and path plots if connection to sim lost
 - [x] route instructions cleared when position updated and route invalid
-- [ ] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
+- [x] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
 - [ ] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)
@@ -44,11 +44,10 @@
 - [x] support implicit first taxiway
 - [x] create boundary zone for 26L/08R
 - [x] update instructions modal with runway and maintenance area formats
-- [ ] make wrong turn detection optional (experimental)
-- [ ] create tool to simulate aircraft position when sim not connected
+- [x] make wrong turn detection optional (experimental)
+- [x] refactor wrong turn detection
 - [ ] create object with 'wide view' bounds of each taxiway (rough outline containing stands and all taxiway segments of named taxiway)
-- [ ] button to trigger route parsing to improve performance or a delay after typing finished
-- [ ] button to clear route
+- [ ] buttons to control route parsing (trigger route parsing, clear route, reparse route)
 
 ### Potential Future Improvements
 - [ ] too keenly adding implicit last taxiway - e.g. on L putting just /q1 draws the full route, also putting Q /Q1 shows invalid route. 

@@ -5,9 +5,10 @@
     import mapTransformations from '@/js/map/mapTransformations';
     import WrongTurnBanner from '@/components/Map/WrongTurnBanner.vue';
     
+    import { checkWrongTurn } from '@/js/map/segmentLogic';
     import { generateDirections } from '@/js/map/directionLogic';
-    import { ref, onMounted, watch, computed, defineProps, defineEmits } from 'vue';
-    import { calculatePixelCoords, getSegment, parseRoute, trimRoute, pythagDistance } from '@/js/map/mapLogic';
+    import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
+    import { calculatePixelCoords, getSegment, parseRoute, trimRoute } from '@/js/map/mapLogic';
     import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
     const props = defineProps(['routeStringArr', 'routeFound', 'segment', 'turnDetection']);
@@ -153,58 +154,10 @@
 
 
     watch(() => props.segment, (newSegment, oldSegment) => {
-        // segment changed - wrong turn detection
-
-        if(!routeArr.value?.length || !routeArr.value?.length || !props.turnDetection) {
-            // no active route or turn detection disabled - skip wrong turn detection
+        if(!props.turnDetection)
             return;
-        }
 
-        if(typeof routeArr.value?.length !== 'undefined' && routeArr.value.length <= 2 && !newSegment) {
-            // near end of route - if not in segment, could be turning onto stand so don't trigger
-            return;
-        }
-
-        if(!allSegments.value.includes(newSegment)) {
-            // aircraft not within any of the route segments - check within radius of points in current and next segment
-            
-            let segments = [];
-            let followingRoute = false;
-
-            if(oldSegment && allSegments.value.includes(oldSegment))
-                segments.push(oldSegment);
-
-            for(const el of routeArr.value) {
-                if(el.points && (!oldSegment || el.points !== oldSegment)) {
-                    segments.push(el);
-                    break;
-                }
-            }
-
-            // array used to keep track of which points have had proximity checked
-            let points = [];
-            const proximityThreshold = 28;
-
-            for(const segment of segments) {
-                for(const point of segment.points) {
-                    if(!points.includes(point)) {
-                        // if point (from either old segment or next in )
-                        if(pythagDistance(pxCoords.value, point) <= proximityThreshold) {
-                            followingRoute = true;
-                            break;
-                        }
-                    }
-                }
-                if(followingRoute)
-                    break;
-            }
-
-            if(!followingRoute) {
-                // user is not following route correctly
-                console.log('user has left marked route!');
-                displayBanner.value = true;
-            }
-        }
+        checkWrongTurn(newSegment, oldSegment, allSegments, routeArr, pxCoords, displayBanner);
     });
 
     
