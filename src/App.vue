@@ -45,6 +45,7 @@
             @clearRoute='clearRoute'
             @newRouteArr='newRouteArr'
             @newDirections='newDirections'
+            @updateRouteStringArr='updateRouteStringArr'
         ></Map>
         <ControlConsole 
             :routeStringArr='routeStringArr'

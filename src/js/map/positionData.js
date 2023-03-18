@@ -65,8 +65,6 @@ class DataProvider {
         
                     if(response.data.latitude != this.currentData.latitude || response.data.longitude != this.currentData.longitude) {
                         this.currentData = response.data;
-                    } else {
-                        console.log('same')
                     }
                 }
         

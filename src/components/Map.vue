@@ -6,13 +6,13 @@
     import WrongTurnBanner from '@/components/Map/WrongTurnBanner.vue';
     
     import { generateDirections } from '@/js/map/directionLogic';
-    import { getSegment, checkWrongTurn } from '@/js/map/segmentLogic';
-    import { ref, onMounted, watch, defineProps, defineEmits } from 'vue';
+    import { ref, onMounted, watch, defineProps, defineEmits, toRaw } from 'vue';
     import { calculatePixelCoords, parseRoute, trimRoute } from '@/js/map/mapLogic';
+    import { getSegment, checkSegment, checkWrongTurn } from '@/js/map/segmentLogic';
     import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
     const props = defineProps(['routeStringArr', 'routeFound', 'segment', 'turnDetection']);
-    const emit = defineEmits(['updateConnection', 'updateRouteFound', 'updateSegment', 'clearRoute', 'newRouteArr', 'newDirections']);
+    const emit = defineEmits(['updateConnection', 'updateRouteFound', 'updateSegment', 'clearRoute', 'newRouteArr', 'newDirections', 'updateRouteStringArr']);
 
     // transformation functions var
     let transformations;
@@ -95,7 +95,7 @@
         const { x, y, oob = false } = calculatePixelCoords(newValue);
         
         if(plot.value) {
-            plot.value.remove();
+            plot.value.remove(); 
         }
 
         if(oob) {
@@ -133,19 +133,55 @@
 
 
     watch(() => props.segment, (newSegment, oldSegment) => {
-        if(!props.turnDetection)
+        if(!props.turnDetection || !routeArr.value?.length || !pxCoords.value?.x)
             return;
 
         checkWrongTurn(newSegment, oldSegment, allSegments, routeArr, pxCoords, props, displayBanner);
     });
 
     
-    watch(() => props.routeStringArr, (newRoute) => {
+    watch(() => props.routeStringArr, async (newRoute) => {
         // if route string array changes, parse new route
+
         clearPaths(drawnRoute.value);
 
-        if(!props.segment)
+        if(!props.segment || !newRoute?.length) {
+            // either no current segment or no route so can't parse
             return;
+        }
+
+        const { segment: newSeg = false, implicitTaxiway = false, pathFound } = checkSegment(props.segment, pxCoords.value, newRoute, emit);
+
+        if(!pathFound || !newSeg) {
+            // if no route found
+            if(props.routeFound)
+                emit('updateRouteFound', false);
+            routeArr.value = [];
+            return;
+        }
+
+        if(newSeg !== props.segment) {
+            emit('updateSegment', newSeg);
+        }
+
+        if(implicitTaxiway) {
+            newRoute.splice(0, 0, newSeg.name);
+            emit('newRouteArr', newRoute);
+        }
+
+        let loopCounter = 0;
+
+        while(newSeg !== toRaw(props.segment)) {
+            loopCounter++;
+            if(loopCounter === 200) {
+                // have been looping for 2 seconds, report error and exit
+                alert('uh oh, looks like something\'s gone wrong :( (sorry!)');
+                console.log('timeout waiting for segment to update');
+                return;
+            }
+                
+            await new Promise((resolve) => setTimeout(resolve, 10));
+        }
 
         const point = props.segment.points[0];
         const newRouteArr = parseRoute(point, newRoute, props.segment, allSegments, pxCoords.value);

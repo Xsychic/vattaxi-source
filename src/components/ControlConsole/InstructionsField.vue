@@ -79,11 +79,6 @@
             return;
         }
 
-        if(route[0] !== props.segment.name) {
-            // if the first part of the route isn't the current segment, the route can't be valid
-            route.unshift(props.segment.name);
-        }
-
         if(route.length < 2) {
             // route needs at least two elements
             // can't be in validation function for feedback v-else-if
@@ -118,8 +113,9 @@
             routeValid.value = true;
             emit('updateRouteStringArr', route);
         } else {
+            // route validation checks failed
             routeValid.value = false;
-        }
+        }            
     }
 
     watch(() => props.routeStringArr, (newRouteStringArr) => {
@@ -128,6 +124,13 @@
             routeChecked.value = false;
         }
     });
+
+    const clear = () => {
+        routeString.value = ''; 
+        routeChecked.value = false;
+        routeValid.value = false;
+        emit("updateRouteStringArr", []);
+    } 
 </script>
 
 <template>
@@ -183,7 +186,7 @@
             <div class='route-status' v-else></div>
 
             <div class='buttons'>
-                <div class='button button-grey' role='button' @click='routeString = "";' v-if='routeString'>Clear</div>
+                <div class='button button-grey' role='button' @click='clear' v-if='routeString'>Clear</div>
                 <div class='button button-green' role='button' @click='parseRoute' v-if='!routeString || routeString && (!routeValid || !routeFound)'>Check Route</div>
                 <div class='button button-orange' role='button' @click='parseRoute' v-else>Recheck Route</div>
             </div>
@@ -225,6 +228,7 @@
         width: 100%;
         display: flex;
         justify-content: space-between;
+        align-items: center;
         margin-top: 8px;
     }
 
@@ -283,7 +287,6 @@
         width: calc(100% - 10px);
         text-align: left;
         padding: 0 5px;
-        margin-top: -2px;
     }
 
     .route-status svg {
