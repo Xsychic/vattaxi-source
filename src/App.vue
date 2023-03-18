@@ -74,6 +74,7 @@
         --yellow: #ffcc00;
 
         /* shades */
+        --white: #ffffff;
         --off-white: #eeeeee;
         --marble-grey: #d1d1d1;
         --middle-grey: #969696;

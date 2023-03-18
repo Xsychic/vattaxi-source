@@ -7,6 +7,7 @@
     const showTooltip = ref(false);
     const routeString = ref('');
     const routeValid = ref(false);
+    const routeChecked = ref(false);
 
     const isValidRoute = (route) => {
         /*
@@ -57,8 +58,13 @@
         return true;   
     }
 
-    watch(routeString, (newRoute, oldRoute) => {
+    const parseRoute = () => {
+        // function to run regex's on input before generating route string array to trigger graph parsing
+
+        routeChecked.value = true;
+
         // replace runway designations with full runway description
+        let newRoute = routeString.value;
         newRoute = newRoute.replace(/(08L|26R)/i, '08L/26R');
         newRoute = newRoute.replace(/(08R|26L)/i, '08R/26L');
 
@@ -114,11 +120,13 @@
         } else {
             routeValid.value = false;
         }
-    });
+    }
 
     watch(() => props.routeStringArr, (newRouteStringArr) => {
-        if(!newRouteStringArr.length && routeValid.value)
+        if(!newRouteStringArr.length && routeValid.value) {
             routeString.value = '';
+            routeChecked.value = false;
+        }
     });
 </script>
 
@@ -162,20 +170,64 @@
             </div>
 
         </div>
-        <textarea class='instructions' id='instructions' name='instructions' rows='4' placeholder='Enter your taxi route' v-model='routeString'></textarea>
-        <div class='route-status route-valid' v-if='routeString && routeValid && routeFound'>
-            valid route
-            <font-awesome-icon icon='fa-solid fa-check'></font-awesome-icon>
+        <textarea class='instructions' id='instructions' name='instructions' rows='4' placeholder='Enter your taxi route' v-model='routeString' @keypress.enter.prevent='parseRoute'></textarea>
+        <div class='control-row'>
+            <div class='route-status route-valid' v-if='routeChecked && routeString && routeValid && routeFound'>
+                valid route
+                <font-awesome-icon icon='fa-solid fa-check'></font-awesome-icon>
+            </div>
+            <div class='route-status route-invalid' v-else-if='routeChecked && routeString && (!routeValid || !routeFound)'>
+                invalid route
+                <font-awesome-icon icon='fa-solid fa-times'></font-awesome-icon>
+            </div>
+            <div class='route-status' v-else></div>
+
+            <div class='buttons'>
+                <div class='button button-grey' role='button' @click='routeString = "";' v-if='routeString'>Clear</div>
+                <div class='button button-green' role='button' @click='parseRoute' v-if='!routeString || routeString && (!routeValid || !routeFound)'>Check Route</div>
+                <div class='button button-orange' role='button' @click='parseRoute' v-else>Recheck Route</div>
+            </div>
         </div>
-        <div class='route-status route-invalid' v-else-if='!routeValid && routeString || routeString && routeValid && !routeFound'>
-            invalid route
-            <font-awesome-icon icon='fa-solid fa-times'></font-awesome-icon>
-        </div>
-        <div class='route-status' v-else></div>
     </div>
 </template>
 
 <style scoped>
+    .button {
+        padding: 2px 8px;
+        margin-left: 4px;
+        color: var(--white);
+        border-radius: 2px;
+    }
+
+    .button:hover {
+        cursor: pointer;
+    }
+
+    .button-green {
+        background: var(--green);
+    }
+
+    .button-grey {
+        background: var(--icon-grey)
+    }
+
+    .button-orange {
+        background: var(--orange);
+    }
+
+    .buttons {
+        display: flex;
+        width: 100%;
+        justify-content: flex-end;
+    }
+
+    .control-row {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        margin-top: 8px;
+    }
+
     .explain {
         color: var(--blue);
         font-weight: bold;
@@ -187,7 +239,6 @@
     }
 
     .instructions {
-        width: calc(100% - 30px);
         background: var(--active-grey);
         border: none;
         border-radius: 2px;
@@ -202,7 +253,9 @@
     .instructions-group {
         width: 100%;
         border-bottom: 1px solid var(--middle-grey);
-        padding: 20px 0 22px 0;
+        padding: 20px 0 14px 0;
+        display: flex;
+        flex-direction: column;
     }
 
     .label {
@@ -223,13 +276,14 @@
     }
 
     .route-status {
+        flex-grow: 1;
         font-size: 14px;
         font-weight: bold;
         height: 22.4px;
         width: calc(100% - 10px);
-        text-align: right;
+        text-align: left;
         padding: 0 5px;
-        margin-top: -7px;
+        margin-top: -2px;
     }
 
     .route-status svg {

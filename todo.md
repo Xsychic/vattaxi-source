@@ -34,9 +34,6 @@
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
 - [ ] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)
-        when regexing route instructions, check if current point is on first taxiway provided before implicitly adding current segment
-        then change current segment if found
-        otherwise check if route is shorter using the different segments available (need to think of shortcut for this)
 
 
 ### QOL 
@@ -45,10 +42,11 @@
 - [x] update instructions modal with runway and maintenance area formats
 - [x] make wrong turn detection optional (experimental)
 - [x] refactor wrong turn detection
+- [x] buttons to control route parsing (trigger route parsing, clear route, reparse route)
 - [ ] create object with 'wide view' bounds of each taxiway (rough outline containing stands and all taxiway segments of named taxiway)
-- [ ] buttons to control route parsing (trigger route parsing, clear route, reparse route)
 
 ### Potential Future Improvements
+- [ ] show aircraft heading on map by using oriented icon and using sim data
 - [ ] too keenly adding implicit last taxiway - e.g. on L putting just /q1 draws the full route, also putting Q /Q1 shows invalid route. 
         Should remove this but need to look at holding point at first points on new taxiway and also those on different twy (e.g. A2, W1)
 - [ ] invalidate routes requiring a single turn of more than approx 100 degrees
