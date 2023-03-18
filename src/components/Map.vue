@@ -123,7 +123,7 @@
 
         trimRoute(coords, routeArr, drawnRoute);
         plotPosition(coords, plot, layers, routeArr.value, drawnRoute);
-        
+
         if(!routeArr.value.length) {
            emit('clearRoute');
         }

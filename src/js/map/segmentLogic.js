@@ -13,7 +13,7 @@ export const getSegment = (x = false, y = false, currentSegment = false, props, 
         return [];
     }
 
-    for(const [taxiway, boundObjs] of Object.entries(taxiwaySegments)) {
+    for(const boundObjs of Object.values(taxiwaySegments)) {
         for(let i = 0; i < boundObjs.length; i++) {
             const boundObj = boundObjs[i];
             if(pointInPolygon([x, y], boundObj.bounds)) {

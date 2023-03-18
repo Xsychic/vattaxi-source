@@ -100,7 +100,7 @@ public partial class SimConnectServer : Form {
             // register data structure with managed data connection marshaller
             connection?.RegisterDataDefineStruct<DataStruct>(DATA_DEFINE_ID.DEFINITION_1);
             Debug.WriteLine("Created data definition");
-            connection?.RequestDataOnSimObject(DATA_REQUEST_ID.REQUEST_1, DATA_DEFINE_ID.DEFINITION_1, 0, SIMCONNECT_PERIOD.SECOND, SIMCONNECT_DATA_REQUEST_FLAG.DEFAULT, 0, 0, 0);
+            connection?.RequestDataOnSimObject(DATA_REQUEST_ID.REQUEST_1, DATA_DEFINE_ID.DEFINITION_1, 0, SIMCONNECT_PERIOD.VISUAL_FRAME, SIMCONNECT_DATA_REQUEST_FLAG.DEFAULT, 0, 0, 0);
 
         } catch(COMException err) {
             Debug.WriteLine(err); 
@@ -156,10 +156,7 @@ public partial class SimConnectServer : Form {
     }
 
     public DataStruct? getLatestData() {
-        if(latestData != null) {
-            return latestData;
-        }
-        return null;
+        return latestData;
     }
 
     protected override void DefWndProc(ref Message m) {

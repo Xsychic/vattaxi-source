@@ -35,7 +35,6 @@
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
 - [ ] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)
 
-
 ### QOL 
 - [x] support implicit first taxiway
 - [x] create boundary zone for 26L/08R
@@ -43,7 +42,7 @@
 - [x] make wrong turn detection optional (experimental)
 - [x] refactor wrong turn detection
 - [x] buttons to control route parsing (trigger route parsing, clear route, reparse route)
-- [ ] create object with 'wide view' bounds of each taxiway (rough outline containing stands and all taxiway segments of named taxiway)
+- [x] investigate lag between sim movement and map update
 
 ### Potential Future Improvements
 - [ ] show aircraft heading on map by using oriented icon and using sim data

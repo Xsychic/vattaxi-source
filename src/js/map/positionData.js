@@ -6,6 +6,7 @@ class DataProvider {
     currentDataField = ref({});
     reqTimeoutCounter = 0;
     timeoutCap = 100;
+    reqInterval = 500;
     connectedField = ref(false);
     fourOhFourOccurred = false;
     continueFetchingData = true;
@@ -34,71 +35,76 @@ class DataProvider {
     }
 
     getData = async () => { 
-        axios({
-            method: 'get',
-            url: 'http://localhost:57016',
-            params: {
-                type: 'data request'
-            },
-            timeout: 2000,
-            responseType: 'json'  
-        }).then(async (response) => {
-            this.connected = true;
-            this.reqTimeoutCounter = 0;
-            this.fourOhFourOccurred = false;
-    
-            if(response?.data?.latitude && response?.data?.longitude) {
-                let lat = response.data.latitude;
-                let long = response.data.longitude;
-    
-                lat = Math.round(lat * 10**6) / 10**6;
-                long = Math.round(long * 10**6) / 10**6;
-    
-                response.data.latitude = lat;
-                response.data.longitude = long;
-    
-                if(response.data.latitude != this.currentData.latitude || response.data.longitude != this.currentData.longitude) {
-                    this.currentData = response.data;
+        if(this.outstandingRequest)
+            return;
+        
+        
+        while(this.continueFetchingData) {
+            await axios({
+                method: 'get',
+                url: 'http://localhost:57016',
+                params: {
+                    type: 'data request'
+                },
+                timeout: 2000,
+                responseType: 'json'  
+            }).then(async (response) => {
+                this.connected = true;
+                this.reqTimeoutCounter = 0;
+                this.fourOhFourOccurred = false;
+        
+                if(response?.data?.latitude && response?.data?.longitude) {
+                    let lat = response.data.latitude;
+                    let long = response.data.longitude;
+        
+                    lat = Math.round(lat * 10**6) / 10**6;
+                    long = Math.round(long * 10**6) / 10**6;
+        
+                    response.data.latitude = lat;
+                    response.data.longitude = long;
+        
+                    if(response.data.latitude != this.currentData.latitude || response.data.longitude != this.currentData.longitude) {
+                        this.currentData = response.data;
+                    } else {
+                        console.log('same')
+                    }
                 }
-            }
-    
-        }).catch((error) => {
-            this.connected = false;
-    
-            if(error.code == 'ECONNABORTED' || error.code == 'ERR_NETWORK') {
-                // timed out 
-                this.reqTimeoutCounter++;
-                if(this.reqTimeoutCounter == this.timeoutCap || this.reqTimeoutCounter == 1) {
-                    console.log(`Count: ${ this.reqTimeoutCounter }`);
-                    console.log(error);
+        
+            }).catch((error) => {
+                this.connected = false;
+        
+                if(error.code == 'ECONNABORTED' || error.code == 'ERR_NETWORK') {
+                    // timed out 
+                    this.reqTimeoutCounter++;
+                    if(this.reqTimeoutCounter == this.timeoutCap || this.reqTimeoutCounter == 1) {
+                        console.log(`Count: ${ this.reqTimeoutCounter }`);
+                        console.log(error);
+                    }
+                    return;
+                }          
+        
+                if(error?.response) {
+                    const { status = 500 } = error.response;
+        
+                    if(status == 404 && this.fourOhFourOccurred == false) {
+                        // location data not received from sim
+                        this.fourOhFourOccurred = true;
+                        console.log(error);
+                        console.log(error.response.data.message); // "Location data not yet been retrieved from the simulator" or "Connection to simulator has been lost"
+                    } else if(status != 404) {
+                        console.log(error);
+                    }
                 }
-                return;
-            }          
-    
-            if(error?.response) {
-                const { status = 500 } = error.response;
-    
-                if(status == 404 && this.fourOhFourOccurred == false) {
-                    // location data not received from sim
-                    this.fourOhFourOccurred = true;
-                    console.log(error);
-                    console.log(error.response.data.message); // "Location data not yet been retrieved from the simulator" or "Connection to simulator has been lost"
-                } else if(status != 404) {
-                    console.log(error);
+            }).finally(() => {
+                if(this.reqTimeoutCounter == this.timeoutCap) {
+                    // need to post message to user
+                    alert("Unable to connect to the simulator, please ensure it is running and if still not connected then please try restarting this application.");
+                    console.log("Timeout cap exceeded, possible unresolvable loss in connection to simconnect client, please restart the application if the simulator is already running.");
                 }
-            }
-        }).finally(() => {
-            if(this.reqTimeoutCounter == this.timeoutCap) {
-                // need to post message to user
-                alert("Unable to connect to the simulator, please ensure it is running and if still not connected then please try restarting this application.");
-                console.log("Timeout cap exceeded, possible unresolvable loss in connection to simconnect client, please restart the application if the simulator is already running.");
-            }
-    
-            if(this.continueFetchingData) {
-                const period = (this.connected ? 1000 : 2500);
-                setTimeout(this.getData, period);
-            }    
-        });
+            });
+
+            await new Promise(resolve => setTimeout(resolve, this.reqInterval));
+        }
     }
 }
 
