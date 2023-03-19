@@ -70,7 +70,7 @@ const createDirectionObj = (ptOne, ptTwo, ptThree, name, el) => {
 
 
 
-export const generateDirections = (routeArray, routeStringArr, currentSegment) => {
+export const generateDirections = (routeArray, routeStringArr, currentSegment, pxCoords) => {
     // point, taxiwaySegment, stand
     let currentTwy = false;
     let directions = [];
@@ -83,20 +83,26 @@ export const generateDirections = (routeArray, routeStringArr, currentSegment) =
         if(el.name) {
             // el is twySegment or stand
             if(!currentTwy) {
-                // first twySegment
+                // first twySegment, instantiate currentTwy
                 currentTwy = { name: el.name, i };
             } else {
                 if(currentTwy.name === el.name) {
-                    // update current taxiway and move on if same as previous taxiway
+                    // update current taxiway name and move on if same as previous taxiway
                     currentTwy = { name: el.name, i };
                     continue;
                 }
 
                 // generate direction 
 
-                let ptOne = routeArr[currentTwy.i + 1];
+                // ptOne : point before currentTwy, ptTwo: point before el, ptThree: point after el
+                let ptOne = routeArr[currentTwy.i - 1];
                 let ptTwo = routeArr[i - 1];
                 let ptThree = routeArr[i + 1];
+
+                if(!ptOne) {
+                    // currentTwy is the first taxiway in the route so has no preceeding point - use current coordinates
+                    ptOne = pxCoords;
+                }
 
                 if(typeof ptThree === 'undefined') {
                     // el is stand
