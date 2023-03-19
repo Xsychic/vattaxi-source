@@ -143,7 +143,7 @@
                     <div class='tooltip'>
                         <h5 class='tooltip-header'>Taxi Route</h5>
                         <p class='tooltip-desc'>
-                            Enter the taxi route you've received from ATC here using the following syntax:
+                            Enter the taxi route you've received from ATC here using the following syntax, separated by spaces:
                         </p>
 
                         <ul class='tooltip-list'>

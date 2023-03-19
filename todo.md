@@ -31,9 +31,10 @@
 - [x] remove aircraft and path plots if connection to sim lost
 - [x] route instructions cleared when position updated and route invalid
 - [x] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
-- [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
+- [x] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)
 - [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
-- [ ] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)
+- [ ] clear saved coordinates when sim connection lost
+- [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 
 ### QOL 
 - [x] support implicit first taxiway
@@ -49,7 +50,6 @@
 - [ ] too keenly adding implicit last taxiway - e.g. on L putting just /q1 draws the full route, also putting Q /Q1 shows invalid route. 
         Should remove this but need to look at holding point at first points on new taxiway and also those on different twy (e.g. A2, W1)
 - [ ] invalidate routes requiring a single turn of more than approx 100 degrees
-- [ ] improve location data update efficiency and increase frequency
 - [ ] improve plotting accuracy
 - [ ] focus pan/zoom on aircraft location? 
 - [ ] add fancy curves between route segments

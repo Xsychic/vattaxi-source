@@ -77,6 +77,10 @@ export const checkSegment = (currentSegment, pxCoords, routeStringArr, emit) => 
     let segments = getSegment(pxCoords.x, pxCoords.y, currentSegment, {routeStringArr}, [], true);
     let matchingSegments = [];
     let addImplicitTaxiway = false;
+    
+    if(!Array.isArray(segments)) {
+        segments = [ segments ];
+    }
 
     // see how many if any segments have the same name as first element of route string
     for(const segment of segments) {
