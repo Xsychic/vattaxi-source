@@ -32,7 +32,7 @@
         }
 
         const standExp = `(?:S\\d{1,3}[LREW]?)`;
-        const holdingPointExp = String.raw`(?:\/[a-z]{1,2}|\/[abcdeghjmnpqrstuwyz][1-7])`;
+        const holdingPointExp = String.raw`(?:\/[a-z]{1,2}|\/[abcdeghjmnpqrstuwyz][1-7]|\/08L\/26R|\/08R\/26L)`;
         const maintenanceAreaExp = `(?:MA1|MA2)`;
 
         // global flag must not be used
@@ -79,13 +79,9 @@
             return;
         }
 
-        if(route.length < 2) {
-            // route needs at least two elements
+        if(route.length < 1) {
+            // route needs at least one element (allowing for implicit first taxiway)
             // can't be in validation function for feedback v-else-if
-            if(props.routeStringArr.length != 0) {
-                routeValid.value = false;
-                emit('updateRouteStringArr', []);
-            }
             return;
         }
 
@@ -124,6 +120,15 @@
             routeChecked.value = false;
         }
     });
+
+    watch(routeString, (newValue) => {
+        // if input has been emptied and the routeStringArray is not empty, reset all relevant variables
+        if(!newValue?.length && props.routeStringArr?.length) {
+            routeValid.value = false;
+            routeChecked.value = false;
+            emit('updateRouteStringArr', []);
+        }
+    })
 
     const clear = () => {
         routeString.value = ''; 

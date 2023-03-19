@@ -37,7 +37,9 @@
 - [x] fix 'turn left onto ra' (from r)
 - [x] clear directions when route cleared
 - [x] stop wrong turn detection when route cleared
-- [ ] implicit first taxiway not working when termination point on current taxiway (probs regexer causing this)
+- [x] implicit first taxiway not working when termination point on current taxiway (probs regexer causing this)
+- [x] turn detection and directions not cleared when instructions input cleared by hand
+- [x] hold short runway not working
 - [ ] clear saved coordinates when sim connection lost
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 
