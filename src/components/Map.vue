@@ -147,6 +147,9 @@
 
         if(!props.segment || !newRoute?.length) {
             // either no current segment or no route so can't parse
+            if(routeArr.value?.length) {
+                routeArr.value = [];
+            }
             return;
         }
 

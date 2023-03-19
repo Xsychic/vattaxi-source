@@ -16,6 +16,7 @@
 - [x] complete graph
 - [x] destination detection
 - [x] draw hold bars when plotting input route
+- [ ] change map colours (mainly just path)
 - [ ] write unit tests, particularly for functions in js files
 
 ### Bugs
@@ -33,9 +34,10 @@
 - [x] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [x] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)
 - [x] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
-- [ ] fix 'turn left onto ra' (from r)
-- [ ] clear directions when route cleared
-- [ ] stop wrong turn detection when route cleared
+- [x] fix 'turn left onto ra' (from r)
+- [x] clear directions when route cleared
+- [x] stop wrong turn detection when route cleared
+- [ ] implicit first taxiway not working when termination point on current taxiway (probs regexer causing this)
 - [ ] clear saved coordinates when sim connection lost
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 
@@ -49,6 +51,8 @@
 - [x] investigate lag between sim movement and map update
 
 ### Potential Future Improvements
+- [ ] detect wrong turns quicker (as soon as enter first incorrect segment) 
+        - maybe not possible with current system due to possibility of aircraft passing briefly into another segment when turning a corner
 - [ ] show aircraft heading on map by using oriented icon and using sim data
 - [ ] too keenly adding implicit last taxiway - e.g. on L putting just /q1 draws the full route, also putting Q /Q1 shows invalid route. 
         Should remove this but need to look at holding point at first points on new taxiway and also those on different twy (e.g. A2, W1)

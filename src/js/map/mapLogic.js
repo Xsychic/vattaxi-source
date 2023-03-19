@@ -82,8 +82,8 @@ const getBounds = (point, nextEl) => {
     bounds[1][0] = point.x + xAdjBaseline;
     bounds[1][1] = baseLineY(bounds[1][0]);
 
-    let segmentHeight = 15;
-    let deltaXSideline = Math.sqrt((segmentHeight ** 2) / (1 + gradient ** 2));
+    let segmentDepth = 10;
+    let deltaXSideline = Math.sqrt((segmentDepth ** 2) / (1 + gradient ** 2));
     let xAdjSideline = Math.round(deltaXSideline * 10) / 10;
     
     let sideLineC1 = bounds[0][1] - gradient * bounds[0][0];
@@ -101,6 +101,8 @@ const getBounds = (point, nextEl) => {
 let boundPaths = [];
 
 export const trimRoute = (coords, routeArr, drawnRoute) => {
+    // function to remove parts of the route that have been passed and update the path depiction
+
     if(!routeArr.value?.length || !drawnRoute.value?.length) 
         return;
 
@@ -136,14 +138,15 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
                 // current position within 8 pixels of first point, do not count as closest point so it will get removed
                 continue;
             } else {
-                if(i === 0 && dist <= 25) { // if not within 25, cannot be inside detection zone 
+                if(i === 0 && dist <= 25) { // if not within 25, cannot be inside detection zone (diagonal size of bounding box from centre of long edge (intersecting point))
                     // test pip rectangular segment intersecting at first point - only reachable if not within 8pxs
 
                     if(routeArr.value.length === 1) {
                         // reached end of route
                         let lastEl = routeArr.value[0];
 
-                        if(dist < 12){
+                        if(dist < 20){
+                            // within 20 pixels of termination point
                             if(lastEl.joinPoint) {
                                 routeArr.value[0] = routeArr.value[0].stopPoint;
                             } else {
