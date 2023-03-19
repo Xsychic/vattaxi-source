@@ -70,13 +70,15 @@ const createDirectionObj = (ptOne, ptTwo, ptThree, name, el) => {
 
 
 
-export const generateDirections = (routeArr, routeStringArr) => {
+export const generateDirections = (routeArray, routeStringArr, currentSegment) => {
     // point, taxiwaySegment, stand
     let currentTwy = false;
     let directions = [];
+    let routeArr = routeArray.value.map(el => el);
+    routeArr.unshift(currentSegment);
 
-    for(let i = 0; i < routeArr.value.length; i++) {
-        let el = routeArr.value[i];
+    for(let i = 0; i < routeArr.length; i++) {
+        let el = routeArr[i];
 
         if(el.name) {
             // el is twySegment or stand
@@ -92,9 +94,9 @@ export const generateDirections = (routeArr, routeStringArr) => {
 
                 // generate direction 
 
-                let ptOne = routeArr.value[currentTwy.i + 1];
-                let ptTwo = routeArr.value[i - 1];
-                let ptThree = routeArr.value[i + 1];
+                let ptOne = routeArr[currentTwy.i + 1];
+                let ptTwo = routeArr[i - 1];
+                let ptThree = routeArr[i + 1];
 
                 if(typeof ptThree === 'undefined') {
                     // el is stand
@@ -102,8 +104,8 @@ export const generateDirections = (routeArr, routeStringArr) => {
                     // add instruction onto stand taxiway if not already done
                     let secondToLastTwy = routeStringArr[routeStringArr.length - 2];
                     if(secondToLastTwy !== currentTwy.name) {
-                        let ptOne = routeArr.value[currentTwy.i - 1];
-                        let ptTwo = routeArr.value[currentTwy.i + 1];
+                        let ptOne = routeArr[currentTwy.i - 1];
+                        let ptTwo = routeArr[currentTwy.i + 1];
                         let ptThree = el.joinPoint;
                         directions.push(createDirectionObj(ptOne, ptTwo, ptThree, secondToLastTwy, el));
                     }
@@ -125,9 +127,9 @@ export const generateDirections = (routeArr, routeStringArr) => {
         }
 
         let lastStringEl = routeStringArr[routeStringArr.length - 1];
-        if(i === routeArr.value.length - 1 && el.x && lastStringEl[0] === '/') {
+        if(i === routeArr.length - 1 && el.x && lastStringEl[0] === '/') {
             // last element is a point - a hold short or holding point
-            directions.push({dir: 2, text: `Hold short of ${ lastStringEl.slice(1) }`, el: routeArr.value[routeArr.value.length - 1]});
+            directions.push({dir: 2, text: `Hold short of ${ lastStringEl.slice(1) }`, el: routeArr[routeArr.length - 1]});
         }
     }
 

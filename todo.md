@@ -32,7 +32,10 @@
 - [x] route instructions cleared when position updated and route invalid
 - [x] fix wrong turn detection misfiring - when in two segments, check if one is in current route or contains route terminator and if so pick that one
 - [x] naive segment detection is causing routing anomolies in congested areas (e.g. sat at P/J/Z intersection going to /P1)
-- [ ] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
+- [x] fix wrong/missing directions when turning off current or first after current taxiway segment - e.g. S574 segment onto QC
+- [ ] fix 'turn left onto ra' (from r)
+- [ ] clear directions when route cleared
+- [ ] stop wrong turn detection when route cleared
 - [ ] clear saved coordinates when sim connection lost
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 

@@ -217,7 +217,7 @@
         }
 
         // route found - generate directions and draw route
-        let directions = generateDirections(routeArr, newRoute);
+        let directions = generateDirections(routeArr, newRoute, props.segment);
         emit('newRouteArr', routeArr.value);
         emit('newDirections', directions);
 
