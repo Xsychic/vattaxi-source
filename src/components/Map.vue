@@ -83,6 +83,15 @@
                 plot.value = false;
             }
 
+            pxCoords.value = {};
+            allSegments.value = [];
+            displayBanner.value = false;
+            oldSegment = false;
+            emit('updateSegment', false);
+            emit('clearRoute');
+
+            
+
             if(drawnRoute.value?.length) {
                 clearPaths(drawnRoute.value);
             }
@@ -152,7 +161,8 @@
             }
             return;
         }
-
+        console.log(props.segment);
+        // get the best one of the possible segments
         const { segment: newSeg = false, implicitTaxiway = false, pathFound } = checkSegment(props.segment, pxCoords.value, newRoute, emit);
 
         if(!pathFound || !newSeg) {

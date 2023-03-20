@@ -25,8 +25,8 @@ internal class LocalServer {
 
     public void startServer() {
 
-
         try {
+
             while(true) {
                 HttpListenerContext context = listener.GetContext();
 
@@ -72,6 +72,9 @@ internal class LocalServer {
             }
         } catch(COMException err) {
             Debug.WriteLine(err);
+        } catch(ObjectDisposedException err) {
+            Console.WriteLine("fuck");
+            Console.WriteLine(err);
         }
     }
 
