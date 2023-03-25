@@ -5,13 +5,13 @@ import { ref } from 'vue';
 import { parseRoute, pickShortestPath, pythagDistance } from '@/js/map/mapLogic';
 
 
-export const getSegment = (x = false, y = false, currentSegment = false, props, routeArr = [], multipleSegments = false) => {
+export const getSegment = (x = false, y = false, currentSegment = false, props, multipleSegments = false) => {
     // function to check which segment the aircraft is in
     const segments = [];
 
-    if(x == false || y == false) {
+    if(x === false || y === false) {
         console.log("no coords for get segment :(");
-        return [];
+        return false;
     }
 
     for(const boundObjs of Object.values(taxiwaySegments)) {
@@ -49,7 +49,7 @@ export const getSegment = (x = false, y = false, currentSegment = false, props, 
         }
     }
 
-    if(routeArr?.value?.length) {
+    if(props?.routeStringArr?.length) {
         // existing route, check if any of the returned segments are in the route
         for(const seg of segments) {
 

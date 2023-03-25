@@ -122,7 +122,7 @@
         };
 
         // find list of possible segments and select the best if any found
-        let newSeg = getSegment(x, y, oldSegment, props, routeArr);
+        let newSeg = getSegment(x, y, oldSegment, props);
         
         if(!oldSegment || newSeg !== oldSegment) {
             // segment change - can't be in watcher, changes must happen before route trimmed
@@ -311,7 +311,7 @@
                 const adjustedX = Math.round(10 * event.point.x / event.scale) / 10;
                 const adjustedY = Math.round(10 * event.point.y / event.scale) / 10;
                 
-                let seg = getSegment(adjustedX, adjustedY, false, props, routeArr, true);
+                let seg = getSegment(adjustedX, adjustedY, false, props, true);
 
                 if(seg) {
                     if(!Array.isArray(seg)) {
