@@ -68,7 +68,7 @@ const getBounds = (point, nextEl) => {
     let normalGradient = -1 / gradient;
 
     // change in x = sqrt((desired line length)^2 / (1 + gradient^2))
-    let segmentWidth = 35;
+    let segmentWidth = 45;
     let deltaXBaseline = Math.sqrt((segmentWidth ** 2) / (1 + normalGradient ** 2));
     let xAdjBaseline = Math.round(deltaXBaseline * 10) / 20;
     
@@ -82,7 +82,7 @@ const getBounds = (point, nextEl) => {
     bounds[1][0] = point.x + xAdjBaseline;
     bounds[1][1] = baseLineY(bounds[1][0]);
 
-    let segmentDepth = 10;
+    let segmentDepth = 14;
     let deltaXSideline = Math.sqrt((segmentDepth ** 2) / (1 + gradient ** 2));
     let xAdjSideline = Math.round(deltaXSideline * 10) / 10;
     
@@ -138,7 +138,7 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
                 // current position within 8 pixels of first point, do not count as closest point so it will get removed
                 continue;
             } else {
-                if(i === 0 && dist <= 25) { // if not within 25, cannot be inside detection zone (diagonal size of bounding box from centre of long edge (intersecting point))
+                if(i === 0 && dist <= 30) { // if not within 25, cannot be inside detection zone (diagonal size of bounding box from centre of long edge (intersecting point))
                     // test pip rectangular segment intersecting at first point - only reachable if not within 8pxs
 
                     if(routeArr.value.length === 1) {

@@ -16,8 +16,19 @@
 - [x] complete graph
 - [x] destination detection
 - [x] draw hold bars when plotting input route
-- [ ] change map colours (mainly just path)
+- [ ] prepare release version
+    - [ ] change map colours (mainly just path)
+    - [ ] remove temp tools
+    - [ ] package and distribute
 - [ ] write unit tests, particularly for functions in js files
+    - [ ] isValidRoute
+    - [ ] parseRoute (graph)
+    - [ ] trimRoute
+    - [ ] generateDirections
+    - [ ] pickShortestPath
+    - [ ] getSegment
+    - [ ] checkSegment
+    - [ ] checkWrongTurn
 
 ### Bugs
 - [x] fix path doubling back when route starts with turn off current segment (low priority, instructions *shouldn't* be given)
@@ -40,7 +51,7 @@
 - [x] implicit first taxiway not working when termination point on current taxiway (probs regexer causing this)
 - [x] turn detection and directions not cleared when instructions input cleared by hand
 - [x] hold short runway not working
-- [ ] clear saved coordinates when sim connection lost
+- [x] clear saved coordinates when sim connection lost
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 
 ### QOL 

@@ -20,13 +20,13 @@
         */
         
         // create regexs
-        const singleTaxiways = ['A', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z'];
+        const singleTaxiways = ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z'];
         const singleTwysExp = `[${ singleTaxiways.join('') }]`;
         const doubleTaxiways = ['AN', 'AS', 'FR', 'GR', 'KA', 'NA', 'QA', 'QB', 'QC', '08L/26R', '08R/26L'];
         let doubleTwysExp = '';
 
         for(let i = 0; i < doubleTaxiways.length; i++) {
-            doubleTwysExp += `(?:${ doubleTaxiways[i] })`;
+            doubleTwysExp += `${ doubleTaxiways[i] }`;
             if((i+1) !== doubleTaxiways.length)
                 doubleTwysExp += '|';
         }
@@ -38,8 +38,10 @@
         // global flag must not be used
         const validElementString = String.raw`^(${ singleTwysExp }{1}|${ doubleTwysExp })$`;
         const validElement = new RegExp(validElementString, 'mi');
+        const holdShortExp = `(?:\/(?:${ validElementString.slice(2, -2)}))`;
 
-        const validTerminatorString = String.raw`^(${ standExp }|${ holdingPointExp }|${ maintenanceAreaExp })$`;
+
+        const validTerminatorString = String.raw`^(${ standExp }|${ holdingPointExp }|${ holdShortExp }|${ maintenanceAreaExp })$`;
         const validTerminator = new RegExp(validTerminatorString, 'mi');
 
         // route ends in termination point
@@ -48,9 +50,10 @@
         }
 
         // rest of route consists of taxiways
-        const restOfRoute = route.splice(0,-1);
-        for(let i = 0; i < restOfRoute.length; i++) {
-            if(!validElement.test(restOfRoute[i])) {
+        const restOfRoute = route.slice(0,-1);
+
+        for(const el of restOfRoute) {
+            if(!validElement.test(el)) {
                 return false;
             }
         }

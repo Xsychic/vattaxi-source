@@ -28,6 +28,10 @@ pnpm-debug.log*
 *.njsproj
 *.sw?
 
-#Electron-builder output
+# Electron-builder output
 /dist_electron/*
 !/dist_electron/src
+
+
+# test coverage
+coverage/*
