@@ -5,7 +5,15 @@ import InstructionsField from '@/components/ControlConsole/InstructionsField';
 import { shallowMount } from '@vue/test-utils';
 
 describe('isValidRoute', () => {
-    const wrapper = shallowMount(InstructionsField);
+    const wrapper = shallowMount(InstructionsField, {
+        global: {
+            stubs: {
+                'font-awesome-icon': {
+                    template: '<span />'
+                }
+            }
+        }
+    });
 
     test('long valid route, named holding point', () => {        
         

@@ -16,7 +16,6 @@
   "main": "background.js",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^6.2.1",
-    "@fortawesome/free-regular-svg-icons": "^6.2.1",
     "@fortawesome/free-solid-svg-icons": "^6.2.1",
     "@fortawesome/vue-fontawesome": "^3.0.2",
     "axios": "^1.2.3",
@@ -42,6 +41,7 @@
     "eslint": "^7.32.0",
     "eslint-plugin-vue": "^8.0.3",
     "jest": "^27.0.5",
+    "jest-canvas-mock": "^2.5.0",
     "spectron": "15.0.0",
     "vue-cli-plugin-electron-builder": "~2.1.1"
   }

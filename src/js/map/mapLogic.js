@@ -10,7 +10,7 @@ export const calculatePixelCoords = (newValue) => {
 
     // if no position coords or coords out of bounds
     if(!latitude || !longitude || latitude < latLower || latitude > latUpper || longitude < longLower || longitude > longUpper) {
-        return {oob: true };
+        return { oob: true };
     }
     
     // coord translation to pixels
@@ -26,11 +26,11 @@ export const calculatePixelCoords = (newValue) => {
     
     const yLower = 0, yUpper = 2765;
     const xLower = 0, xUpper = 3455;
-    
+
     if(xPx < xLower || xPx > xUpper || yPx < yLower || yPx > yUpper) {
         return { oob: true }
     }
-
+    
     return { x: xPx, y: yPx };
 }
 
@@ -42,7 +42,8 @@ export const pythagDistance = (origin, dest) => {
     return Math.sqrt(xDiff ** 2 + yDiff ** 2);
 }
 
-const getBounds = (point, nextEl) => {
+
+export const getBounds = (point, nextEl) => {
     // function to get bounds of a rectangle across current taxiway intersecting first point
     let nextElCoords = {};
 
@@ -86,14 +87,22 @@ const getBounds = (point, nextEl) => {
     let deltaXSideline = Math.sqrt((segmentDepth ** 2) / (1 + gradient ** 2));
     let xAdjSideline = Math.round(deltaXSideline * 10) / 10;
     
-    let sideLineC1 = bounds[0][1] - gradient * bounds[0][0];
-    let sideLineC2 = bounds[1][1] - gradient * bounds[1][0];
-    let sideLineY = (x, c) => gradient * x + c;
-
     bounds[2][0] = bounds[1][0] - xAdjSideline;
-    bounds[2][1] = sideLineY(bounds[2][0], sideLineC2);
     bounds[3][0] = bounds[0][0] - xAdjSideline;
-    bounds[3][1] = sideLineY(bounds[3][0], sideLineC1);
+
+    if(gradient !== Infinity) {
+        // gradient along taxiway is not infinite
+        let sideLineC1 = bounds[0][1] - gradient * bounds[0][0];
+        let sideLineC2 = bounds[1][1] - gradient * bounds[1][0];
+        let sideLineY = (x, c) => gradient * x + c;
+    
+        bounds[2][1] = sideLineY(bounds[2][0], sideLineC2);
+        bounds[3][1] = sideLineY(bounds[3][0], sideLineC1);
+    } else {
+        // gradient along taxiway is infinite
+        bounds[2][1] = bounds[1][1] + segmentDepth;
+        bounds[3][1] = bounds[0][1] + segmentDepth;
+    }
 
     return bounds;
 }

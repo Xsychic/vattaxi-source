@@ -34,4 +34,4 @@ pnpm-debug.log*
 
 
 # test coverage
-coverage/*
+/tests/coverage/

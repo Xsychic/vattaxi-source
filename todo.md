@@ -21,7 +21,8 @@
     - [ ] remove temp tools
     - [ ] package and distribute
 - [ ] write unit tests, particularly for functions in js files
-    - [ ] isValidRoute
+    - [x] isValidRoute
+    - [ ] calculatePixelCoords
     - [ ] parseRoute (graph)
     - [ ] trimRoute
     - [ ] generateDirections
