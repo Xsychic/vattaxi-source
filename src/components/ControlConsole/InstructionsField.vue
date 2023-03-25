@@ -38,7 +38,7 @@
         // global flag must not be used
         const validElementString = String.raw`^(${ singleTwysExp }{1}|${ doubleTwysExp })$`;
         const validElement = new RegExp(validElementString, 'mi');
-        const holdShortExp = `(?:\/(?:${ validElementString.slice(2, -2)}))`;
+        const holdShortExp = `(?:/(?:${ validElementString.slice(2, -2)}))`;
 
 
         const validTerminatorString = String.raw`^(${ standExp }|${ holdingPointExp }|${ holdShortExp }|${ maintenanceAreaExp })$`;
