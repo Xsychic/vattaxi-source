@@ -5,6 +5,7 @@ import InstructionsField from '@/components/ControlConsole/InstructionsField';
 import { shallowMount } from '@vue/test-utils';
 
 describe('isValidRoute', () => {
+
     const wrapper = shallowMount(InstructionsField, {
         global: {
             stubs: {

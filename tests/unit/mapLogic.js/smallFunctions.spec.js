@@ -1,12 +1,11 @@
 import Stand from '@/js/graph/Stand';
 import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 
-// must be imported or wont run
-import { setupJestCanvasMock } from 'jest-canvas-mock';
+// import { setupJestCanvasMock } from 'jest-canvas-mock';
 import { calculatePixelCoords, getBounds, pythagDistance } from '@/js/map/mapLogic';
 
 describe('calculatePixelCoords', () => {
-    
+
     test('validCoords', () => {
         const coords = {
             latitude: 51.150542,
