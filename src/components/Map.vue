@@ -11,6 +11,7 @@
     import { getSegment, checkSegment, checkWrongTurn } from '@/js/map/segmentLogic';
     import { setupCanvas, drawGraph, drawRoute, clearPaths, plotPosition } from '@/js/map/drawingFunctions';
 
+
     const props = defineProps(['routeStringArr', 'routeFound', 'segment', 'turnDetection']);
     const emit = defineEmits(['updateConnection', 'updateRouteFound', 'updateSegment', 'clearRoute', 'newRouteArr', 'newDirections', 'updateRouteStringArr']);
 

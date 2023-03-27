@@ -42,8 +42,7 @@ describe('getSegment', () => {
         const x = 1984, y = 840;
 
         const segments = getSegment(x, y, false, {}, true);
-        console.log(typeof segments)
-        console.log(segments)
+
         expect(Array.isArray(segments)).toBe(true);
         expect(segments.length).toBe(2);
         expect(segments.includes(Q.segTwo)).toBe(true);

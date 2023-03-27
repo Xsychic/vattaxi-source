@@ -8,11 +8,13 @@ module.exports = {
     'src/**/*.{vue,js}',
     '!src/main.js',
     '!src/js/graph/**/*',
+    '!src/background.js',
     'jest-canvas-mock'
   ],
   coverageReporters: ['text', 'html'],
   coverageProvider: 'v8',
   moduleNameMapper: {
     axios: "axios/dist/node/axios.cjs"
-  }
+  },
+  testTimeout: 5000
 }

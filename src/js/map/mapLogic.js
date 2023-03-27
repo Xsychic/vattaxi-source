@@ -1,7 +1,6 @@
 import paper from 'paper';
 import pointInPolygon from 'point-in-polygon';
 
-
 export const calculatePixelCoords = (newValue) => {
     let { latitude = false, longitude = false } = newValue;
         
@@ -255,7 +254,7 @@ export const parseRoute = (point, route, currentSegment, allSegments, coords) =>
 
     allSegments.value = path.filter((el) => typeof el.bounds !== 'undefined');
 
-    if(path[1] == currentSegment) {
+    if(path[1] === currentSegment) {
         // if initially picked wrong point at wrong end of current segment, remove it and current segment
         path = path.slice(2);
     }
@@ -325,29 +324,23 @@ export const pickShortestPath = (paths) => {
 }
 
 
-const traversePoint = (point, route, path) => {
+export const traversePoint = (point, route, path) => {
     path.push(point)
-
-    if(route == [])
+    
+    if(route.length === 0)
         return path;
 
-    if(route[1] && route[1][0] == '/') {
+    if(route[1] && route[1][0] === '/') {
         // next point in route is an explicit holding point
-        if(point?.holdingPoint?.name == route[1].slice(1))
+        if(point?.holdingPoint?.name === route[1].slice(1))
             return path;
     }
 
     const foundPaths = [];
         
     for(let segment of point.adjacentTaxiwaySegments) {
-        if(route[1] && route[1][0] == '/') {
-            // next point in route is a hold short instruction that matches next node
-            if(route[1].slice(1) == segment.name)
-                return path;
-        }
-
-        if(route[0] == segment.name) {
-            if(route[1] && route[1].length > 1 && (route[1][0] == 'S' || (route[1][0] == 'M' && route[1][1] == 'A')) ) {
+        if(route[0] === segment.name) {
+            if(route[1] && route[1].length > 1 && (route[1][0] === 'S' || (route[1][0] === 'M' && route[1][1] === 'A')) ) {
                 // next point is a stand or maintenance area
                 let standName = route[1];
 
@@ -355,7 +348,7 @@ const traversePoint = (point, route, path) => {
                     // terminator is stand
                     standName = route[1].slice(1);
 
-                let stand = segment.stands.find((stand) => standName == stand.name);
+                let stand = segment.stands.find((stand) => standName === stand.name);
 
                 if(typeof stand != 'undefined') {
                     path.push(stand);
@@ -364,18 +357,13 @@ const traversePoint = (point, route, path) => {
             }
         }
 
-        if(route.slice(0,2).includes(segment.name)) {
-            // name of segment selected is in first two elements of route
-            let newRoute;
+        if(route[0] === segment.name) {
+            // name of segment selected is first element of route
+            // different taxiways cannot be joined at a point, 
+            // their points must be linked instead so cannot progress
+            // route array here
+            let newRoute = route;
             let pairPoint = segment.points.find(p => p != point);
-            
-            if(route[0] == segment.name) {
-                // segment is on same taxiway as previous segment
-                newRoute = route;
-            } else {
-                // segment is on the next taxiway compared to previous segment
-                newRoute = route.slice(1);
-            }
 
             if(!path.includes(pairPoint)) {
                 let pathCopy = path.map((el) => el);
@@ -389,7 +377,7 @@ const traversePoint = (point, route, path) => {
     }
 
     for(const pairPoint of point.adjoiningPoints) {
-        if(route[1] && route[1][0] == '/') {
+        if(route[1] && route[1][0] === '/') {
             // some kind of hold short/holding point instruction next
             if(pairPoint?.holdingPoint?.name === route[1].slice(1)) {
                 // next point in route is a named holding point at pairPoint
@@ -406,6 +394,7 @@ const traversePoint = (point, route, path) => {
         }
         
         for(let segment of pairPoint.adjacentTaxiwaySegments) {
+
             if(route.slice(0,2).includes(segment.name)) {
                 // route includes name of taxiway linked to adjoining point in first two elements of route array
 

@@ -21,15 +21,7 @@
     - [ ] remove temp tools
     - [ ] package and distribute
 - [ ] write unit tests, particularly for functions in js files
-    - [x] isValidRoute
-    - [ ] calculatePixelCoords
-    - [ ] parseRoute (graph)
-    - [ ] trimRoute
-    - [ ] generateDirections
-    - [ ] pickShortestPath
-    - [ ] getSegment
-    - [ ] checkSegment
-    - [ ] checkWrongTurn
+
 
 ### Bugs
 - [x] fix path doubling back when route starts with turn off current segment (low priority, instructions *shouldn't* be given)
@@ -53,6 +45,7 @@
 - [x] turn detection and directions not cleared when instructions input cleared by hand
 - [x] hold short runway not working
 - [x] clear saved coordinates when sim connection lost
+- [ ] recheck route button wraps on default window size
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 
 ### QOL 
