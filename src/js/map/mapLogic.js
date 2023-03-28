@@ -106,7 +106,6 @@ export const getBounds = (point, nextEl) => {
     return bounds;
 }
 
-let boundPaths = [];
 
 export const trimRoute = (coords, routeArr, drawnRoute) => {
     // function to remove parts of the route that have been passed and update the path depiction
@@ -146,7 +145,11 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
                 // current position within 8 pixels of first point, do not count as closest point so it will get removed
                 continue;
             } else {
-                if(i === 0 && dist <= 30) { // if not within 25, cannot be inside detection zone (diagonal size of bounding box from centre of long edge (intersecting point))
+                if(i === 0) {
+                    console.log(routeArr.value[i])
+                }
+                
+                if(i === 0 && dist <= 30) { // if not within 30, cannot be inside detection zone (diagonal size of bounding box from centre of long edge (intersecting point))
                     // test pip rectangular segment intersecting at first point - only reachable if not within 8pxs
 
                     if(routeArr.value.length === 1) {
@@ -176,19 +179,9 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
                             bounds = getBounds({x, y}, coords);
                     }
                     
-                    // draw bounding box
-                    while(boundPaths.length) boundPaths.pop().remove();
-
-                    const boundingPath = new paper.Path();
-                    boundPaths.push(boundingPath);
-                    boundingPath.strokeColor = 'white';
-        
-                    bounds.forEach((bound) => {
-                        let p = new paper.Point(bound[0], bound[1]);
-                        boundingPath.add(p);
-                    });
-        
-                    boundingPath.closed = true;
+                    console.log(bounds)
+                    console.log(coords)
+                    console.log(pointInPolygon([coords.x, coords.y], bounds))
 
                     if(pointInPolygon([coords.x, coords.y], bounds)) {
                         // current position within detection bounds, do not count current point as closest point so it will get removed
