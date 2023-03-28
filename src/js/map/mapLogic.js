@@ -47,7 +47,7 @@ export const getBounds = (point, nextEl) => {
     let nextElCoords = {};
 
     if(nextEl.x) {
-        // second el is a point
+        // second el is a point or stand
         nextElCoords = { x: nextEl.x, y: nextEl.y };
     } else if(nextEl.points) {
         // second el is a taxiway segment
@@ -141,14 +141,11 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
             // check if within 8px radius of first point
             const dist = pythagDistance(coords, {x, y});
 
+
             if(i === 0 && dist < 8 && routeArr.value.length > 1) {
                 // current position within 8 pixels of first point, do not count as closest point so it will get removed
                 continue;
-            } else {
-                if(i === 0) {
-                    console.log(routeArr.value[i])
-                }
-                
+            } else {        
                 if(i === 0 && dist <= 30) { // if not within 30, cannot be inside detection zone (diagonal size of bounding box from centre of long edge (intersecting point))
                     // test pip rectangular segment intersecting at first point - only reachable if not within 8pxs
 
@@ -170,42 +167,28 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
 
                     let bounds;
                     
+                    // generate bounds array of bounded detection area
+                    // intersecting point using another point to calculate gradients
                     if(routeArr.value[1]) {
+                        // if no other point in the route, this el must be a point or 
+                        // the stop point of a stand. Therefore, bounds would be calculated
+                        // with reference to the point and coords, not possible
+                        // to be in bounded area (would be perpendicular to aircraft path so max distance 
+                        // of detection is  the deptch of the bounded area) and not in the radius of
+                        // the point (20px). Therefore this is only possibly true if
+                        // there's another point in the route
                         bounds = getBounds(point, routeArr.value[1]);
-                    } else {
-                        if(point.x)
-                            bounds = getBounds(point, coords);
-                        else
-                            bounds = getBounds({x, y}, coords);
                     }
                     
-                    console.log(bounds)
-                    console.log(coords)
-                    console.log(pointInPolygon([coords.x, coords.y], bounds))
-
                     if(pointInPolygon([coords.x, coords.y], bounds)) {
-                        // current position within detection bounds, do not count current point as closest point so it will get removed
-
-                        if(routeArr.value.length === 1) {
-                            // reached end of route
-                            let lastEl = routeArr.value[0];
-    
-                            if(lastEl.joinPoint) {
-                                routeArr.value[0] = routeArr.value[0].stopPoint;
-                            } else {
-                                routeArr.value = [];
-                            }
-                            drawnRoute.value.shift().remove();
-                            return;
-                        }
-
+                        // current position within detection bounds, do not count current point as closest point 
+                        // so that it will get removed
                         continue;
                     }
                 }
 
                 if(dist < minDist) {
                     // new min distance point found
-
                     minDist = dist;
                     minDistIndex = i;
                     minDistPoint = point;
@@ -234,7 +217,7 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
             drawnRoute.value.shift().remove();
         }
     }
-};
+};  
 
 
 export const parseRoute = (point, route, currentSegment, allSegments, coords) => {

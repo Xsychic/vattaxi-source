@@ -18,7 +18,7 @@ import { traversePoint, trimRoute } from '@/js/map/mapLogic';
 describe('trimRoute', () => {
     beforeAll(() => {
         paper.setup();
-    })
+    });
 
     test('route doesn\'t require trimming', () => {
         const route = 'P K S15'.split(' ');
@@ -50,7 +50,22 @@ describe('trimRoute', () => {
         expect(drawnPaths.value).toEqual(drawnPathsArr.slice(1));    
     });
 
-    test('transform stand into stop point', () => {
+    test('closer to third point than first or second trims first two points', () => {
+        const route = 'K Q /Q1'.split(' ');
+        const pathArr = traversePoint(K.segTwo.right, route, []);
+        const drawnPathsArr = [new paper.Path(), new paper.Path(), new paper.Path()];
+
+        const path = { value: pathArr.map(el => el) };
+        const coords = {x: 1989.7, y: 1251.8};
+        const drawnPaths = { value: drawnPathsArr.map(el => el) };
+
+        trimRoute(coords, path, drawnPaths);
+
+        expect(path.value).toEqual(pathArr.slice(3));        
+        expect(drawnPaths.value).toEqual(drawnPathsArr.slice(2)); 
+    });
+
+    test('transform termination stand into stop point when within radius of join point', () => {
         const route = 'K S15'.split(' ');
         const stand = new Stand({x: 2628, y: 1069.4}, {x: 2643.1, y: 1140.9}, '15');
         const pathArr = [ stand ]; // stop point of stand 15
@@ -68,7 +83,7 @@ describe('trimRoute', () => {
     });
 
     test('at termination point of route', () => {
-        const route = 'K S15'.split(' ');
+        // nb: route = K S15
         const pathArr = [{x: 2643.4, y: 1140.8}]; // stop point of stand 15
         const drawnPathsArr = [new paper.Path()];
 
@@ -82,4 +97,33 @@ describe('trimRoute', () => {
         expect(path.value).toEqual([]);        
         expect(drawnPaths.value).toEqual([]);    
     });
+
+    test('bounded area detection used to remove first point', () => {
+        const route = 'P K S105'.split(' ');
+        const pathArr = traversePoint(P.segOne.lower, route, []);
+        const drawnPathsArr = [new paper.Path(), new paper.Path()];
+
+        const path = { value: pathArr.map(el => el) };
+        const coords = {x: 2308.7, y: 1115};
+        const drawnPaths = { value: drawnPathsArr.map(el => el) };
+
+        trimRoute(coords, path, drawnPaths);
+
+        expect(path.value).toEqual(pathArr.slice(1));        
+        expect(drawnPaths.value).toEqual(drawnPathsArr.slice(1)); 
+    });
+
+    test('no route provided', () => {
+        const route = { value: [] };
+        const drawnPathsArr = [new paper.Path()];
+        const drawnPaths = { value: drawnPathsArr.map(el => el ) };
+        const coords = { x: 1000, y: 1200 };
+
+        trimRoute(coords, route, drawnPaths);
+
+        expect(route.value).toEqual([]);
+        expect(drawnPaths.value).toEqual(drawnPathsArr);
+    });
+
+    
 });
