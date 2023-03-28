@@ -65,10 +65,10 @@ export const getSegment = (x = false, y = false, currentSegment = false, props, 
 }
 
 
-export const checkSegment = (currentSegment, pxCoords, routeStringArr, emit) => {
+export const checkSegment = (currentSegment, pxCoords, routeStringArr) => {
     // function to check current segment is the best one of the possible options for the new route
-    
-    if(!currentSegment || !pxCoords?.x || !routeStringArr?.length || !emit) {
+
+    if(!currentSegment || !pxCoords?.x || !routeStringArr?.length) {
         console.log('can\'t check segment with missing arguments');
         return;
     }
@@ -77,7 +77,11 @@ export const checkSegment = (currentSegment, pxCoords, routeStringArr, emit) => 
     let segments = getSegment(pxCoords.x, pxCoords.y, currentSegment, {routeStringArr}, [], true);
     let matchingSegments = [];
     let addImplicitTaxiway = false;
-    
+    console.log(segments)
+    if(segments === false) {
+        return { pathFound: false };
+    }
+
     if(!Array.isArray(segments)) {
         segments = [ segments ];
     }
@@ -118,7 +122,7 @@ export const checkSegment = (currentSegment, pxCoords, routeStringArr, emit) => 
             // if implicit taxiway required, then add it
             routeArr.splice(0, 0, segment.name);
         }
-
+        console.log(segment)
         const allSegments = ref();
         const path = parseRoute(segment.points[0], routeArr, segment, allSegments, pxCoords);
 

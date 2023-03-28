@@ -49,6 +49,10 @@ describe('getSegment', () => {
         expect(segments.includes(Q.QC)).toBe(true);
     });
 
+    test('returns multiple segments when route provided', () => {
+        
+    })
+
     test('detects when taxiway name is unchanged and one of two or more possible segments', () => {
         const x = 1984, y = 840;
 

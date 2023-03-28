@@ -164,7 +164,7 @@
         }
         console.log(props.segment);
         // get the best one of the possible segments
-        const { segment: newSeg = false, implicitTaxiway = false, pathFound } = checkSegment(props.segment, pxCoords.value, newRoute, emit);
+        const { segment: newSeg = false, implicitTaxiway = false, pathFound } = checkSegment(props.segment, pxCoords.value, newRoute);
 
         if(!pathFound || !newSeg) {
             // if no route found
