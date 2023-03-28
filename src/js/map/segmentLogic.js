@@ -23,6 +23,11 @@ export const getSegment = (x = false, y = false, currentSegment = false, props, 
         }
     }
 
+    if(multipleSegments) {
+        // return all options for segment detection tool
+        return segments;
+    }
+
     // return different value depending on number of matching segments found and if any of them match the current segment
     if(segments.length == 0)
         return false;
@@ -32,13 +37,6 @@ export const getSegment = (x = false, y = false, currentSegment = false, props, 
         // aircraft still in old segment
         return currentSegment;
 
-
-    // still more than one possible segment
-
-    if(multipleSegments) {
-        // return all options for segment detection tool
-        return segments;
-    }
 
     // check if any segments have same name as current segment
     if(currentSegment) {
@@ -77,13 +75,9 @@ export const checkSegment = (currentSegment, pxCoords, routeStringArr) => {
     let segments = getSegment(pxCoords.x, pxCoords.y, currentSegment, {routeStringArr}, [], true);
     let matchingSegments = [];
     let addImplicitTaxiway = false;
-    console.log(segments)
-    if(segments === false) {
-        return { pathFound: false };
-    }
 
-    if(!Array.isArray(segments)) {
-        segments = [ segments ];
+    if(segments.length === 0) {
+        return { pathFound: false };
     }
 
     // see how many if any segments have the same name as first element of route string
@@ -122,7 +116,7 @@ export const checkSegment = (currentSegment, pxCoords, routeStringArr) => {
             // if implicit taxiway required, then add it
             routeArr.splice(0, 0, segment.name);
         }
-        console.log(segment)
+
         const allSegments = ref();
         const path = parseRoute(segment.points[0], routeArr, segment, allSegments, pxCoords);
 

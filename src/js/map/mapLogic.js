@@ -1,4 +1,3 @@
-import paper from 'paper';
 import pointInPolygon from 'point-in-polygon';
 
 export const calculatePixelCoords = (newValue) => {

@@ -1,6 +1,8 @@
 import { getSegment } from '@/js/map/segmentLogic';
+import { taxiways as J } from '@/js/graph/taxiways/J';
 import { taxiways as P } from '@/js/graph/taxiways/P';
 import { taxiways as Q } from '@/js/graph/taxiways/QX';
+import { taxiways as Z } from '@/js/graph/taxiways/Z';
 
 describe('getSegment', () => {
 
@@ -50,8 +52,18 @@ describe('getSegment', () => {
     });
 
     test('returns multiple segments when route provided', () => {
-        
-    })
+        const x = 2335.8, y = 1327.8;
+        const currentSegment = Z.segOne;
+        const routeStringArr = 'P /L'.split(' ');
+
+        const segments = getSegment(x, y, currentSegment, {routeStringArr}, true);
+
+        expect(Array.isArray(segments)).toBe(true);
+        expect(segments.length).toBe(3);
+        expect(segments.includes(J.segESeven)).toBe(true);
+        expect(segments.includes(P.segSix)).toBe(true);
+        expect(segments.includes(Z.segOne)).toBe(true);
+    });
 
     test('detects when taxiway name is unchanged and one of two or more possible segments', () => {
         const x = 1984, y = 840;
