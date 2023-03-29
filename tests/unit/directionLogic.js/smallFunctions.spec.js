@@ -25,11 +25,11 @@ describe('turnDirection', () => {
         expect(direction).toBe(0);
     });
 
-    test('marginally straight ahead (10 deg off straight)', () => {
+    test('marginally straight ahead (15 deg off straight)', () => {
         // abstract example
         const pointOne = {x: 1000, y: 2000};
         const pointTwo = {x: 1000, y: 1500};
-        const pointThree = {x: 1100, y: 921};
+        const pointThree = {x: 1100, y: 1126};
 
         const direction = turnDirection(pointOne, pointTwo, pointThree);
 
@@ -142,4 +142,4 @@ describe('createDirectionObj', () => {
 
         expect(returnVal).toBe(undefined);
     });
-})
+});

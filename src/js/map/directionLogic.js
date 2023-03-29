@@ -1,4 +1,3 @@
-
 export const turnDirection = (pointOne, pointTwo, pointThree) => {
     // function that returns direction given three points (from, pivot, to)
     // -1 = left, 0 = straight, 1 = right
@@ -40,7 +39,7 @@ export const turnDirection = (pointOne, pointTwo, pointThree) => {
     const vectorAngle = Math.acos(scalarOneTwo / (magnitude(vecOne) * magnitude(vecTwo)));
 
     // check if second vector in same direction as first (within 10 degrees either way)
-    const straightToleranceDegrees = 10;
+    const straightToleranceDegrees = 15;
     const toleranceRad = straightToleranceDegrees / 180 * Math.PI;
 
     if(vectorAngle >= Math.PI - toleranceRad && vectorAngle <= Math.PI + toleranceRad ) {
@@ -51,7 +50,7 @@ export const turnDirection = (pointOne, pointTwo, pointThree) => {
     const rotatedVecOne = [vecOne[1], -vecOne[0]];
     const scalarRotOneTwo = scalarProduct(rotatedVecOne, vecTwo);
 
-    if(scalarRotOneTwo < 0)
+    if(scalarRotOneTwo < 0) 
         return 1;
     return -1;
 }
