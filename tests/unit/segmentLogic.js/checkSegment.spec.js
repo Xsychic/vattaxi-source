@@ -1,6 +1,5 @@
 import '@/js/graph/index';
-import { checkSegment, getSegment } from '@/js/map/segmentLogic';
-import { taxiways as J } from '@/js/graph/taxiways/J';
+import { checkSegment } from '@/js/map/segmentLogic';
 import { taxiways as P } from '@/js/graph/taxiways/P';
 import { taxiways as Y } from '@/js/graph/taxiways/Y';
 import { taxiways as Z } from '@/js/graph/taxiways/Z';

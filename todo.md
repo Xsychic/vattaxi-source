@@ -69,3 +69,4 @@
 - [ ] add fancy curves between route segments
 - [ ] add direction counter - i.e. take third right instead of turn right
 - [ ] rewrite position reporting to have server in js client rather than c#
+- [ ] fix parse timeout when route long/loops kinda back

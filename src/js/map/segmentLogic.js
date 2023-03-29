@@ -150,12 +150,12 @@ export const checkWrongTurn = (newSegment, oldSegment, allSegments, routeArr, px
     if(!routeArr.value?.length || !routeArr.value?.length) {
         // no active route - skip wrong turn detection
         return;
-        }
+    }
 
-        if(typeof routeArr.value?.length !== 'undefined' && routeArr.value.length <= 2 && !newSegment) {
-            // near end of route - if not in segment, could be turning onto stand so don't trigger
-            return;
-        }
+    if(routeArr.value.length <= 2 && !newSegment) {
+        // near end of route - if not in segment, could be turning onto stand so don't trigger
+        return;
+    }
 
     if(!allSegments.value.includes(newSegment)) {
         // aircraft not within any of the route segments - check if new segment contains terminating stand
@@ -165,7 +165,7 @@ export const checkWrongTurn = (newSegment, oldSegment, allSegments, routeArr, px
         // check if terminator is a stand
         const terminator = props.routeStringArr[props.routeStringArr.length - 1];
 
-        if(routeArr.value.length <= 3 && terminator && terminator[0] === 'S' && terminator.length > 1) {
+        if(routeArr.value.length <= 3 && terminator && (terminator[0] === 'S' || terminator.slice(0,2) === 'MA') && terminator.length > 1) {
             // if not much of route left and terminator is a stand, check if any of potential new segments contains stand
             const standName = terminator.slice(1);
 
@@ -180,7 +180,8 @@ export const checkWrongTurn = (newSegment, oldSegment, allSegments, routeArr, px
         }
 
         if(followingRoute === false) {
-            // not in segment containing route terminator - check within radius of points in current and next segment (next segment taken from routeArr - is not the new segment)
+            // not in segment containing route terminator - check within radius of points in current 
+            // and next segment (next segment taken from routeArr - is not the new segment)
             let segments = [];
 
             if(oldSegment && allSegments.value.includes(oldSegment))
