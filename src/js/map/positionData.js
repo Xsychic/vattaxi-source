@@ -22,10 +22,6 @@ class DataProvider {
         }
     }
 
-    get connected() {
-        return this.connectedField.value;
-    }
-
     set currentData(newValue) {
         this.currentDataField.value = newValue;
     }
@@ -41,7 +37,7 @@ class DataProvider {
         
         while(this.continueFetchingData) {
             await axios({
-                method: 'get',
+                //method: 'get',
                 url: 'http://localhost:57016',
                 params: {
                     type: 'data request'
@@ -52,7 +48,7 @@ class DataProvider {
                 this.connected = true;
                 this.reqTimeoutCounter = 0;
                 this.fourOhFourOccurred = false;
-        
+                
                 if(response?.data?.latitude && response?.data?.longitude) {
                     let lat = response.data.latitude;
                     let long = response.data.longitude;
@@ -94,7 +90,7 @@ class DataProvider {
                     }
                 }
             }).finally(() => {
-                if(this.reqTimeoutCounter == this.timeoutCap) {
+                if(this.reqTimeoutCounter === this.timeoutCap) {
                     // need to post message to user
                     console.log("Timeout cap exceeded, possible unresolvable loss in connection to simconnect client, please restart the application if the simulator is already running.");
                 }
