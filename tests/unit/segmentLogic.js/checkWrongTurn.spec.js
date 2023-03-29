@@ -6,6 +6,7 @@ import { parseRoute, trimRoute } from '@/js/map/mapLogic';
 import jPts, { taxiways as J } from '@/js/graph/taxiways/J';
 import kPts, { taxiways as K } from '@/js/graph/taxiways/K';
 import pPts, { taxiways as P } from '@/js/graph/taxiways/P';
+import tPts, { taxiways as T } from '@/js/graph/taxiways/T';
 
 describe('checkWrongTurn', () => {
     test('within one of the route segments', () => {
@@ -126,6 +127,44 @@ describe('checkWrongTurn', () => {
         const props = { routeStringArr: route };
         const displayBanner = ref(false);
         const oldSegment = P.segTwo, newSegment = K.segTwo;
+        
+        trimRoute(coords, routeArr, []);
+        checkWrongTurn(
+            newSegment, 
+            oldSegment, 
+            allSegments, 
+            routeArr, 
+            coords, 
+            props, 
+            displayBanner
+        );
+
+        expect(allSegments.value.includes(newSegment)).toBe(false);
+        expect(displayBanner.value).toBe(false);
+    });
+
+    test('dont trigger wrong turn if entering segment containing terminating maintenance area', () => {
+        let coords = {x: 1482.8, y: 1454.1};
+        const initialPoint = tPts.segTwo.upper;
+        const initialSegment = T.segTwo;
+        const route = 'T MA2'.split(' ');
+        const allSegments = { value: [] };
+
+        const path = parseRoute(
+            initialPoint, 
+            route, 
+            initialSegment, 
+            allSegments, 
+            coords
+        );
+
+        expect(path).not.toBe(false);
+
+        coords = { value: {x: 1465.7, y: 1299.1} };
+        const routeArr = { value: path };
+        const props = { routeStringArr: route };
+        const displayBanner = ref(false);
+        const oldSegment = T.segTwo, newSegment = T.segOne;
         
         trimRoute(coords, routeArr, []);
         checkWrongTurn(

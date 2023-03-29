@@ -165,9 +165,13 @@ export const checkWrongTurn = (newSegment, oldSegment, allSegments, routeArr, px
         // check if terminator is a stand
         const terminator = props.routeStringArr[props.routeStringArr.length - 1];
 
-        if(routeArr.value.length <= 3 && terminator && (terminator[0] === 'S' || terminator.slice(0,2) === 'MA') && terminator.length > 1) {
+        if(routeArr.value.length <= 3 && terminator?.length && terminator.length > 1 && (terminator[0] === 'S' || terminator.slice(0,2) === 'MA')) {
             // if not much of route left and terminator is a stand, check if any of potential new segments contains stand
-            const standName = terminator.slice(1);
+            let standName = terminator;
+            
+            if(terminator[0] === 'S')
+                standName = terminator.slice(1);
+            
 
             if(newSegment.stands) {
                 const stand = newSegment.stands.findIndex((stand) => stand.name === standName);
