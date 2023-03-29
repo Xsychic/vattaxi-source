@@ -1,10 +1,10 @@
 import '@/js/graph/index';
 
 import { ref } from 'vue';
+import { taxiways as K } from '@/js/graph/taxiways/K';
 import { checkWrongTurn } from '@/js/map/segmentLogic';
 import { parseRoute, trimRoute } from '@/js/map/mapLogic';
 import jPts, { taxiways as J } from '@/js/graph/taxiways/J';
-import kPts, { taxiways as K } from '@/js/graph/taxiways/K';
 import pPts, { taxiways as P } from '@/js/graph/taxiways/P';
 import tPts, { taxiways as T } from '@/js/graph/taxiways/T';
 

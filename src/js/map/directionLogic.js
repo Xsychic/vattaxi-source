@@ -1,5 +1,5 @@
 
-const turnDirection = (pointOne, pointTwo, pointThree) => {
+export const turnDirection = (pointOne, pointTwo, pointThree) => {
     // function that returns direction given three points (from, pivot, to)
     // -1 = left, 0 = straight, 1 = right
 
@@ -57,7 +57,7 @@ const turnDirection = (pointOne, pointTwo, pointThree) => {
 }
 
 
-const createDirectionObj = (ptOne, ptTwo, ptThree, name, el) => {
+export const createDirectionObj = (ptOne, ptTwo, ptThree, name, el) => {
     switch(turnDirection(ptOne, ptTwo, ptThree)) {
         case 0:
             return { dir: 0, text: `Continue straight ahead onto ${ name }`, el };
@@ -128,7 +128,10 @@ export const generateDirections = (routeArray, routeStringArr, currentSegment, p
                 if(nameOverride)
                     currentTwy.name = nameOverride;
 
-                directions.push(createDirectionObj(ptOne, ptTwo, ptThree, currentTwy.name, el));
+                const directionObj = createDirectionObj(ptOne, ptTwo, ptThree, currentTwy.name, el)
+
+                if(directionObj !== undefined)
+                    directions.push(directionObj);
             }
         }
 
