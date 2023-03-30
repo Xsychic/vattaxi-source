@@ -228,7 +228,7 @@
 
     .buttons {
         display: flex;
-        width: 100%;
+        min-width: 178px;
         justify-content: flex-end;
     }
 

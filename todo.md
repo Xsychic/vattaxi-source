@@ -46,8 +46,9 @@
 - [x] turn detection and directions not cleared when instructions input cleared by hand
 - [x] hold short runway not working
 - [x] clear saved coordinates when sim connection lost
-- [ ] recheck route button text wraps on default window size
-- [ ] directions overflow
+- [x] recheck route button text wraps on default window size
+- [x] directions overflow
+- [x] br routes not working
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 
 ### QOL 
