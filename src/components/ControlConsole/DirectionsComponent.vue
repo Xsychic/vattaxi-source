@@ -84,7 +84,7 @@
         height: calc(100% - 64.8px);
         overflow: auto;
         border-top: 1px solid var(--subtle-grey);
-        border-bottom: 1px solid var(--subtle-grey);
+        border-bottom: 1px solid var(--middle-grey);
     }
 
     .directions-container {
