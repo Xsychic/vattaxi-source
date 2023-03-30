@@ -1,3 +1,4 @@
+import '@/js/graph/index';
 import pointInPolygon from 'point-in-polygon';
 
 export const calculatePixelCoords = (newValue) => {

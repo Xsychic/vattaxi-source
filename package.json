@@ -1,6 +1,8 @@
 {
   "name": "vattaxi",
+  "author": "Adam Bass",
   "version": "0.1.0",
+  "description": "A native windows app to help with airfield navigation at Gatwick on the VATSIM network",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
