@@ -18,9 +18,10 @@
 - [x] draw hold bars when plotting input route
 - [ ] prepare release version
     - [ ] change map colours (mainly just path)
-    - [ ] remove temp tools
+    - [x] remove temp tools
     - [ ] package and distribute
-- [ ] write unit tests, particularly for functions in js files
+- [x] write unit tests, particularly for functions in js files
+- [ ] write unit tests for components
 
 
 ### Bugs
@@ -45,7 +46,8 @@
 - [x] turn detection and directions not cleared when instructions input cleared by hand
 - [x] hold short runway not working
 - [x] clear saved coordinates when sim connection lost
-- [ ] recheck route button wraps on default window size
+- [ ] recheck route button text wraps on default window size
+- [ ] directions overflow
 - [ ] fix path finding onto stand opposite end of taxiway (e.g., 564 from QC)
 
 ### QOL 

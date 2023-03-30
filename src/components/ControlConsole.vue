@@ -51,6 +51,8 @@
         flex-grow: 1;
         min-width: 320px;
         height: calc(100% - 30px);
+        display: flex;
+        flex-direction: column;
     }
 
     .header {
@@ -80,7 +82,7 @@
         display: flex;
         align-items: center;
         font-weight: 500;
-        font-size: 17px;
+        font-size: 14px;
     }
 
     .turn-detection-switch {

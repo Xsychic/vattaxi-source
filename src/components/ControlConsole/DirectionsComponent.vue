@@ -70,11 +70,10 @@
         font-size: 18px;
         padding: 12px 6px 10px 6px;
         border-bottom: 1px solid var(--subtle-grey);
-        
     }
 
-    .direction:first-of-type {
-        border-top: 1px solid var(--subtle-grey);
+    .direction:last-of-type {
+        /* border-bottom: none; */
     }
 
     .direction svg {
@@ -85,8 +84,18 @@
         color: var(--icon-grey);
     }
 
+    .directions {
+        height: calc(100% - 64.8px);
+        overflow: auto;
+        border-top: 1px solid var(--subtle-grey);
+        border-bottom: 1px solid var(--subtle-grey);
+    }
+
     .directions-container {
         width: 100%;
+        height: 10px;
+        flex-grow: 1;
+        margin-bottom: 35px;
         color: var(--marble-grey);
     }
 
