@@ -179,7 +179,7 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
                         bounds = getBounds(point, routeArr.value[1]);
                     }
                     
-                    if(pointInPolygon([coords.x, coords.y], bounds)) {
+                    if(pointInPolygon(bounds && [coords.x, coords.y], bounds)) {
                         // current position within detection bounds, do not count current point as closest point 
                         // so that it will get removed
                         continue;
