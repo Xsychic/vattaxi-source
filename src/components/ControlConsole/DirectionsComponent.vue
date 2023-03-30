@@ -72,10 +72,6 @@
         border-bottom: 1px solid var(--subtle-grey);
     }
 
-    .direction:last-of-type {
-        /* border-bottom: none; */
-    }
-
     .direction svg {
         position: relative;
         top: 4px;
@@ -111,6 +107,7 @@
         display: flex;
         justify-content: center;
         font-style: italic;
+        margin-top: 35px;
     }
 
     .title {

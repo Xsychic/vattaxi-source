@@ -22,7 +22,7 @@
         // create regexs
         const singleTaxiways = ['A', 'B', 'C', 'D', 'E', 'G', 'H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'Y', 'Z'];
         const singleTwysExp = `[${ singleTaxiways.join('') }]`;
-        const doubleTaxiways = ['AN', 'AS', 'FR', 'GR', 'KA', 'NA', 'QA', 'QB', 'QC', '08L/26R', '08R/26L'];
+        const doubleTaxiways = ['AN', 'AS', 'BR', 'CR', 'FR', 'GR', 'KA', 'NA', 'QA', 'QB', 'QC', '08L/26R', '08R/26L'];
         let doubleTwysExp = '';
 
         for(let i = 0; i < doubleTaxiways.length; i++) {
