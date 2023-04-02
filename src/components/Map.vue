@@ -250,8 +250,10 @@
 
     var locator = ref(false);
     var segment = ref(false);
+    const demoTool = ref(false);
     const locatorTool = ref(false);
     const segmentTool = ref(false);
+    const demoToolOn = ref(false);
     const locatorToolOn = ref(false);
     const segmentToolOn = ref(false);
     const showGraph = ref(true);
@@ -269,20 +271,29 @@
         if(locatorTool.value) {
             locatorTool.value.remove();
             locatorTool.value = false;
+            locatorToolOn.value = false;
             locator.value = false;
-        } else if(segmentTool.value) {
+        }
+        
+        if(segmentTool.value) {
             segmentTool.value.remove();
             segmentTool.value = false;
+            segmentToolOn.value = false;
             segment.value = false;
+        }
+        
+        if(demoTool.value) {
+            demoTool.value.remove();
+            demoTool.value = false;
+            demoToolOn.value = false;
         }
     }
 
-    const toggleLocatorTool = () => {   
-        turnOffTools();
-        
+    const toggleLocatorTool = () => {          
         if(!locatorToolOn.value) {
+            turnOffTools();
+
             locatorToolOn.value = true;
-            segmentToolOn.value = false;
             locatorTool.value = new paper.Tool();
 
             locatorTool.value.onMouseUp = (event) => {
@@ -294,17 +305,16 @@
 
             locatorTool.value.activate();
         } else {
+            turnOffTools();
             locatorToolOn.value = false;
         }
     }
 
 
     const toggleSegmentTool = () => {
-        turnOffTools();
-
         if(!segmentToolOn.value) {
+            turnOffTools();
             segmentToolOn.value = true;
-            locatorToolOn.value = false;
             segmentTool.value = new paper.Tool();
 
             segmentTool.value.onMouseUp = (event) => {
@@ -346,10 +356,50 @@
 
             segmentTool.value.activate();
         } else {
+            turnOffTools();
             segmentToolOn.value = false;
         }
     }
 
+
+    const pxToLatLong = (x, y) => {
+        const baseLat = 51.150559; // T/J Intersection
+        const baseLong = -0.214077; // J4
+        const baseYPx = 1512; // T/J Intersection
+        const baseXPx = 568; // J4
+        const pxPerLat = -880 / 0.012625; // T/J -> St574
+        const pxPerLong = 1970 / 0.045032; // J4 -> A2
+        let latitude = (y - baseYPx) / pxPerLat + baseLat;
+        let longitude = (x - baseXPx) / pxPerLong + baseLong;
+
+        return { latitude, longitude };
+    }
+
+    const toggleDemoTool = () => {
+        if(!demoToolOn.value) {
+            // turn on demo tool
+            turnOffTools();
+            demoToolOn.value = true;
+
+            
+            demoTool.value = new paper.Tool();
+
+            demoTool.value.onMouseUp = (event) => {
+                event.scale = transformations.scale;
+                locator.value = event;
+                // write points to clipboard in json format
+                const x = Math.round(10 * event.point.x / event.scale) / 10;
+                const y = Math.round(10 * event.point.y / event.scale) / 10;
+                const crds = pxToLatLong(x, y);
+                data.value = crds; 
+            }
+
+            demoTool.value.activate();
+
+        } else {
+            turnOffTools();
+        }
+    }
 
     // function to show/hide map layers
     const toggleLayer = (event) => {
@@ -364,9 +414,11 @@
             :plot='plot' 
             :locator='locator' 
             :segment='segment'
+            :demoToolOn='demoToolOn'
             :locatorToolOn='locatorToolOn'
             :segmentToolOn='segmentToolOn'
             :showGraph='showGraph' 
+            @demoTool='toggleDemoTool'
             @locatorTool='toggleLocatorTool' 
             @segmentTool='toggleSegmentTool' 
             @toggleGraph='showGraph = !showGraph'

@@ -1,8 +1,8 @@
 <script setup>
-    import { ref, defineProps, defineEmits } from 'vue';
+    import { defineProps, defineEmits } from 'vue';
 
-    const props = defineProps(['plot', 'locator', 'segment', 'showGraph', 'locatorToolOn', 'segmentToolOn']);
-    const emit = defineEmits(['locatorTool', 'segmentTool', 'toggleGraph']);
+    const props = defineProps(['plot', 'locator', 'segment', 'showGraph', 'locatorToolOn', 'segmentToolOn', 'demoToolOn']);
+    const emit = defineEmits(['locatorTool', 'segmentTool', 'toggleGraph', 'demoTool']);
 
 
     const locatorTool = () => {
@@ -11,6 +11,10 @@
 
     const segmentTool = () => {
         emit('segmentTool');
+    }
+
+    const demoTool = () => {
+        emit('demoTool');
     }
 </script>
 
@@ -28,9 +32,12 @@
         <div class='block' @click='segmentTool'>
             Segment: {{ ( segment !== false ? segment : (segmentToolOn ? 'On' : 'Off') ) }}
         </div>
-        <div class='block'>
+        <div class='block' @click='demoTool'>
             Display Graph: 
             <input type='checkbox' :checked='showGraph' v-on:change='emit("toggleGraph")'>
+        </div>
+        <div class='block' @click='demoTool'>
+            Demo Tool: {{ ( demoToolOn ? 'On' : 'Off' ) }}
         </div>
     </div>
 
