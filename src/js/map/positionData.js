@@ -31,10 +31,7 @@ class DataProvider {
     }
 
     getData = async () => { 
-        if(this.outstandingRequest)
-            return;
-        
-        
+
         while(this.continueFetchingData) {
             await axios({
                 //method: 'get',
@@ -52,7 +49,8 @@ class DataProvider {
                 if(response?.data?.latitude && response?.data?.longitude) {
                     let lat = response.data.latitude;
                     let long = response.data.longitude;
-        
+                    
+                    // 6 dp provides approx 11cm precision
                     lat = Math.round(lat * 10**6) / 10**6;
                     long = Math.round(long * 10**6) / 10**6;
         
