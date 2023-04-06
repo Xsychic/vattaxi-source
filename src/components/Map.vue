@@ -386,7 +386,6 @@
 
             demoTool.value.onMouseUp = (event) => {
                 event.scale = transformations.scale;
-                locator.value = event;
                 // write points to clipboard in json format
                 const x = Math.round(10 * event.point.x / event.scale) / 10;
                 const y = Math.round(10 * event.point.y / event.scale) / 10;
