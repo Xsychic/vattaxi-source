@@ -7,13 +7,6 @@ export const joinPoints = (pointOne, pointTwo) => {
     pointTwo.addAdjoiningPoint(pointOne);
 }
 
-export const linkSegment = (segment, pointOne, pointTwo) => {
-    // link segments don't need old object checking since linkSegment shouldn't 
-    // link points and segments from separate files
-    pointOne.addTaxiwaySegment(segment);
-    pointTwo.addTaxiwaySegment(segment);
-}
-
 // method to remove references to old points after refresh
 // js garbage collector will then delete them from memory
 const clearAdjoiningPoints = (pointOne, pointTwo) => {
