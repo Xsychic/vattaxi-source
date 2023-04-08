@@ -191,7 +191,7 @@ export const drawGraph = (graphPaths, layers) => {
     }
 
     while(toVisit.length > 0) {
-        const point = toVisit.pop();
+        const point = toVisit.shift();
         visited.push(point);
 
         if(point.holdingPoint) {
