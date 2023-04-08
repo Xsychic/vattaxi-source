@@ -162,7 +162,7 @@
             }
             return;
         }
-        console.log(props.segment);
+
         // get the best one of the possible segments
         const { segment: newSeg = false, implicitTaxiway = false, pathFound } = checkSegment(props.segment, pxCoords.value, newRoute);
 
