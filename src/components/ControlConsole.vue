@@ -1,6 +1,6 @@
 <script setup>    
     import InstructionsField from '@/components/ControlConsole/InstructionsField.vue';
-    import DirectionsComponent from '@/components/ControlConsole/DirectionsComponent.vue'
+    import Directions from '@/components/ControlConsole/Directions.vue'
 
     import { defineEmits, defineProps } from 'vue';
 
@@ -23,7 +23,7 @@
             :segment='segment'
             @updateRouteStringArr='updateRouteStringArr'
         />
-        <DirectionsComponent
+        <Directions
             :segment='segment'
             :routeArr='routeArr'
             :directions='directions'
