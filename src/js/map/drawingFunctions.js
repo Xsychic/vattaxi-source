@@ -67,8 +67,8 @@ export const redrawFirstSegment = (coords, route, drawnRoute) => {
     if(route.length && drawnRoute.value.length) {
         // redraw first section of route
         let newPath = new paper.Path();
-        newPath.strokeColor = '#3498eb';
-        newPath.strokeWidth = '2';
+        newPath.strokeColor = 'red';
+        newPath.strokeWidth = '3';
 
         let x, y;
         if(route[0].x) {
@@ -140,8 +140,8 @@ export const drawRoute = (route, pxCoords) => {
 
     for(let i = 0; i < points.length - 1; i++) {
         let path = new paper.Path();
-        path.strokeColor = '#3498eb';
-        path.strokeWidth = '2';
+        path.strokeColor = 'red';
+        path.strokeWidth = '3';
         drawnPaths.push(path);
         
         const pt1 = points[i];

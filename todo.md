@@ -61,6 +61,7 @@
 - [x] investigate lag between sim movement and map update
 
 ### Potential Future Improvements
+- [x] fix parse timeout when route long/loops kinda back
 - [ ] detect wrong turns quicker (as soon as enter first incorrect segment) 
         - maybe not possible with current system due to possibility of aircraft passing briefly into another segment when turning a corner
 - [ ] show aircraft heading on map by using oriented icon and using sim data
@@ -72,4 +73,3 @@
 - [ ] add fancy curves between route segments
 - [ ] add direction counter - i.e. take third right instead of turn right
 - [ ] rewrite position reporting to have server in js client rather than c#
-- [ ] fix parse timeout when route long/loops kinda back
