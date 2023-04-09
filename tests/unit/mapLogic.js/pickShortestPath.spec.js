@@ -1,5 +1,4 @@
-import { pickShortestPath } from '@/js/map/mapLogic';
-
+import { pickShortestPath } from "@/js/map/graphTraversalAlgorithms/dfs";
 
 
 describe('pickShortestPath', () => {

@@ -1,7 +1,6 @@
 import Stand from '@/js/graph/Stand';
 import TaxiwaySegment from '@/js/graph/TaxiwaySegment';
 
-// import { setupJestCanvasMock } from 'jest-canvas-mock';
 import { calculatePixelCoords, getBounds, pythagDistance } from '@/js/map/mapLogic';
 
 describe('calculatePixelCoords', () => {

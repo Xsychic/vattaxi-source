@@ -2,7 +2,8 @@ import pointInPolygon from 'point-in-polygon';
 import taxiwaySegments from '@/js/graph/taxiways';
 
 import { ref } from 'vue'; 
-import { parseRoute, pickShortestPath, pythagDistance } from '@/js/map/mapLogic';
+import { parseRoute, pythagDistance } from '@/js/map/mapLogic';
+import { pickShortestPath } from './graphTraversalAlgorithms/dfs';
 
 
 export const getSegment = (x = false, y = false, currentSegment = false, props, multipleSegments = false) => {

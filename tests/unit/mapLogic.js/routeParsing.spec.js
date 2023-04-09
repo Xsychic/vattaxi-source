@@ -13,16 +13,21 @@ import W, { taxiways as wTwys } from '@/js/graph/taxiways/W';
 import Y, { taxiways as yTwys } from '@/js/graph/taxiways/Y';
 import rwy, { taxiways as rwySeg } from '@/js/graph/taxiways/R26L';
 
-import { traversePoint, parseRoute } from '@/js/map/mapLogic';
+import { parseRoute } from '@/js/map/mapLogic';
+import { traversePointHelper } from '@/js/map/graphTraversalAlgorithms/dfs';
 
 
-describe('traversePoint', () => {
+test('placeholder', () => {
+    expect(true).toStrictEqual(true)
+})
+
+describe('traversePointHelper', () => {
     test('route terminating with named holding point', () => {
         // start at top of P
         const initialPoint = P.segOne.upper;
         const route = 'P /B1'.split(' ');
 
-        const path = traversePoint(initialPoint, route, []);
+        const path = traversePointHelper(initialPoint, route, []);
 
         const expectedPath = [
             initialPoint,
@@ -52,6 +57,7 @@ describe('traversePoint', () => {
             P.segNine.lower
         ];
 
+
         expect(path).toStrictEqual(expectedPath);     
     });
 
@@ -59,7 +65,7 @@ describe('traversePoint', () => {
         // start at top of P
         const initialPoint = P.segOne.upper;
         const route = 'P /K'.split(' ');
-        const path = traversePoint(initialPoint, route, []);
+        const path = traversePointHelper(initialPoint, route, []);
 
         const expectedPath = [
             initialPoint,
@@ -74,7 +80,7 @@ describe('traversePoint', () => {
         // start at point on L abeam s112
         const initialPoint = L.segSeven.left;
         const route = 'L P K S103'.split(' ');
-        const path = traversePoint(initialPoint, route, []);
+        const path = traversePointHelper(initialPoint, route, []);
 
         const expectedPath = [
             initialPoint,
@@ -95,7 +101,7 @@ describe('traversePoint', () => {
         // start at point at bottom of T
         const initialPoint = T.segThree.lower;
         const route = 'T MA2'.split(' ');
-        const path = traversePoint(initialPoint, route, []);
+        const path = traversePointHelper(initialPoint, route, []);
 
         const expectedPath = [
             initialPoint,
@@ -114,7 +120,7 @@ describe('traversePoint', () => {
         // Start at point on Y at bottom of right most segment
         const initialPoint = Y.segNine.left;
         const route = 'Y /W1'.split(' ');
-        const path = traversePoint(initialPoint, route, []);
+        const path = traversePointHelper(initialPoint, route, []);
 
         const expectedPath = [
             initialPoint,
@@ -129,7 +135,7 @@ describe('traversePoint', () => {
     test('no route passed', () => {
         // Starting point is irrelevant
         const initialPoint = Y.segNine.left;
-        const path = traversePoint(initialPoint, [], []);
+        const path = traversePointHelper(initialPoint, [], []);
 
         expect(path).toStrictEqual([ initialPoint ]);     
     });

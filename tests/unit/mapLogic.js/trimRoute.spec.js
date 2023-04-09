@@ -13,7 +13,9 @@ import W, { taxiways as wTwys } from '@/js/graph/taxiways/W';
 import Y, { taxiways as yTwys } from '@/js/graph/taxiways/Y';
 import rwy, { taxiways as rwySeg } from '@/js/graph/taxiways/R26L';
 
-import { traversePoint, trimRoute } from '@/js/map/mapLogic';
+import { trimRoute } from '@/js/map/mapLogic';
+import { traversePoint } from '@/js/map/graphTraversalAlgorithms/dfs';
+
 
 describe('trimRoute', () => {
     beforeAll(() => {

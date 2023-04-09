@@ -6,7 +6,6 @@ import { taxiways as P } from '@/js/graph/taxiways/P';
 import qPts, { taxiways as Q } from '@/js/graph/taxiways/Q';
 import { generateDirections } from '@/js/map/directionLogic';
 import kaPts, { taxiways as KA } from '@/js/graph/taxiways/KA';
-import Stand from '@/js/graph/Stand';
 
 /*
 { dir: 0, text: `Continue straight ahead onto `, el:  },
