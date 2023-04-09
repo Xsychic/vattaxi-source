@@ -32,7 +32,7 @@
         <div class='block' @click='segmentTool'>
             Segment: {{ ( segment !== false ? segment : (segmentToolOn ? 'On' : 'Off') ) }}
         </div>
-        <div class='block' @click='demoTool'>
+        <div class='block'>
             Display Graph: 
             <input type='checkbox' :checked='showGraph' v-on:change='emit("toggleGraph")'>
         </div>
