@@ -227,7 +227,7 @@ export const parseRoute = (point, route, currentSegment, allSegments, coords) =>
     // function to turn routeStringArray into graph element array
 
     let start = Date.now()
-    let path = traversePoint(point, route, []);
+    let path = traversePoint(point, route);
     // let path = traversePointDijk(point, route);
     let end = Date.now()
     console.log(`${ end - start }ms`);
