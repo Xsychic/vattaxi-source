@@ -15,9 +15,10 @@ const points = {
     },
     segTwo: {
         upper: new Point({x: 1903, y: 1119}),
-        lower: new Point({x: 1916.4, y: 1182.1})
+        lower: new Point({x: 1914.7, y: 1171.2})
     },
     segThree: {
+        upper: new Point({x: 1916.4, y: 1182.1}),
         lower: new Point({x: 1927.2, y: 1233.5})
     },
     segFour: {
@@ -67,15 +68,12 @@ export const taxiways = {
             {x: 1965.6, y: 1125.5},
 
             {x: 1933.7, y: 1184.8},
-            {x: 1915.5, y: 1150.1},
+            {x: 1897.6, y: 1179.8},
 
             {x: 1944.3, y: 1100.2},
         ],
         []
     ),
-    // segOneB: new TaxiwaySegment(
-
-    // ),
     segTwo: new TaxiwaySegment(
         points.segTwo.upper,
         points.segTwo.lower,
@@ -83,24 +81,24 @@ export const taxiways = {
         [
             {x: 1919.4, y: 1109.3},
 
-            {x: 1933.7, y: 1180.1},
-            {x: 1897.9, y: 1186.6},
+            {x: 1933.4, y: 1175.8},
+            {x: 1897.6, y: 1179.8},
 
             {x: 1885.8, y: 1112.9}
         ],
         []
     ),
     segThree: new TaxiwaySegment(
-        points.segTwo.lower,
+        points.segThree.upper,
         points.segThree.lower,
         'R',
         [
-            {x: 1933.7, y: 1180.1},
+            {x: 1933.4, y: 1175.8},
 
             {x: 1946.6, y: 1244.9},
             {x: 1918, y: 1252},
 
-            {x: 1897.9, y: 1186.6},
+            {x: 1897.6, y: 1179.8},
         ],
         Object.values(segThreeStands)
     ),
@@ -150,7 +148,8 @@ export const taxiways = {
 
 // link adjoining (non-adjacent segment) points
 joinPoints(points.segZero.lower, points.segOne.upper);
-joinPoints(points.segOne.lower, points.segTwo.lower);
+joinPoints(points.segOne.lower, points.segThree.upper);
+joinPoints(points.segTwo.lower, points.segThree.upper);
 joinPoints(points.segThree.lower, points.segFour.upper);
 joinPoints(points.segFour.lower, points.segFive.upper);
 

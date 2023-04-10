@@ -225,7 +225,7 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
 
 export const parseRoute = (point, route, currentSegment, allSegments, coords) => {
     // function to turn routeStringArray into graph element array
-
+    console.log(route)
     let start = Date.now()
     let path = traversePoint(point, route);
     // let path = traversePointDijk(point, route);
@@ -238,7 +238,7 @@ export const parseRoute = (point, route, currentSegment, allSegments, coords) =>
     allSegments.value = path.filter((el) => typeof el.bounds !== 'undefined');
 
     if(path[1] === currentSegment) {
-        // if initially picked wrong point at wrong end of current segment, remove it and current segment
+        // if initially picked point at wrong end of current segment, remove it and current segment from route array
         path = path.slice(2);
     }
 
