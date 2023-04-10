@@ -46,6 +46,7 @@
 
         // route ends in termination point
         if(!validTerminator.test(route[route.length - 1])) {
+            console.log(`invalid terminator: ${ route[route.length - 1]}`)
             return false;
         }
 
@@ -54,6 +55,7 @@
 
         for(const el of restOfRoute) {
             if(!validElement.test(el)) {
+                console.log(`failing element: ${ el }`)
                 return false;
             }
         }
@@ -68,8 +70,8 @@
 
         // replace runway designations with full runway description
         let newRoute = routeString.value;
-        newRoute = newRoute.replace(/(08L|26R)/i, '08L/26R');
-        newRoute = newRoute.replace(/(08R|26L)/i, '08R/26L');
+        newRoute = newRoute.replace(/(08L|26R)/ig, '08L/26R');
+        newRoute = newRoute.replace(/(08R|26L)/ig, '08R/26L');
 
         // split route into array on 1+ whitespace chars
         let route = newRoute.split(/\s+/g).filter((el) => el);

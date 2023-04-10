@@ -225,7 +225,10 @@ export const trimRoute = (coords, routeArr, drawnRoute) => {
 
 export const parseRoute = (point, route, currentSegment, allSegments, coords) => {
     // function to turn routeStringArray into graph element array
-    console.log(route)
+
+    if(!currentSegment)
+        return false;
+
     let start = Date.now()
     let path = traversePoint(point, route);
     // let path = traversePointDijk(point, route);
