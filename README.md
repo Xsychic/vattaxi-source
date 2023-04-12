@@ -9,21 +9,22 @@ There are several versions of the software currently available in this repositor
 - demo-tool-release: Identical to the release copy but has the demo tool activated.
 
 
-## Pre-requisites to run this project locally
+## Pre-requisites to run this project
 
 - ^Windows 10
 - ^Node v14.17.5 (if not running the compiled version of the application)
 - Microsoft Windows Desktop Runtime (will be prompted by application on first boot if not installed)
 - Microsoft Flight Simulator (to interact with the application unless using the demo tool on versions that contain it)
 
-^: the named version or later
+<sup><sub>^: the named version or later</sub></sup>
 
 
 ## Running VATTAXI...
 ### ...using a compiled build
 
-- Download the desired installed from xxx
+- Download the desired installed from [GitHub](https://github.com/Xsychic/vattaxi-installers)
 - Run the installer
+- Search VATTAXI in the windows search bar and press enter
 
 *n.b. you will likely receive a warning from Windows stating that the application may contain malware. A Microsoft security analyst has advised this just means the application has not built up enough trust with Windows yet and so it doesn't know if it's safe. The version of the installer provided to survey participants (release) was submitted for security analysis by Microsoft and as such will not trigger this warning. This version contains the old graph parser and does not contain any of the development tools. Other versions have not been submitted to Microsoft as the time taken to get one version reviewed was significant. Running a third-party anti-virus scan on the project has reported that the installer is safe in case you want to verify the security of the installer yourself. Alternatively, the source code can be used to run the application.*
 
