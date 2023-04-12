@@ -132,6 +132,15 @@ describe('traversePointHelper', () => {
         expect(path).toStrictEqual(expectedPath);     
     });
 
+    test('invalid route', () => {
+        // start at point on L abeam s112
+        const initialPoint = L.segSeven.left;
+        const route = 'L K S103'.split(' ');
+        const path = traversePointHelper(initialPoint, route, []);
+
+        expect(path).toBe(false);     
+    });
+
     test('no route passed', () => {
         // Starting point is irrelevant
         const initialPoint = Y.segNine.left;
